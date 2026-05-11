@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>TEST</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    </head>
+    <body>
+        <div class="divider"></div>
+        <div class="loginbox">
+            <h1>BoBo Cards Tracker!</h1>    
+            <h2>Log in</h2>
+            <form method="post" action="/" class="userpassinput">
+                <div>
+                    <input type="text" name="usernametype" placeholder="Username here..." value="">
+                    <input type="text" name="passwordtype" placeholder="Password here..." value="">
+                </div>
+                <div>
+                    <input type="submit" name="confirmlogin" value="Confirm">
+                </div>
+            </form>
+            <div class="sidebyside">
+                    <a>Have no account?</a>
+                    <a>Forgot your password?</a>
+            </div>
+        </div>
+    </body>
+</html>
