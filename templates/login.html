@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>TEST</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    </head>
+    <body>
+        <div class="loginbox">
+            <h1>Log in</h1>
+            <form method="post" action="/">
+                <input type="text" name="usernametype" placeholder="Username here..." value="">
+            </form>
+            <form method="post" action="/">
+                <input type="text" name="passwordtype" placeholder="Password here..." value="">
+            </form>
+            <div class="sidebyside">
+                <input type="submit" name="noaccount" value="Have no account?">
+                <input type="submit" name="forgotpass" value="Forgot your password?">
+            </div>
+            <input type="submit" name="confirmlogin" value="Confirm">
+        </div>
+    </body>
+</html>
