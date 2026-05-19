@@ -7,29 +7,22 @@ body{
     margin: 5%;
 }
 
-.loginbox{
+.signupbox{
     display: grid;
     margin:auto;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     text-align: center;
     max-width: 500px;
+    max-height: 250px;
     background-color: rgb(38, 34, 95);
     border-radius: 5%;
 }
 
-.sidebyside{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr;
-}
-
-.userpassinput{
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, 1fr);
+.pushdown{
+    margin-top: 5%;
 }
 
 a{
