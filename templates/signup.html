@@ -10,14 +10,14 @@
             <h2>Signup by entering your email!<h2>
             <form method="post" action="/signup" class="userpassinput">
                 <div>
-                    <input type="text" name="usernametype" placeholder="Email here..." value="">
-                    <input type="submit" name="confirmlogin" value="Confirm">
+                    <input type="text" name="emailtype" placeholder="Email here..." value="">
+                    <input type="submit" name="confirmemail" value="Confirm">
                 </div>
             </form>
             <div class="pushdown">
                 <a href="{{ url_for('login') }}">Back</a>
             </div>
-            <p>{{  errormessage  }}</p>
+            <p class="errormessage">{{  errormessage  }}</p>
         </div>
     </body>
 </html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Signup</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/signupcode.css') }}">
+    </head>
+    <body>
+        <div class="divider"></div>
+        <div class="signupbox">
+            <h2>A code was mailed to the given address!<h2>
+            <form method="post" action="/signupcode" class="userpassinput">
+                <div>
+                    <input type="text" name="codeemail" placeholder="Code here..." value="">
+                    <input type="submit" name="confirmcodeemail" value="Confirm">
+                </div>
+            </form>
+            <div class="pushdown" class="sidebyside">
+                <a href="{{ url_for('signup') }}">Back</a>
+                <a>Resend Code</a>
+            </div>
+            <p>{{  errormessage  }}</p>
+        </div>
+    </body>
+</html>

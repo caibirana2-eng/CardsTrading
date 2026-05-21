@@ -9,9 +9,9 @@ con.close()
 
 app = Flask(__name__)
 
-user_logged_in = False
+emailinput = ""
 
-error = ""
+user_logged_in = False
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -22,23 +22,39 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    global user_logged_in, error
+    global user_logged_in
+    error = ""
     if request.method == "POST":
         if "confirmlogin" in request.form:
-            print("9wq09eqw9eqw9e90qweu0qwe09uqwe09uqw09euqw9e0uq90weuq90uw90eq9w0eq9weuwe9qw0e0qw")
             infoinput = [request.form.get("usernametype"), request.form.get("passwordtype")]
             for i in accounts:
                 if infoinput[0] == i[0] and infoinput[1] == i[1]:
                     user_logged_in = True
-                    print("9wq09eqw9eqw9e90qweu0qwe09uqwe09uqw09euqw9e0uq90weuq90uw90eq9w0eq9weuwe9qw0e0qw")
                     return redirect(url_for("index"))
-                else:
-                    print("8wq09eqw9eqw9e90qweu0qwe09uqwe09uqw09euqw9e0uq90weuq90uw90eq9w0eq9weuwe9qw0e0qw")
             error = "Incorrect username or password!"
     return render_template('login.html', errormessage=error)
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
-    return render_template('signup.html')
+    error = ""
+    if request.method == "POST":
+        if "confirmemail" in request.form:
+
+            # code to send email and check if valid, then generate a random code with random.randint would be here. Using a set code since I can't email a random code
+            # using emailtype == "erorrpls" or "" just to show the error message working
+            emailcode = 
+            if request.form.get("emailtype") == "errorpls" or "":
+                error = "Entered invalid email!"
+            else:
+                return redirect(url_for("signupcode"))            
+    return render_template('signup.html', errormessage=error)
+
+@app.route("/signupcode", methods=['GET', 'POST'])
+def signupcode():
+    if request.method == "POST":
+        if "confirmcode" in request.form:
+            if request.form.get()
+    return render_template('signupcode.html')
+
 
 app.run(host="127.0.0.1", port=5000, debug=True)
