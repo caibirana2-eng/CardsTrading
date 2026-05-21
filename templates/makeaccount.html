@@ -2,14 +2,14 @@
 <html lang="en">
     <head>
         <title>Login</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/makeaccount.css') }}">
     </head>
     <body>
         <div class="divider"></div>
-        <div class="loginbox">
+        <div class="accoutncreationbox">
             <h1>Bobo Cards Tracker!</h1>    
             <h2>Log in</h2>
-            <form method="POST" action="/login" class="userpassinput">
+            <form method="POST" action="/makeaccount" class="userpassinput">
                 <div>
                     <input type="text" name="usernametype" placeholder="Username here..." value="">
                     <input type="text" name="passwordtype" placeholder="Password here..." value="">
@@ -18,15 +18,10 @@
                     <input type="submit" name="confirmlogin" value="Confirm">
                 </div>
             </form>
-            <div class="sidebyside">
-                <div>
-                    <a href="{{ url_for('signup') }}">Have no account?</a>
-                </div>
-                <div>
-                    <a href="/">Forgot your password?</a>
-                </div>
+            <div>
+                <a href="{{ url_for('signupcode') }}">Back</a>
             </div>
-            <p class="errormessage">{{  errormessage  }}</p>
+            <p>{{  errormessage  }}</p>
         </div>
     </body>
 </html>

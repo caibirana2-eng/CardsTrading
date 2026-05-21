@@ -14,10 +14,12 @@
                     <input type="submit" name="confirmemail" value="Confirm">
                 </div>
             </form>
-            <div class="pushdown">
+            <div class="divider">
                 <a href="{{ url_for('login') }}">Back</a>
             </div>
-            <p class="errormessage">{{  errormessage  }}</p>
+            <div class="divider">
+                <p class="errormessage">{{  errormessage  }}</p>
+            </div>
         </div>
     </body>
 </html>
