@@ -6,19 +6,23 @@
     </head>
     <body>
         <div class="divider"></div>
-        <div class="accoutncreationbox">
-            <h1>Bobo Cards Tracker!</h1>    
-            <h2>Log in</h2>
+        <div class="accountcreationbox">   
+            <h2>Set your account details!</h2>
             <form method="POST" action="/makeaccount" class="userpassinput">
+                <br>
                 <div>
-                    <input type="text" name="usernametype" placeholder="Username here..." value="">
-                    <input type="text" name="passwordtype" placeholder="Password here..." value="">
+                    <input type="text" name="createusernametype" placeholder="Username here..." value="">
                 </div>
+                <br>
+                <div>
+                    <input type="text" name="createpasswordtype" placeholder="Password here..." value="">
+                </div>
+                <br>
                 <div>
                     <input type="submit" name="confirmlogin" value="Confirm">
                 </div>
             </form>
-            <div>
+            <div class="divider">
                 <a href="{{ url_for('signupcode') }}">Back</a>
             </div>
             <p>{{  errormessage  }}</p>

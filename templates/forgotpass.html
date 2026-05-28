@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Forgot Password</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/forgotpass.css') }}">
+    </head>
+    <body>
+        <div class="divider"></div>
+        <div class="forgotpassbox">
+            <h2>Enter your email for a recovery code!<h2>
+            <form method="post" action="/forgotpass" class="userpassinput">
+                <div>
+                    <input type="text" name="emailtype" placeholder="Email here..." value="">
+                    <input type="submit" name="confirmemail" value="Confirm">
+                </div>
+            </form>
+            <div class="divider">
+                <a href="{{ url_for('login') }}">Back</a>
+            </div>
+            <div class="divider">
+                <p class="errormessage">{{  errormessage  }}</p>
+            </div>
+        </div>
+    </body>
+</html>

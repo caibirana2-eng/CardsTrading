@@ -8,8 +8,8 @@
         <div class="divider"></div>
         <div class="loginbox">
             <h1>Bobo Cards Tracker!</h1>    
-            <h2>Log in</h2>
-            <form method="POST" action="/login" class="userpassinput">
+            <h2>Log In</h2>
+            <form method="POST" action="/login" class="userdetailsinput">
                 <div>
                     <input type="text" name="usernametype" placeholder="Username here..." value="">
                     <input type="text" name="passwordtype" placeholder="Password here..." value="">
@@ -23,7 +23,7 @@
                     <a href="{{ url_for('signup') }}">Have no account?</a>
                 </div>
                 <div>
-                    <a href="/">Forgot your password?</a>
+                    <a href="{{ url_for('forgotpass') }}">Forgot your password?</a>
                 </div>
             </div>
             <p class="errormessage">{{  errormessage  }}</p>

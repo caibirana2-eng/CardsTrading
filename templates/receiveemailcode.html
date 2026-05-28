@@ -2,13 +2,13 @@
 <html lang="en">
     <head>
         <title>Signup</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/signupcode.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/receiveemailcode.css') }}">
     </head>
     <body>
         <div class="divider"></div>
-        <div class="signupbox">
+        <div class="codebox">
             <h2>A code was mailed to the given address!<h2>
-            <form method="post" action="/signupcode" class="userpassinput">
+            <form method="post" action="/receiveemailcode" class="userpassinput">
                 <div>
                     <input type="text" name="codeemail" placeholder="Code here..." value="">
                     <input type="submit" name="confirmcodeemail" value="Confirm">
@@ -18,7 +18,7 @@
                 <div class="divider">
                     <div class="divider"></div>
                     <div class="divider"></div>
-                    <a href="{{ url_for('signup') }}">Back</a>
+                    <a href="{{ url_for('{{ priorpage }}') }}">Back</a>
                 </div>
                 <div class="divider">
                     <div class="divider"></div>
