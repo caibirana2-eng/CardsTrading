@@ -4,9 +4,6 @@ import secrets
 
 con = sqlite3.connect('accounts.db')
 cur = con.cursor()
-cur.execute('SELECT * FROM accounts')
-accounts = cur.fetchall()
-con.close()
 
 app = Flask(__name__)
 
@@ -27,8 +24,8 @@ def login():
 
             #Currently uses a python variable set to a two dimensional list, which the code fully loops over to find a match
             #Not very efficient and doesn't directly use sql. Will change later if I have time
-            for i in accounts:
-                if infoinput[0] == i[0] and infoinput[1] == i[1]:
+            cur.execute(f'SELECT * FROM accounts WHERE ? = username AND ? = password', (infoinput[0], infoinput[1]))
+                if 
                     session['user_logged_in'] = infoinput[0]
                     print(session.get('user_logged_in'))
                     return redirect(url_for("index"))
@@ -37,7 +34,6 @@ def login():
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
-    global accounts
     error = ""
     if request.method == "POST":
         if "confirmemail" in request.form:
@@ -49,14 +45,36 @@ def signup():
                 error = "Entered invalid or taken email!"
             else:
                 
-
+                session['emailfor'] = "signup"
                 session['emailcode'] = "123456" #supposed to be made with random.randint and made temporary with session flask function
                 #followed by send code to given email
-                return redirect(url_for("signupcode"))            
+                return redirect(url_for("receiveemailcode"))            
     return render_template('signup.html', errormessage=error)
 
-@app.route("/signupcode", methods=['GET', 'POST'])
-def signupcode():
+@app.route("/accdetails", methods=['GET', 'POST'])
+def makeaccount():
+    error = ""
+    return render_template('accdetails.html', errormessage=error)
+
+@app.route("/forgotpass", methods=['GET', 'POST'])
+def forgotpass():
+    error = ""
+    if request.method == "POST":
+        if "confirmrecoveryemail" in request.form:
+
+            # Exact same case here as signup page
+            if request.form.get("emailtypeforgot") == "errorpls" or request.form.get("emailtypeforgot") == "":
+                error = "Entered invalid or taken email!"
+            else:
+                
+                session['emailfor'] = "forgotpass"
+                session['emailcode'] = "123456" 
+                return redirect(url_for("receiveemailcode"))            
+    return render_template('forgotpass.html', errormessage=error)
+
+@app.route("/receiveemailcode", methods=['GET', 'POST'])
+def receiveemailcode():
+    emailfor = session.get('emailfor')
     error = ""
     if request.method == "POST":
         if "confirmcodeemail" in request.form:
@@ -65,32 +83,7 @@ def signupcode():
             else:
                 error = "Incorrect Code!"
         # No form for resend code since the website won't actually be sending emails
-    return render_template('signupcode.html', errormessage=error)
-
-@app.route("/makeaccount", methods=['GET', 'POST'])
-def makeaccount():
-    error = ""
-    return render_template('makeaccount.html', errormessage=error)
-
-@app.route("/forgotpass", methods=['GET', 'POST'])
-def forgotpass():
-    global accounts
-    error = ""
-    if request.method == "POST":
-        if "confirmrecoveryemail" in request.form:
-
-            # code to send email and check if valid, then generate a random teporary code with would be here
-            # using emailtype == "errorpls" or "" just to show the error message working
-            # Using a set code since I can't email a random temp code
-            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "":
-                error = "Entered invalid or taken email!"
-            else:
-                
-
-                session['emailcode'] = "654321" #supposed to be made with random.randint and made temporary with session flask function
-                #followed by send code to given email
-                return redirect(url_for("forgotpasscode"))            
-    return render_template('signup.html', errormessage=error)
+    return render_template('receiveemailcode.html', errormessage=error, priorpage=emailfor)
 
 
 app.run(host="127.0.0.1", port=5000, debug=True)
