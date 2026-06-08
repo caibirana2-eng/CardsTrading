@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, session, request
 import sqlite3
 import secrets
 
-con = sqlite3.connect('accounts.db')
+con = sqlite3.connect('accounts.db', check_same_thread=False)
 cur = con.cursor()
 
 app = Flask(__name__)
@@ -21,9 +21,8 @@ def login():
     if request.method == "POST":
         if "confirmlogin" in request.form:
             infoinput = [request.form.get("usernametype"), request.form.get("passwordtype")]
-
-            cur.execute(f'SELECT * FROM accounts WHERE ? = username AND ? = password', (infoinput[0], infoinput[1]))
-            data = cur.fetchall()
+            cur.execute('SELECT * FROM accounts WHERE username = ? AND password = ?', (infoinput[0], infoinput[1]))
+            data = cur.fetchone()
             if data != None:
                 session['user_logged_in'] = infoinput[0]
                 print(session.get('user_logged_in'))
@@ -38,9 +37,12 @@ def signup():
         if "confirmemail" in request.form:
 
             # code to send email and check if valid, then generate a random teporary code with would be here
-            # using emailtype == "erorrpls" or "" just to show the error message working
+            # using emailtype == "erorrpls" as a placeholder for invalid emails
             # Using a set code since I can't email a random temp code
-            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "":
+            givenemail = request.form.get("emailtype")
+            cur.execute('SELECT * FROM accounts WHERE email = ?', (givenemail,))
+            data = cur.fetchone()
+            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data != None:
                 error = "Entered invalid or taken email!"
             else:
                 session['emailfor'] = "signup"
@@ -60,9 +62,12 @@ def forgotpass():
     if request.method == "POST":
         if "confirmrecoveryemail" in request.form:
 
-            # Exact same case here as signup page
-            if request.form.get("emailtypeforgot") == "errorpls" or request.form.get("emailtypeforgot") == "":
-                error = "Entered invalid or taken email!"
+            # Same case here as signup page
+            givenemail = request.form.get("emailtypeforgot")
+            cur.execute('SELECT * FROM accounts WHERE email = ?', (givenemail,))
+            data = cur.fetchone()
+            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data == None:
+                error = "Entered invalid email!"
             else:
                 session['emailfor'] = "forgotpass"
                 session['emailcode'] = "123456"
