@@ -22,13 +22,12 @@ def login():
         if "confirmlogin" in request.form:
             infoinput = [request.form.get("usernametype"), request.form.get("passwordtype")]
 
-            #Currently uses a python variable set to a two dimensional list, which the code fully loops over to find a match
-            #Not very efficient and doesn't directly use sql. Will change later if I have time
             cur.execute(f'SELECT * FROM accounts WHERE ? = username AND ? = password', (infoinput[0], infoinput[1]))
-                if 
-                    session['user_logged_in'] = infoinput[0]
-                    print(session.get('user_logged_in'))
-                    return redirect(url_for("index"))
+            data = cur.fetchall()
+            if data != None:
+                session['user_logged_in'] = infoinput[0]
+                print(session.get('user_logged_in'))
+                return redirect(url_for("index"))
             error = "Incorrect username or password!"
     return render_template('login.html', errormessage=error)
 
@@ -44,7 +43,6 @@ def signup():
             if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "":
                 error = "Entered invalid or taken email!"
             else:
-                
                 session['emailfor'] = "signup"
                 session['emailcode'] = "123456" #supposed to be made with random.randint and made temporary with session flask function
                 #followed by send code to given email
@@ -66,9 +64,8 @@ def forgotpass():
             if request.form.get("emailtypeforgot") == "errorpls" or request.form.get("emailtypeforgot") == "":
                 error = "Entered invalid or taken email!"
             else:
-                
                 session['emailfor'] = "forgotpass"
-                session['emailcode'] = "123456" 
+                session['emailcode'] = "123456"
                 return redirect(url_for("receiveemailcode"))            
     return render_template('forgotpass.html', errormessage=error)
 
