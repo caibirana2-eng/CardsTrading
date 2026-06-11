@@ -57,6 +57,11 @@ def signup():
 @app.route("/accdetails", methods=['GET', 'POST'])
 def makeaccount():
     error = ""
+    givenemail = session.get('givenemail')
+    cur.execute('SELECT username FROM accounts WHERE email = ?', (givenemail,))
+    pastusername = cur.fetchone()
+    if pastusername == None:
+        pastusername = ""
     if request.method == "POST":
         if "accdetailsconfirm" in request.form:
             createusername = request.form.get("createusernametype")
@@ -74,12 +79,10 @@ def makeaccount():
                     error = "Password must be at least 10 characters long"
                 else:
                     print(createusername, createpassword, session.get('givenemail'))
-                    cur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, session.get('givenemail')))
+                    cur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, givenemail,))
                     con.commit()
                     return redirect(url_for("login"))
-            else:
-                cur.execute('SELECT username FROM accounts WHERE email = ?', session.get('givenemail'))
-                pastusername = cur.fetchone()
+            else:                
                 if data != None and data != pastusername:
                     error = "Username is taken!"
                 elif not 3 <= len(createusername) <= 20:
@@ -89,8 +92,14 @@ def makeaccount():
                 elif len(createpassword) < 10:
                     error = "Password must be at least 10 characters long"
                 else:
-                    cur.execute('UPDATE accounts SET (username, password) = (?, ?) WHERE email = ?', (createusername, createpassword, session.get('givenemail')))              
-    return render_template('accdetails.html', errormessage=error, pastusername=pastusername)
+                    cur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
+                    con.commit()
+                    return redirect(url_for("login"))
+                
+    cleanpastusername = pastusername.replace("('", "").replace("',)", "")
+    cleanpastusername = pastusername[0]
+    
+    return render_template('accdetails.html', errormessage=error, pastusername=cleanpastusername)
 
 @app.route("/forgotpass", methods=['GET', 'POST'])
 def forgotpass():
