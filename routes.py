@@ -1,6 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, session, request
-import sqlite3
-import secrets
+import sqlite3, secrets, os
 
 con = sqlite3.connect('accounts.db', check_same_thread=False)
 cur = con.cursor()
@@ -13,7 +12,10 @@ app.secret_key = secrets.token_hex(32)
 def index():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    return render_template('index.html')
+    image_folder = os.path.join('static', 'personalnotices')
+    personalnotices = os.listdir(image_folder)
+    print(personalnotices)
+    return render_template('index.html', personalnotices=personalnotices)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -45,6 +47,7 @@ def signup():
             if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data != None:
                 error = "Entered invalid or taken email!"
             else:
+                session['givenemail'] = givenemail
                 session['emailfor'] = "signup"
                 session['emailcode'] = "123456" #supposed to be made with random.randint and made temporary with session flask function
                 #followed by send code to given email
@@ -54,7 +57,40 @@ def signup():
 @app.route("/accdetails", methods=['GET', 'POST'])
 def makeaccount():
     error = ""
-    return render_template('accdetails.html', errormessage=error)
+    if request.method == "POST":
+        if "accdetailsconfirm" in request.form:
+            createusername = request.form.get("createusernametype")
+            createpassword = request.form.get("createpasswordtype")
+            cur.execute('SELECT * FROM accounts WHERE username = ?', (createusername,))
+            data = cur.fetchone()
+            if session.get('emailfor') == "signup":
+                if data != None:
+                    error = "Username is taken!"
+                elif not 3 <= len(createusername) <= 20:
+                    error = "Username must be between 3 and 20 characters long."
+                elif createusername != "".join(filter(str.isalnum, createusername)):
+                    error = "Username can only contain alphanumeric characters (a-z), (0-9)."
+                elif len(createpassword) < 10:
+                    error = "Password must be at least 10 characters long"
+                else:
+                    print(createusername, createpassword, session.get('givenemail'))
+                    cur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, session.get('givenemail')))
+                    con.commit()
+                    return redirect(url_for("login"))
+            else:
+                cur.execute('SELECT username FROM accounts WHERE email = ?', session.get('givenemail'))
+                pastusername = cur.fetchone()
+                if data != None and data != pastusername:
+                    error = "Username is taken!"
+                elif not 3 <= len(createusername) <= 20:
+                    error = "Username must be between 3 and 20 characters long."
+                elif createusername != "".join(filter(str.isalnum, createusername)):
+                    error = "Username can only contain alphanumeric characters (a-z), (0-9)."
+                elif len(createpassword) < 10:
+                    error = "Password must be at least 10 characters long"
+                else:
+                    cur.execute('UPDATE accounts SET (username, password) = (?, ?) WHERE email = ?', (createusername, createpassword, session.get('givenemail')))              
+    return render_template('accdetails.html', errormessage=error, pastusername=pastusername)
 
 @app.route("/forgotpass", methods=['GET', 'POST'])
 def forgotpass():
@@ -69,6 +105,7 @@ def forgotpass():
             if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data == None:
                 error = "Entered invalid email!"
             else:
+                session['givenemail'] = givenemail
                 session['emailfor'] = "forgotpass"
                 session['emailcode'] = "123456"
                 return redirect(url_for("receiveemailcode"))            

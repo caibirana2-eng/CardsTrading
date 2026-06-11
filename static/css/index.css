@@ -1,0 +1,22 @@
+.personalnoticescontainer{
+    margin: auto;
+    display: flex;            
+    flex-wrap: nowrap;        
+    overflow-x: auto;         
+    overflow-y: hidden;        
+    width: 95%;             
+    border: 2px solid #ccc;
+    padding: 10px;
+    gap: 15px;
+    border-radius: 8px;
+}
+
+.personalnotices{
+    flex: 0 0 200px;           
+    height: 50px;
+    background-color: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

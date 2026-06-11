@@ -2,9 +2,13 @@
 <html lang="en">
     <head>
         <title>Home</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     </head>
     <body>
-        <p>AAAA</p>
+        <div class="personalnoticescontainer">
+            {% for notice in personalnotices %}
+                <div class="personalnotice"><img src="static/personalnotices/{{ notice }}"></div>
+            {% endfor %}
+        </div>
     </body>
 </html>

@@ -2,16 +2,16 @@
 <html lang="en">
     <head>
         <title>Login</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/makeaccount.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/accdetails.css') }}">
     </head>
     <body>
         <div class="divider"></div>
         <div class="accountcreationbox">   
             <h2>Set your account details!</h2>
-            <form method="POST" action="/makeaccount" class="userdetailsinput">
+            <form method="POST" action="/accdetails" class="userdetailsinput">
                 <br>
                 <div>
-                    <input type="text" name="createusernametype" placeholder="Username here..." value="">
+                    <input type="text" name="createusernametype" placeholder="Username here..." value="{{ pastusername }}">
                 </div>
                 <br>
                 <div>
@@ -19,11 +19,11 @@
                 </div>
                 <br>
                 <div>
-                    <input type="submit" name="confirmlogin" value="Confirm">
+                    <input type="submit" name="accdetailsconfirm" value="Confirm">
                 </div>
             </form>
             <div class="divider">
-                <a href="{{ url_for('signupcode') }}">Back</a>
+                <a href="{{ url_for('receiveemailcode') }}">Back</a>
             </div>
             <p>{{  errormessage  }}</p>
         </div>
