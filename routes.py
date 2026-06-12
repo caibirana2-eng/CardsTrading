@@ -61,12 +61,14 @@ def makeaccount():
     cur.execute('SELECT username FROM accounts WHERE email = ?', (givenemail,))
     pastusername = cur.fetchone()
     if pastusername == None:
-        pastusername = ""
+        cleanpastusername = ""
+    else:
+        cleanpastusername = pastusername[0]
     if request.method == "POST":
         if "accdetailsconfirm" in request.form:
             createusername = request.form.get("createusernametype")
             createpassword = request.form.get("createpasswordtype")
-            cur.execute('SELECT * FROM accounts WHERE username = ?', (createusername,))
+            cur.execute('SELECT username FROM accounts WHERE username = ?', (createusername,))
             data = cur.fetchone()
             if session.get('emailfor') == "signup":
                 if data != None:
@@ -84,6 +86,8 @@ def makeaccount():
                     return redirect(url_for("login"))
             else:                
                 if data != None and data != pastusername:
+                    print(data)
+                    print(pastusername)
                     error = "Username is taken!"
                 elif not 3 <= len(createusername) <= 20:
                     error = "Username must be between 3 and 20 characters long."
@@ -94,11 +98,7 @@ def makeaccount():
                 else:
                     cur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
                     con.commit()
-                    return redirect(url_for("login"))
-                
-    cleanpastusername = pastusername.replace("('", "").replace("',)", "")
-    cleanpastusername = pastusername[0]
-    
+                    return redirect(url_for("login"))   
     return render_template('accdetails.html', errormessage=error, pastusername=cleanpastusername)
 
 @app.route("/forgotpass", methods=['GET', 'POST'])
