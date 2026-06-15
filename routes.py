@@ -14,8 +14,8 @@ def index():
         return redirect(url_for("login"))
     image_folder = os.path.join('static', 'personalnotices')
     personalnotices = os.listdir(image_folder)
-    print(personalnotices)
-    return render_template('index.html', personalnotices=personalnotices)
+    user = session.get('user_logged_in')
+    return render_template('index.html', personalnotices=personalnotices, user=user)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -29,7 +29,7 @@ def login():
                 session['user_logged_in'] = infoinput[0]
                 print(session.get('user_logged_in'))
                 return redirect(url_for("index"))
-            error = "Incorrect username or password!"
+            error = "Incorrect username or password! (Case sensitive)"
     return render_template('login.html', errormessage=error)
 
 @app.route("/signup", methods=['GET', 'POST'])
@@ -65,40 +65,39 @@ def makeaccount():
     else:
         cleanpastusername = pastusername[0]
     if request.method == "POST":
-        if "accdetailsconfirm" in request.form:
-            createusername = request.form.get("createusernametype")
-            createpassword = request.form.get("createpasswordtype")
-            cur.execute('SELECT username FROM accounts WHERE username = ?', (createusername,))
-            data = cur.fetchone()
-            if session.get('emailfor') == "signup":
-                if data != None:
-                    error = "Username is taken!"
-                elif not 3 <= len(createusername) <= 20:
-                    error = "Username must be between 3 and 20 characters long."
-                elif createusername != "".join(filter(str.isalnum, createusername)):
-                    error = "Username can only contain alphanumeric characters (a-z), (0-9)."
-                elif len(createpassword) < 10:
-                    error = "Password must be at least 10 characters long"
-                else:
-                    print(createusername, createpassword, session.get('givenemail'))
-                    cur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, givenemail,))
-                    con.commit()
-                    return redirect(url_for("login"))
-            else:                
-                if data != None and data != pastusername:
-                    print(data)
-                    print(pastusername)
-                    error = "Username is taken!"
-                elif not 3 <= len(createusername) <= 20:
-                    error = "Username must be between 3 and 20 characters long."
-                elif createusername != "".join(filter(str.isalnum, createusername)):
-                    error = "Username can only contain alphanumeric characters (a-z), (0-9)."
-                elif len(createpassword) < 10:
-                    error = "Password must be at least 10 characters long"
-                else:
-                    cur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
-                    con.commit()
-                    return redirect(url_for("login"))   
+        loweredcleanpastusername = cleanpastusername.lower()
+        createusername = request.form.get("createusernametype")
+        createpassword = request.form.get("createpasswordtype")
+        loweredcreateusername = createusername.lower()
+        cur.execute('SELECT LOWER(username) FROM accounts')
+        data = cur.fetchall()
+        cleandata = (row[0] for row in data)
+        if loweredcreateusername in cleandata and loweredcreateusername != loweredcleanpastusername:
+            error = "Username is taken!"
+        else: 
+            if"accdetailsconfirm" in request.form:
+                if session.get('emailfor') == "signup":
+                    if not 3 <= len(createusername) <= 20:
+                        error = "Username must be between 3 and 20 characters long."
+                    elif createusername != "".join(filter(str.isalnum, createusername)):
+                        error = "Username can only contain alphanumeric characters (a-z), (0-9)."
+                    elif len(createpassword) < 10:
+                        error = "Password must be at least 10 characters long"
+                    else:
+                        cur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, givenemail,))
+                        con.commit()
+                        return redirect(url_for("login"))
+                else:                
+                    if not 3 <= len(createusername) <= 20:
+                        error = "Username must be between 3 and 20 characters long."
+                    elif createusername != "".join(filter(str.isalnum, createusername)):
+                        error = "Username can only contain alphanumeric characters (a-z), (0-9)."
+                    elif len(createpassword) < 10:
+                        error = "Password must be at least 10 characters long"
+                    else:
+                        cur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
+                        con.commit()
+                        return redirect(url_for("login"))   
     return render_template('accdetails.html', errormessage=error, pastusername=cleanpastusername)
 
 @app.route("/forgotpass", methods=['GET', 'POST'])

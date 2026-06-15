@@ -5,10 +5,20 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     </head>
     <body>
+        <nav>
+        <form method="POST" action="/index" class="navsearchbar">
+            <input type="text" name="navsearch" placeholder="Search for cards!" value="">
+            <input type="submit" name="confirmnavsearch" value="Search">
+        </form>
+        </nav>
+        <p>Welcome, {{ user }}!</p>
         <div class="personalnoticescontainer">
             {% for notice in personalnotices %}
                 <div class="personalnotice"><img src="static/personalnotices/{{ notice }}"></div>
             {% endfor %}
         </div>
+        <nav>
+            <a>aaaaaaaaaaa </a>
+        </nav>
     </body>
 </html>
