@@ -71,7 +71,7 @@ def makeaccount():
         loweredcreateusername = createusername.lower()
         cur.execute('SELECT LOWER(username) FROM accounts')
         data = cur.fetchall()
-        cleandata = (row[0] for row in data)
+        cleandata = (account[0] for account in data)
         if loweredcreateusername in cleandata and loweredcreateusername != loweredcleanpastusername:
             error = "Username is taken!"
         else: 

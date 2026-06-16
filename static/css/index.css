@@ -29,16 +29,12 @@ body{
     background-color:rgb(47, 47, 128);
 }
 
-
-nav{
-    position: fixed;
-}
-
 .divider{
     margin: 5%;
 }
 
 .navsearchbar{
+    position: fixed;
     display: grid;
     place-items: center;
     grid-template-rows: 1fr;
@@ -47,9 +43,18 @@ nav{
     background-color: darkblue;
     padding: 10px;
     border-radius: 5px;
+    top: 0;
 }
 
 .navsearchbartext{
     display: block;
     width: 100%;
+}
+
+.navlinkbar{
+    position: fixed;
+    bottom: 0;
+    background-color: darkblue;
+    padding: 10px;
+    border-radius: 5px;
 }
