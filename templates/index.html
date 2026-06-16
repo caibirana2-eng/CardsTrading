@@ -7,18 +7,45 @@
     <body>
         <nav>
         <form method="POST" action="/index" class="navsearchbar">
-            <input type="text" name="navsearch" placeholder="Search for cards!" value="">
+            <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
             <input type="submit" name="confirmnavsearch" value="Search">
         </form>
         </nav>
-        <p>Welcome, {{ user }}!</p>
-        <div class="personalnoticescontainer">
+        <br>
+        <div class="divider"></div>
+        <p class="welcome">Welcome, {{ user }}!</p>
+        <div class="divider"></div>
+        <p class="noticetype">Notice Type</p>
+        <br>
+        <div class="noticecontainer">
             {% for notice in personalnotices %}
-                <div class="personalnotice"><img src="static/personalnotices/{{ notice }}"></div>
+                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
+            {% endfor %}
+        </div>
+        <p class="noticetype">Notice Type</p>
+        <br>
+        <div class="noticecontainer">
+            {% for notice in personalnotices %}
+                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
+            {% endfor %}
+        </div>
+        <p class="noticetype">Notice Type</p>
+        <br>
+        <div class="noticecontainer">
+            {% for notice in personalnotices %}
+                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
+            {% endfor %}
+        </div>
+        <p class="noticetype">Notice Type</p>
+        <br>
+        <div class="noticecontainer">
+            {% for notice in personalnotices %}
+                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
             {% endfor %}
         </div>
         <nav>
-            <a>aaaaaaaaaaa </a>
+            <a>aaaaaaaaaaa</a>
+            <a>aaaaaaaaaaa</a>
         </nav>
     </body>
 </html>

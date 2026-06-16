@@ -1,4 +1,4 @@
-.personalnoticescontainer{
+.noticecontainer{
     margin: auto;
     display: flex;            
     flex-wrap: nowrap;        
@@ -7,11 +7,14 @@
     width: 95%;             
     border: 2px solid #ccc;
     padding: 10px;
+    background-color: aliceblue;
     gap: 15px;
     border-radius: 8px;
+    height:200px;
+    margin-bottom: 5%;
 }
 
-.personalnotices{
+.notices{
     flex: 0 0 200px;           
     height: 50px;
     background-color: #3498db;
@@ -19,4 +22,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+body{
+    color:aliceblue;
+    background-color:rgb(47, 47, 128);
+}
+
+
+nav{
+    position: fixed;
+}
+
+.divider{
+    margin: 5%;
+}
+
+.navsearchbar{
+    display: grid;
+    place-items: center;
+    grid-template-rows: 1fr;
+    grid-template-columns: 3fr 1fr;
+    column-gap: 10px;
+    background-color: darkblue;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.navsearchbartext{
+    display: block;
+    width: 100%;
 }
