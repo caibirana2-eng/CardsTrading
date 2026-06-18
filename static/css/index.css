@@ -17,11 +17,15 @@
 .notices{
     flex: 0 0 200px;           
     height: 50px;
-    background-color: #3498db;
     color: white;
+    background-color: rgb(35, 35, 99);
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.noticetype{
+    text-align: center;
 }
 
 body{
@@ -34,27 +38,51 @@ body{
 }
 
 .navsearchbar{
+    display: flex;
     position: fixed;
-    display: grid;
-    place-items: center;
-    grid-template-rows: 1fr;
-    grid-template-columns: 3fr 1fr;
-    column-gap: 10px;
-    background-color: darkblue;
-    padding: 10px;
-    border-radius: 5px;
+    background-color: rgb(35, 35, 99);
+    width: 100%;
+    height: 4%;
     top: 0;
+    left: 0;
+    border: 2px solid aliceblue;
+    align-content: center;
+    justify-content: center;
+    padding: 10px;
 }
 
 .navsearchbartext{
-    display: block;
-    width: 100%;
+    width: 50%;
 }
 
 .navlinkbar{
     position: fixed;
     bottom: 0;
-    background-color: darkblue;
+    left: 0;
+    background-color: rgb(35, 35, 99);
     padding: 10px;
-    border-radius: 5px;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(6, 1fr);
+    border: 2px solid aliceblue;
+}
+
+.navlink{
+    padding: 5px;
+    background-color:rgb(47, 47, 128);
+    width: 80%;
+    text-align: center;
+}
+
+a{
+    color: aliceblue;
+}
+
+.welcomeback{
+    margin-top: 5%;
+    text-align: center;
+    font-size: 50px;
+    margin-bottom: 5%;
 }

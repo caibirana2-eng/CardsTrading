@@ -11,40 +11,37 @@
             <input type="submit" name="confirmnavsearch" value="Search">
         </form>
         </nav>
+        <p class="welcomeback">Welcome, {{ user }}!</p>
+        <p class="noticetype">Updates</p>
+        <br>
+        <div class="noticecontainer">
+            {% for notice in personalnotices %}
+                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
+            {% endfor %}
+        </div>
+        <p class="noticetype">Personal Set Notices</p>
+        <br>
+        <div class="noticecontainer">
+            {% for notice in personalnotices %}
+                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
+            {% endfor %}
+        </div>
+        <p class="noticetype">Trending Cards</p>
+        <br>
+        <div class="noticecontainer">
+            {% for notice in personalnotices %}
+                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
+            {% endfor %}
+        </div>
+        <br>
         <div class="divider"></div>
-        <p class="welcome">Welcome, {{ user }}!</p>
-        <div class="divider"></div>
-        <p class="noticetype">Notice Type</p>
-        <br>
-        <div class="noticecontainer">
-            {% for notice in personalnotices %}
-                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
-            {% endfor %}
-        </div>
-        <p class="noticetype">Notice Type</p>
-        <br>
-        <div class="noticecontainer">
-            {% for notice in personalnotices %}
-                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
-            {% endfor %}
-        </div>
-        <p class="noticetype">Notice Type</p>
-        <br>
-        <div class="noticecontainer">
-            {% for notice in personalnotices %}
-                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
-            {% endfor %}
-        </div>
-        <p class="noticetype">Notice Type</p>
-        <br>
-        <div class="noticecontainer">
-            {% for notice in personalnotices %}
-                <div class="notice"><img src="static/personalnotices/{{ notice }}"></div>
-            {% endfor %}
-        </div>
         <nav class="navlinkbar">
-            <a>aaaaaaaaaaa</a>
-            <a>aaaaaaaaaaa</a>
+            <a href="{{ url_for('index') }}" class="navlink">HOME</a>
+            <a href="{{ url_for('index') }}" class="navlink">HELP</a>
+            <a href="{{ url_for('index') }}" class="navlink">ALL CARDS</a>
+            <a href="{{ url_for('index') }}" class="navlink">OWN SETS</a>
+            <a href="{{ url_for('index') }}" class="navlink">CONTACT US</a>
+            <a href="{{ url_for('index') }}" class="navlink">SETTINGS</a>
         </nav>
     </body>
 </html>
