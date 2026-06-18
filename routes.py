@@ -21,11 +21,11 @@ def index():
     user = session.get('user_logged_in')
     return render_template('index.html', bugfixchangenotices=bugfixchangenotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
-@app.route("/allcards", methods=['GET', 'POST'])
-def allcards():
+@app.route("/cardsearch", methods=['GET', 'POST'])
+def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    return render_template('allcards.html')
+    return render_template('cardsearch.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
