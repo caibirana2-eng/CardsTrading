@@ -12,14 +12,20 @@ app.secret_key = secrets.token_hex(32)
 def index():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    image_folder = os.path.join('static', 'bugfixnotices')
-    bugfixnotices = os.listdir(image_folder)
+    image_folder = os.path.join('static', 'bugfixchangenotices')
+    bugfixchangenotices = os.listdir(image_folder)
     image_folder = os.path.join('static', 'newsetnotices')
     newsetnotices = os.listdir(image_folder)
     image_folder = os.path.join('static', 'trendingcardnotices')
     trendingcardnotices = os.listdir(image_folder)
     user = session.get('user_logged_in')
-    return render_template('index.html', bugfixnotices=bugfixnotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
+    return render_template('index.html', bugfixchangenotices=bugfixchangenotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
+
+@app.route("/allcards", methods=['GET', 'POST'])
+def allcards():
+    if not session.get('user_logged_in'):
+        return redirect(url_for("login"))
+    return render_template('allcards.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():

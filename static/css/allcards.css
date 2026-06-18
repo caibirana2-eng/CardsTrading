@@ -1,0 +1,51 @@
+body{
+    color:aliceblue;
+    background-color:rgb(47, 47, 128);
+}
+
+.divider{
+    margin: 5%;
+}
+
+.navsearchbar{
+    display: flex;
+    position: fixed;
+    background-color: rgb(35, 35, 99);
+    width: 100%;
+    height: 4%;
+    top: 0;
+    left: 0;
+    border-bottom: 2px solid aliceblue;
+    align-content: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.navsearchbartext{
+    width: 50%;
+}
+
+.navlinkbar{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(35, 35, 99);
+    padding: 20px;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(6, 1fr);
+    border-top: 2px solid aliceblue;
+}
+
+.navlink{
+    padding: 5px;
+    background-color:rgb(47, 47, 128);
+    width: 80%;
+    text-align: center;
+}
+
+a{
+    color: aliceblue;
+}

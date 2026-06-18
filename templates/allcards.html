@@ -11,28 +11,6 @@
             <input type="submit" name="confirmnavsearch" value="Search">
         </form>
         </nav>
-        <p class="welcomeback">Welcome, {{ user }}!</p>
-        <p class="noticetype">New Sets!</p>
-        <br>
-        <div class="noticecontainer">
-            {% for notice in newsetnotices %}
-                <div class="notice"><img src="static/newsetnotices/{{ notice }}"></div>
-            {% endfor %}
-        </div>
-        <p class="noticetype">Bug Fixes and Changes</p>
-        <br>
-        <div class="noticecontainer">
-            {% for notice in bugfixchangenotices %}
-                <div class="notice"><img src="static/bugfixchangenotices/{{ notice }}"></div>
-            {% endfor %}
-        </div>
-        <p class="noticetype">Trending Cards</p>
-        <br>
-        <div class="noticecontainer">
-            {% for notice in trendingcardnotices %}
-                <div class="notice"><img src="static/trendingcardnotices/{{ notice }}"></div>
-            {% endfor %}
-        </div>
         <br>
         <div class="divider"></div>
         <nav class="navlinkbar">
