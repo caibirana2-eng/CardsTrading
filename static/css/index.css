@@ -5,7 +5,7 @@
     overflow-x: auto;         
     overflow-y: hidden;        
     width: 95%;             
-    border: 2px solid #ccc;
+    border: 2.5px solid aliceblue;
     padding: 10px;
     background-color: aliceblue;
     gap: 15px;
@@ -17,7 +17,7 @@
 .notices{
     flex: 0 0 200px;           
     height: 50px;
-    color: white;
+    color:aliceblue;
     background-color: rgb(35, 35, 99);
     display: flex;
     align-items: center;
@@ -45,10 +45,10 @@ body{
     height: 4%;
     top: 0;
     left: 0;
-    border: 2px solid aliceblue;
+    border-bottom: 2px solid aliceblue;
     align-content: center;
     justify-content: center;
-    padding: 10px;
+    padding: 20px;
 }
 
 .navsearchbartext{
@@ -60,13 +60,13 @@ body{
     bottom: 0;
     left: 0;
     background-color: rgb(35, 35, 99);
-    padding: 10px;
+    padding: 20px;
     width: 100%;
     display: grid;
     place-items: center;
     grid-template-rows: 1fr;
     grid-template-columns: repeat(6, 1fr);
-    border: 2px solid aliceblue;
+    border-top: 2px solid aliceblue;
 }
 
 .navlink{

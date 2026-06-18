@@ -12,10 +12,14 @@ app.secret_key = secrets.token_hex(32)
 def index():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    image_folder = os.path.join('static', 'personalnotices')
-    personalnotices = os.listdir(image_folder)
+    image_folder = os.path.join('static', 'bugfixnotices')
+    bugfixnotices = os.listdir(image_folder)
+    image_folder = os.path.join('static', 'newsetnotices')
+    newsetnotices = os.listdir(image_folder)
+    image_folder = os.path.join('static', 'trendingcardnotices')
+    trendingcardnotices = os.listdir(image_folder)
     user = session.get('user_logged_in')
-    return render_template('index.html', personalnotices=personalnotices, user=user)
+    return render_template('index.html', bugfixnotices=bugfixnotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -56,6 +60,7 @@ def signup():
 
 @app.route("/accdetails", methods=['GET', 'POST'])
 def makeaccount():
+    #Checks if a username is already linked to the given forgotpass email   
     error = ""
     givenemail = session.get('givenemail')
     cur.execute('SELECT username FROM accounts WHERE email = ?', (givenemail,))
@@ -66,16 +71,24 @@ def makeaccount():
         cleanpastusername = pastusername[0]
     if request.method == "POST":
         loweredcleanpastusername = cleanpastusername.lower()
+    
         createusername = request.form.get("createusernametype")
         createpassword = request.form.get("createpasswordtype")
         loweredcreateusername = createusername.lower()
+
+        #Creates a collection of every username in the database lowered
         cur.execute('SELECT LOWER(username) FROM accounts')
         data = cur.fetchall()
         cleandata = (account[0] for account in data)
+
+        #Checks if the username input is either the past username or is not taken 
         if loweredcreateusername in cleandata and loweredcreateusername != loweredcleanpastusername:
             error = "Username is taken!"
         else: 
             if"accdetailsconfirm" in request.form:
+
+                #Just states boundaries for the username and password input. Successful check results in either
+                #account creation or the data of the account linked to the given email being updated
                 if session.get('emailfor') == "signup":
                     if not 3 <= len(createusername) <= 20:
                         error = "Username must be between 3 and 20 characters long."
@@ -97,7 +110,9 @@ def makeaccount():
                     else:
                         cur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
                         con.commit()
-                        return redirect(url_for("login"))   
+                        return redirect(url_for("login"))
+                    
+                    #added pastusername=cleanpastusername for recognition rather than recall   
     return render_template('accdetails.html', errormessage=error, pastusername=cleanpastusername)
 
 @app.route("/forgotpass", methods=['GET', 'POST'])
@@ -106,7 +121,7 @@ def forgotpass():
     if request.method == "POST":
         if "confirmrecoveryemail" in request.form:
 
-            # Same case here as signup page
+            # Same case here as in /signup route
             givenemail = request.form.get("emailtypeforgot")
             cur.execute('SELECT * FROM accounts WHERE email = ?', (givenemail,))
             data = cur.fetchone()
