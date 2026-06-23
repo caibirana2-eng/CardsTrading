@@ -6,12 +6,38 @@
     </head>
     <body>
         <nav>
-        <form method="POST" action="/index" class="navsearchbar">
+        <form method="POST" action="/cardsearch" class="navsearchbar">
             <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
             <input type="submit" name="confirmnavsearch" value="Search">
         </form>
+        <form method="POST" action="/cardsearch" class="navfilterbar" name="filtersets">
+            {% for category in categories %}
+            <div>
+                <label for="setfilter">PLACEHOLDER:</label>
+                <select>
+                  {% for item in category %}
+                    <option value="{{ item }}">{{ item }}</option>
+                  {% endfor %}
+                </select>
+            </div>
+            {% endfor %}
+            <input type="submit">
+        </form>
         </nav>
         <br>
+        <div class="divider"></div>
+        <br>
+        <h2 class="filterresults">Showing Results For: PLACEHOLDER, PLACEHOLDER, PLACEHOLDER</h2>
+        <br>
+        <div class="allshowncards">
+        <form method="POST" action="/cardsearch">
+        {% for card in showncards %}
+        <button type="submit" name="card" value="{{ card }}" class="cardimg">
+            <img src="static/placeholdercards/{{ card[0] }}">
+        </button>
+        {% endfor %}
+        </form>
+        </div>
         <div class="divider"></div>
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
