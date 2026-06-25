@@ -11,17 +11,53 @@
             <input type="submit" name="confirmnavsearch" value="Search">
         </form>
         <form method="POST" action="/cardsearch" class="navfilterbar" name="filtersets">
-            {% for category in categories %}
             <div>
-                <label for="setfilter">PLACEHOLDER:</label>
+                <label for="setfilter">Set:</label>
                 <select>
-                  {% for item in category %}
-                    <option value="{{ item }}">{{ item }}</option>
+                  {% for set in sets %}
+                    <option value="{{ set }}">{{ set[0] }}</option>
                   {% endfor %}
                 </select>
             </div>
-            {% endfor %}
-            <input type="submit">
+            <div>
+                <label for="pricefilter">Avg Price:</label>
+                <select>
+                    <option value="avgpricelower">higher than</option>
+                    <option value="avgpricehigher">lower than</option>
+                </select>
+                <input type="text" placeholder="Enter price...">
+            </div>
+            <div>
+                <label for="releaseyearfilter">Release Year:</label>
+                <select>
+                    <option value="">later than</option>
+                    <option value="">earlier than</option>
+                </select>
+                <select>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+            </div>
+            <div>
+                <label for="datarecencyfilter">Data Recency:</label>
+                <select>
+                    <option value="">later than</option>
+                    <option value="">earlier than</option>
+                </select>
+                <select>
+                    <option value="2022">2022</option>
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                </select>
+            </div>
+            <div class="navfilterconfirm">
+                <input type="submit" value="Run Filter">
+            </div>
         </form>
         </nav>
         <br>

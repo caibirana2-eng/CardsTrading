@@ -30,12 +30,21 @@ def cardsearch():
         return redirect(url_for("login"))
     cardsearchcur.execute("SELECT cardimg FROM cards")
     showncards = cardsearchcur.fetchall()
-    cardsearchcur.execute("SELECT releasedate, avgprice, inforecency, fromset FROM cards")
-    categories = cardsearchcur.fetchall()
-    print(categories)
+    cardsearchcur.execute("SELECT DISTINCT fromset FROM cards")
+    sets = cardsearchcur.fetchall()
     if request.method == "POST":
-        print(request.form.get("card"))
-    return render_template('cardsearch.html', showncards=showncards, categories=categories)
+        if "card" in request.form:
+            session["cardclicked"] = request.form.get("card")
+            print(request.form.get("card"))
+            return redirect(url_for("individualcards"))
+    return render_template('cardsearch.html', showncards=showncards, sets=sets)
+
+@app.route("/individualcards", methods=['GET', 'POST'])
+def individualcards():
+    if not session.get('user_logged_in'):
+        return redirect(url_for("login"))
+    
+    return render_template('individualcards.html')
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():

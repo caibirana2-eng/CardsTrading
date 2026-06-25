@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/individualcards.css') }}">
+    </head>
+    <body>
+        <nav>
+        <form method="POST" action="/individualcards" class="navsearchbar">
+            <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
+            <input type="submit" name="confirmnavsearch" value="Search">
+        </form>
+        </nav>
+        <div class="cardinfo">
+            <div class="sidebyside">
+                <img src="static/placeholdercards/wts-combinerivers.jpg">
+                <div class="cardinfobox">    
+                    <img src="static/placeholdercards/wts-combinerivers.jpg">
+                </div>    
+            </div>
+            <img src="static/placeholdercards/wts-combinerivers.jpg">
+        </div>
+        <nav class="navlinkbar">
+            <a href="{{ url_for('index') }}" class="navlink">HOME</a>
+            <a href="{{ url_for('index') }}" class="navlink">HELP</a>
+            <a href="{{ url_for('cardsearch') }}" class="navlink">ALL CARDS</a>
+            <a href="{{ url_for('index') }}" class="navlink">OWN SETS</a>
+            <a href="{{ url_for('index') }}" class="navlink">CONTACT US</a>
+            <a href="{{ url_for('index') }}" class="navlink">SETTINGS</a>
+        </nav>
+    </body>
+</html>
