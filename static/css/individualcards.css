@@ -51,18 +51,25 @@ a{
 }
 
 .cardinfo{
-    width: 35%;
     display: grid;
     grid-template-rows: repeat(2, 1fr);
     grid-template-columns: 1fr;
+    width: 70%;
+    margin: auto;
 }
 
 .sidebyside{
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr;
 }
 
 .cardinfobox{
     width: 100%;
+    background-color: rgb(11, 48, 80);
+}
+
+.marketlistings{
+    width: 100%;
+    background-color: black;
 }

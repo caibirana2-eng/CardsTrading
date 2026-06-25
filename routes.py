@@ -35,7 +35,6 @@ def cardsearch():
     if request.method == "POST":
         if "card" in request.form:
             session["cardclicked"] = request.form.get("card")
-            print(request.form.get("card"))
             return redirect(url_for("individualcards"))
     return render_template('cardsearch.html', showncards=showncards, sets=sets)
 
@@ -43,8 +42,18 @@ def cardsearch():
 def individualcards():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    
-    return render_template('individualcards.html')
+    cardpage = session.get('cardclicked')
+    cardsearchcur.execute("SELECT * FROM cards WHERE cardimg = ?", (cardpage,))
+    cardpagedata = cardsearchcur.fetchall()
+    print(cardpagedata)
+    cardname = cardpagedata[0]
+    cardreleaseyear = cardpagedata[1]
+    avgcardprice = cardpagedata[2]
+    carddesc = cardpagedata[3]
+    cardset = cardpagedata[4]
+    cardlistings = cardpagedata[5]
+    cardtrend = cardpagedata[6]   
+    return render_template('individualcards.html', cardpage=cardpage)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():

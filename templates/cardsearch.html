@@ -13,27 +13,28 @@
         <form method="POST" action="/cardsearch" class="navfilterbar" name="filtersets">
             <div>
                 <label for="setfilter">Set:</label>
-                <select>
+                <select id="setfilter">
+                    <option value="anyset">ALL</option>
                   {% for set in sets %}
-                    <option value="{{ set }}">{{ set[0] }}</option>
+                    <option value="{{ set[0] }}">{{ set[0] }}</option>
                   {% endfor %}
                 </select>
             </div>
             <div>
                 <label for="pricefilter">Avg Price:</label>
-                <select>
-                    <option value="avgpricelower">higher than</option>
-                    <option value="avgpricehigher">lower than</option>
+                <select id="pricefilter">
+                    <option value="pricehigher">higher than</option>
+                    <option value="pricelower">lower than</option>
                 </select>
-                <input type="text" placeholder="Enter price...">
+                <input type="number" name="priceinput" value=0>
             </div>
             <div>
-                <label for="releaseyearfilter">Release Year:</label>
-                <select>
-                    <option value="">later than</option>
-                    <option value="">earlier than</option>
+                <label for="releaseearlylate">Release Year:</label>
+                <select id="releaseearlylate">
+                    <option value="yearlater">later than</option>
+                    <option value="yearearlier">earlier than</option>
                 </select>
-                <select>
+                <select id="releaseyear">
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                     <option value="2024">2024</option>
@@ -42,12 +43,12 @@
                 </select>
             </div>
             <div>
-                <label for="datarecencyfilter">Data Recency:</label>
-                <select>
-                    <option value="">later than</option>
-                    <option value="">earlier than</option>
+                <label for="dataearlylate">Data Recency:</label>
+                <select id="dataearlylate">
+                    <option value="datalater">later than</option>
+                    <option value="dataearlier">earlier than</option>
                 </select>
-                <select>
+                <select id="datayear">
                     <option value="2022">2022</option>
                     <option value="2023">2023</option>
                     <option value="2024">2024</option>
@@ -56,7 +57,7 @@
                 </select>
             </div>
             <div class="navfilterconfirm">
-                <input type="submit" value="Run Filter">
+                <input type="submit" value="Run Filter" name="runfilter">
             </div>
         </form>
         </nav>
@@ -68,7 +69,7 @@
         <div class="allshowncards">
         <form method="POST" action="/cardsearch">
         {% for card in showncards %}
-        <button type="submit" name="card" value="{{ card }}" class="cardimg">
+        <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
             <img src="static/placeholdercards/{{ card[0] }}">
         </button>
         {% endfor %}
