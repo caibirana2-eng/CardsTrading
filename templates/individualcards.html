@@ -11,21 +11,29 @@
             <input type="submit" name="confirmnavsearch" value="Search">
         </form>
         </nav>
+        <br>
+        <div class="divider"></div>
         <div class="cardinfo">
             <div class="sidebyside">
-                <img src="static/placeholdercards/{{ cardpage }}">
-                <div class="cardinfobox">    
-                    <p>qew2312313123132213112312123123</p>
-                    <p>qew2312313123132213112312123123</p>
-                    <p>qew2312313123132213112312123123</p>
+                <div class="cardimg"><img src="static/cardimages/{{ cardpage }}"></div>
+                <div class="cardinfobox">
+                    <p>Page last updated: {{ carddatarecency }}</p>
+                    <p>Card Name: {{ cardname }}</p>
+                    <p>Set: {{ cardset }}</p>
+                    <p>Release Date: {{ cardreleaseyear }}</p>
+                    <p>Description: {{ carddesc }}</p>
+                    <p>Current Price Average: {{ avgcardprice }}</p>
+                    <p>Market Trend:</p>
+                    <img src="static/cardtrends/{{ cardtrend }}" class="trendimg">
                 </div>    
             </div>
             <div class="marketlistings">
-                <p>qew2312313123132213112312123123</p>
-                <p>qew2312313123132213112312123123</p>
-                <p>qew2312313123132213112312123123</p>
+                <p>Market Listings:</p>
+                <img src="static/cardlistings/{{ cardlistings }}" class="marketlistingsimg">
             </div>
         </div>
+        <br>
+        <div class="divider"></div>
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
             <a href="{{ url_for('index') }}" class="navlink">HELP</a>

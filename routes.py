@@ -36,6 +36,31 @@ def cardsearch():
         if "card" in request.form:
             session["cardclicked"] = request.form.get("card")
             return redirect(url_for("individualcards"))
+        if "runfilter" in request.form:
+            higherlower = request.form.get("avgpricehigherlower")
+            if higherlower == "higher":
+                pricehighlow = "<"
+            else:
+                pricehighlow = ">"
+            higherlower = request.form.get("releaseearlylate")
+            if higherlower == "later":
+                releaseearlylate = ">"
+            else:
+                releaseearlylate = "<"
+            higherlower = request.form.get("dataearlylate")
+            if higherlower == "later":
+                recencyearlylate = "<"
+            else:
+                recencyearlylate = ">"
+            releaseyear = request.form.get("releaseyear")
+            intreleaseyear = int(releaseyear)
+            recencyyear = request.form.get("datayear")
+            intrecencyyear = int(recencyyear)
+            query = f"SELECT cardimg FROM cards WHERE fromset = ? AND avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
+            print(query)
+            cardsearchcur.execute(query, (request.form.get("setfilter"), request.form.get("priceinput"), intreleaseyear, intrecencyyear))
+            showncards = cardsearchcur.fetchall()
+            print(showncards)
     return render_template('cardsearch.html', showncards=showncards, sets=sets)
 
 @app.route("/individualcards", methods=['GET', 'POST'])
@@ -45,15 +70,16 @@ def individualcards():
     cardpage = session.get('cardclicked')
     cardsearchcur.execute("SELECT * FROM cards WHERE cardimg = ?", (cardpage,))
     cardpagedata = cardsearchcur.fetchall()
-    print(cardpagedata)
-    cardname = cardpagedata[0]
-    cardreleaseyear = cardpagedata[1]
-    avgcardprice = cardpagedata[2]
-    carddesc = cardpagedata[3]
-    cardset = cardpagedata[4]
-    cardlistings = cardpagedata[5]
-    cardtrend = cardpagedata[6]   
-    return render_template('individualcards.html', cardpage=cardpage)
+    cleancardpagedata = cardpagedata[0]
+    cardname = cleancardpagedata[0]
+    cardreleaseyear = cleancardpagedata[1]
+    avgcardprice = cleancardpagedata[2]
+    carddatarecency = cleancardpagedata[3]
+    carddesc = cleancardpagedata[4]
+    cardset = cleancardpagedata[5]
+    cardlistings = cleancardpagedata[7]
+    cardtrend = cleancardpagedata[8]
+    return render_template('individualcards.html', carddatarecency=carddatarecency, cardpage=cardpage, carddesc=carddesc, cardname=cardname, cardreleaseyear=cardreleaseyear, avgcardprice=avgcardprice, cardset=cardset, cardlistings=cardlistings, cardtrend=cardtrend)
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
