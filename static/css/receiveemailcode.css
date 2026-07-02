@@ -1,7 +1,7 @@
 @font-face {
     font-family: 'Comfortaa';
-    src: url('static/css/font/Comfortaa-VaribleFont_wght.ttf') format('truetype');
-    font-weight: 200px;
+    src: url('font/Comfortaa-VariableFont_wght.ttf');
+    font-weight: 200 700;
     font-style: normal;
 }
 
@@ -39,7 +39,7 @@ a{
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: 1fr;
     width: 70%;
-    margin-left: 14%;
+    margin-left: 12%;
 }
 
 .errormessage{
