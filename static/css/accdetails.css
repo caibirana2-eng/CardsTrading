@@ -1,6 +1,14 @@
+@font-face {
+    font-family: 'Comfortaa';
+    src: url('static/css/font/Comfortaa-VaribleFont_wght.ttf') format('truetype');
+    font-weight: 200px;
+    font-style: normal;
+}
+
 body{
     color:aliceblue;
     background-color:rgb(47, 47, 128);
+    font-family: "Comfortaa", sans-serif;
 }
 
 .divider{

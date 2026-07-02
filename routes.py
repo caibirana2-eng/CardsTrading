@@ -22,6 +22,10 @@ def index():
     image_folder = os.path.join('static', 'trendingcardnotices')
     trendingcardnotices = os.listdir(image_folder)
     user = session.get('user_logged_in')
+    if request.method == "POST":
+        if "confirmnavsearch" in request.form:
+            session["cardsearchbarresults"] = request.form.get("confirmnavsearch")
+            return redirect(url_for("cardsearch"))
     return render_template('index.html', bugfixchangenotices=bugfixchangenotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
 @app.route("/cardsearch", methods=['GET', 'POST'])
@@ -36,7 +40,7 @@ def cardsearch():
         if "card" in request.form:
             session["cardclicked"] = request.form.get("card")
             return redirect(url_for("individualcards"))
-        if "runfilter" in request.form:
+        elif "runfilter" in request.form:
             higherlower = request.form.get("avgpricehigherlower")
             if higherlower == "higher":
                 pricehighlow = "<"
@@ -56,11 +60,14 @@ def cardsearch():
             intreleaseyear = int(releaseyear)
             recencyyear = request.form.get("datayear")
             intrecencyyear = int(recencyyear)
-            query = f"SELECT cardimg FROM cards WHERE fromset = ? AND avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
-            print(query)
-            cardsearchcur.execute(query, (request.form.get("setfilter"), request.form.get("priceinput"), intreleaseyear, intrecencyyear))
+            filterset = request.form.get("setfilter")
+            if filterset == "anyset":
+                query = f"SELECT cardimg FROM cards WHERE avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
+                cardsearchcur.execute(query, (request.form.get("priceinput"), intreleaseyear, intrecencyyear))
+            else:
+                query = f"SELECT cardimg FROM cards WHERE fromset = ? AND avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
+                cardsearchcur.execute(query, (filterset, request.form.get("priceinput"), intreleaseyear, intrecencyyear))
             showncards = cardsearchcur.fetchall()
-            print(showncards)
     return render_template('cardsearch.html', showncards=showncards, sets=sets)
 
 @app.route("/individualcards", methods=['GET', 'POST'])
