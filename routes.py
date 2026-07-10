@@ -24,7 +24,7 @@ def index():
     user = session.get('user_logged_in')
     if request.method == "POST":
         if "confirmnavsearch" in request.form:
-            session["cardsearchbarresults"] = request.form.get("confirmnavsearch")
+            session["cardsearchbarinput"] = request.form.get("navsearch")
             return redirect(url_for("cardsearch"))
     return render_template('index.html', bugfixchangenotices=bugfixchangenotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
@@ -32,14 +32,16 @@ def index():
 def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    cardsearchcur.execute("SELECT cardimg FROM cards")
-    showncards = cardsearchcur.fetchall()
+    searchvalue = session.get("cardsearchbarinput", "")
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards")
     sets = cardsearchcur.fetchall()
     if request.method == "POST":
         if "card" in request.form:
             session["cardclicked"] = request.form.get("card")
             return redirect(url_for("individualcards"))
+        elif "confirmnavsearch" in request.form:
+            session["cardsearchbarinput"] = request.form.get("navsearch")
+            return redirect(url_for("cardsearch"))
         elif "runfilter" in request.form:
             higherlower = request.form.get("avgpricehigherlower")
             if higherlower == "higher":
@@ -68,6 +70,16 @@ def cardsearch():
                 query = f"SELECT cardimg FROM cards WHERE fromset = ? AND avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
                 cardsearchcur.execute(query, (filterset, request.form.get("priceinput"), intreleaseyear, intrecencyyear))
             showncards = cardsearchcur.fetchall()
+            return render_template('cardsearch.html', showncards=showncards, sets=sets)
+    if searchvalue:
+        comparedsearchvalue = f"%{searchvalue}%"
+        cardsearchcur.execute(
+            "SELECT cardimg FROM cards WHERE cardname LIKE ?",
+            (comparedsearchvalue,)
+        )
+    else:
+        cardsearchcur.execute("SELECT cardimg FROM cards")
+    showncards = cardsearchcur.fetchall()
     return render_template('cardsearch.html', showncards=showncards, sets=sets)
 
 @app.route("/individualcards", methods=['GET', 'POST'])
