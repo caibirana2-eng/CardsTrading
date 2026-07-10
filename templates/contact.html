@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Contact</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
+    </head>
+    <body>
+        <div class="navblankbar"></div>
+        <div class="pagecontent">
+            <h1>Contact Us</h1>
+        {% if messagesent %}
+            <p>Your message has been sent. We will review it shortly.</p>
+        {% else %}
+            <form method="POST" action="{{ url_for('contact') }}">
+                <label for="subject">Subject</label><br>
+                <input type="text" id="subject" name="messagesubject" placeholder="Subject" class="messagesubject"><br><br>
+                <label for="message">Message</label><br>
+                <textarea id="message" name="contactmessage" rows="6" placeholder="Write your message here..."></textarea><br><br>
+                <input type="submit" name="sendmessageconfirm" value="Send Message" class="sendmessageconfirm">
+            </form>
+        {% endif %}
+        <br>
+        <div class="divider"></div>
+        <nav class="navlinkbar">
+            <a href="{{ url_for('index') }}" class="navlink">HOME</a>
+            <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
+            <a href="{{ url_for('cardsearch') }}" class="navlink">ALL CARDS</a>
+            <a href="{{ url_for('index') }}" class="navlink">OWN SETS</a>
+            <a href="{{ url_for('contact') }}" class="navlink">CONTACT US</a>
+            <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
+        </nav>
+    </body>
+</html>

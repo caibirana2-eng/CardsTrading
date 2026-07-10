@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>User Settings</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/usersettings.css') }}">
+    </head>
+    <body>
+        <div class="navblankbar"></div>
+        <div class="pagecontent">
+            <h1>User Settings</h1>
+        <form method="POST" action="{{ url_for('usersettings') }}">
+            <div>
+                <label for="newusername">New username</label><br>
+                <input type="text" id="newusername" name="settingsnewusername" value="{{ username }}">
+            </div>
+            <div>
+                <label for="newpassword">New password</label><br>
+                <input type="password" id="newpassword" name="settingsnewpassword" placeholder="New password">
+            </div>
+            <div>
+                <input type="submit" name="settingschangeaccount" value="Change Account Info">
+            </div>
+            <div>
+                <input type="submit" name="logout" value="Log Out">
+            </div>
+            <div>
+                <input type="submit" name="deleteaccount" value="Delete Account">
+            </div>
+        </form>
+        <p>{{ error }}</p>
+        <br>
+        <div class="divider"></div>
+        <nav class="navlinkbar">
+            <a href="{{ url_for('index') }}" class="navlink">HOME</a>
+            <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
+            <a href="{{ url_for('cardsearch') }}" class="navlink">ALL CARDS</a>
+            <a href="{{ url_for('index') }}" class="navlink">OWN SETS</a>
+            <a href="{{ url_for('contact') }}" class="navlink">CONTACT US</a>
+            <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
+        </nav>
+    </body>
+</html>

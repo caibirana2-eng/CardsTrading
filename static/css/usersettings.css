@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'Comfortaa';
+    src: url('font/Comfortaa-VariableFont_wght.ttf');
+    font-weight: 200 700;
+    font-style: normal;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    color: aliceblue;
+    background-color: rgb(47, 47, 128);
+    font-family: "Comfortaa", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 16px 140px;
+}
+
+.navblankbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10.3%;
+    background-color: rgb(35, 35, 99);
+    border-bottom: 2px solid aliceblue;
+}
+
+.navlinkbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(35, 35, 99);
+    padding: 20px;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(6, 1fr);
+    border-top: 2px solid aliceblue;
+}
+
+.navlink {
+    padding: 5px;
+    background-color: rgb(47, 47, 128);
+    width: 80%;
+    text-align: center;
+}
+
+.pagecontent {
+    width: min(100%, 520px);
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+    background-color: rgb(38, 34, 95);
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    margin: 0;
+}
+
+form {
+    display: grid;
+    gap: 16px;
+}
+
+a {
+    color: aliceblue;
+}
+
+.divider {
+    margin: 5%;
+}

@@ -82,6 +82,31 @@ def cardsearch():
     showncards = cardsearchcur.fetchall()
     return render_template('cardsearch.html', showncards=showncards, sets=sets)
 
+@app.route("/instructionsmanual")
+def instructionsmanual():
+    if not session.get('user_logged_in'):
+        return redirect(url_for("login"))
+    return render_template('instructionsmanual.html')
+
+@app.route("/faqs")
+def faqs():
+    if not session.get('user_logged_in'):
+        return redirect(url_for("login"))
+    return render_template('faqs.html')
+
+@app.route("/contact", methods=['GET', 'POST'])
+def contact():
+    if not session.get('user_logged_in'):
+        return redirect(url_for("login"))
+    messagesent = False
+    if request.method == "POST" and "sendmessageconfirm" in request.form:
+        messagesent = True
+    return render_template('contact.html', messagesent=messagesent)
+
+@app.route("/usersettings", methods=['GET', 'POST'])
+def usersettings():
+    return render_template('usersettings.html')
+
 @app.route("/individualcards", methods=['GET', 'POST'])
 def individualcards():
     if not session.get('user_logged_in'):
