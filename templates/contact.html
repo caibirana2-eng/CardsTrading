@@ -6,6 +6,7 @@
     </head>
     <body>
         <div class="navblankbar"></div>
+        <div class="divider"></div>
         <div class="pagecontent">
             <h1>Contact Us</h1>
         {% if messagesent %}
@@ -13,12 +14,16 @@
         {% else %}
             <form method="POST" action="{{ url_for('contact') }}">
                 <label for="subject">Subject</label><br>
-                <input type="text" id="subject" name="messagesubject" placeholder="Subject" class="messagesubject"><br><br>
+                <input type="text" id="subject" name="messagesubject" placeholder="Subject..." class="messagesubject">
+                <br>
+                <br>
                 <label for="message">Message</label><br>
                 <textarea id="message" name="contactmessage" rows="6" placeholder="Write your message here..."></textarea><br><br>
                 <input type="submit" name="sendmessageconfirm" value="Send Message" class="sendmessageconfirm">
             </form>
+            <br>
         {% endif %}
+        </div>
         <br>
         <div class="divider"></div>
         <nav class="navlinkbar">

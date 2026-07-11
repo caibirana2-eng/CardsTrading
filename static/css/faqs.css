@@ -71,9 +71,7 @@ body {
 }
 
 .divider {
-    margin: 20px auto;
-    width: 100%;
-    border-bottom: 1px solid aliceblue;
+    margin: 5%;
 }
 
 a {

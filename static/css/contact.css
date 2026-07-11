@@ -12,9 +12,11 @@ body {
     background-color: rgb(47, 47, 128);
     font-family: "Comfortaa", sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
-    padding: 80px 16px 140px;
+    padding: 32px 16px 140px;
+    box-sizing: border-box;
 }
 
 .navblankbar {
@@ -56,7 +58,7 @@ body {
     background-color: rgb(38, 34, 95);
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
 }
 
 h1 {
@@ -65,7 +67,7 @@ h1 {
 
 form {
     display: grid;
-    gap: 16px;
+    gap: 5px;
 }
 
 a {
@@ -83,9 +85,11 @@ a {
 
 textarea{
     font-family: "Comfortaa", sans-serif;
+    resize: none;
 }
 
 .messagesubject{
     width: 50%;
     margin-left: 24%;
 }
+
