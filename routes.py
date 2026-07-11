@@ -105,7 +105,40 @@ def contact():
 
 @app.route("/usersettings", methods=['GET', 'POST'])
 def usersettings():
-    return render_template('usersettings.html')
+    error = ""
+    pastusername = session.get('user_logged_in')
+    if not session.get('user_logged_in'):
+        return redirect(url_for("login"))
+    if request.method == "POST":
+        if "logout" in request.form:
+            session['user_logged_in'] = None
+            return redirect(url_for("login"))
+        if "deleteaccount" in request.form:
+            accountscur.execute("DELETE FROM accounts WHERE username = ?", (session.get('user_logged_in'),))
+            conaccounts.commit()
+            session['user_logged_in'] = None
+            return redirect(url_for("login"))
+        if "settingschangeaccount" in request.form:
+            loweredpastusername = pastusername.lower()
+            settinginputusername = request.form.get("settinginputusername")
+            settinginputpassword = request.form.get("settinginputpassword")
+            loweredsettinginputusername = settinginputusername.lower()
+            accountscur.execute('SELECT LOWER(username) FROM accounts')
+            data = accountscur.fetchall()
+            cleandata = (account[0] for account in data)
+            if loweredsettinginputusername in cleandata and loweredsettinginputusername != loweredpastusername:
+                error = "Username is taken!"
+            else:                
+                if not 3 <= len(settinginputusername) <= 20:
+                    error = "Username must be between 3 and 20 characters long."
+                elif settinginputusername != "".join(filter(str.isalnum, settinginputusername)):
+                    error = "Username can only contain alphanumeric characters (a-z), (0-9)."
+                elif len(settinginputpassword) < 10:
+                    error = "Password must be at least 10 characters long"
+                else:
+                    accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername))
+                conaccounts.commit()             
+    return render_template('usersettings.html', pastusername=pastusername, error=error)
 
 @app.route("/individualcards", methods=['GET', 'POST'])
 def individualcards():

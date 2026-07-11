@@ -12,11 +12,11 @@
         <form method="POST" action="{{ url_for('usersettings') }}">
             <div>
                 <label for="newusername">New username</label><br>
-                <input type="text" id="newusername" name="settingsnewusername" placeholder="New username..." value="{{ username }}">
+                <input type="text" id="newusername" name="settinginputusername" placeholder="New username..." value="{{ pastusername }}">
             </div>
             <div>
                 <label for="newpassword">New password</label><br>
-                <input type="password" id="newpassword" name="settingsnewpassword" placeholder="New password...">
+                <input type="password" id="newpassword" name="settinginputpassword" placeholder="New password..." value="">
             </div>
             <div>
                 <input type="submit" name="settingschangeaccount" value="Change Account Info">
