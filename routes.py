@@ -1,11 +1,14 @@
 from flask import Flask, render_template, redirect, url_for, session, request
-import sqlite3, secrets, os
+import sqlite3, secrets, os, re
 
 conaccounts = sqlite3.connect('accounts.db', check_same_thread=False)
 accountscur = conaccounts.cursor()
 
 concards = sqlite3.connect('cards.db', check_same_thread=False)
 cardsearchcur = concards.cursor()
+
+conusersets = sqlite3.connect('usersets.db', check_same_thread=False)
+usersetcur = conusersets.cursor()
 
 app = Flask(__name__)
 
@@ -282,6 +285,34 @@ def receiveemailcode():
                 error = "Incorrect Code!"
         # No form for resend code since the website won't actually be sending emails
     return render_template('receiveemailcode.html', errormessage=error, priorpage=emailfor)
+
+@app.route("/ownsets", methods=['GET', 'POST'])
+def ownsets():
+    if not session.get('user_logged_in'):
+        return redirect(url_for("login"))
+    error = ""
+    username = session.get("user_logged_in")
+    if request.method == "POST":
+        if "confirmmakeset" in request.form:
+            setname = request.form.get("makesetname", "").strip()
+            if not setname:
+                error = "Please enter a set name."
+            else:
+                uniquesetname = username.upper() + setname.lower()
+                usersetcur.execute("""CREATE TABLE IF NOT EXISTS ? (username TEXT, setname TEXT, storedcards TEXT)""", (uniquesetname,))
+                usersetcur.execute("INSERT INTO ? (username, setname) VALUES (?, ?)", (uniquesetname, username, setname,))
+                conusersets.commit()
+    usernameupper = username.upper()
+    likeusernameupper = f"%{usernameupper}%"
+    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+    loggedinusersets = usersetcur.fetchall()
+    shownsets = []
+    for sets in loggedinusersets:
+        usersetcur.execute(f"SELECT setname FROM {sets}")
+        loggedinsetname = usersetcur.fetchone()
+        shownsets.append(loggedinsetname[0]) 
+    return render_template('ownsets.html', error=error, shownsets=shownsets)
+
 
 
 app.run(host="127.0.0.1", port=5000, debug=True)

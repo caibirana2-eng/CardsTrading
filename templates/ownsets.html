@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Instructions Manual</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/instructionsmanual.css') }}">
+        <title>FAQs</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/ownsets.css') }}">
     </head>
     <body>
         <div class="navblankbar"></div>
-        <br>
         <div class="divider"></div>
         <div class="pagecontent">
-            <h1>Instructions Manual</h1>
-            <p><a href="{{ url_for('faqs') }}">Click for FAQs</a></p>
+            <h1>My Sets</h1>
+            <label for="makeset">Create a set:</label>
+            <form id="makeset" method="post">
+                <input type="text" placeholder="Set name..." value="" name="makesetname">
+                <input type="submit" value="Create" name="confirmmakeset">
+            </form>
+            <p>{{ error }}</p>
+            {% for sets in shownsets %}
             <div class="section">
-                <h2>Search</h2>
-                <p>Use the search bar at the top to find cards by name, description, set, or image filename.</p>
+                <h2>{{ sets }}</h2>
             </div>
-        <div class="section">
-            <h2>Card Details</h2>
-            <p>Click a card image to view its details on the individual card page.</p>
-        </div>
-        <div class="section">
-            <h2>Account Settings</h2>
-            <p>Go to User Settings to change your account information, log out, or delete your account.</p>
-        </div>
+            {% endfor %}
         </div>
         <br>
         <div class="divider"></div>

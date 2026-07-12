@@ -8,35 +8,36 @@
         <div class="navblankbar"></div>
         <div class="divider"></div>
         <div class="pagecontent">
-            <h1>User Settings</h1>
-        <form method="POST" action="{{ url_for('usersettings') }}">
-            <div>
-                <label for="newusername">New username</label><br>
-                <input type="text" id="newusername" name="settinginputusername" placeholder="New username..." value="{{ pastusername }}">
-            </div>
-            <div>
-                <label for="newpassword">New password</label><br>
-                <input type="password" id="newpassword" name="settinginputpassword" placeholder="New password..." value="">
-            </div>
-            <div>
-                <input type="submit" name="settingschangeaccount" value="Change Account Info">
-            </div>
-            <div>
-                <br>
-                <input type="submit" name="logout" value="Log Out">
-            </div>
-            <div>
-                <br>
-                <input type="submit" name="deleteaccount" value="Delete Account">
-            </div>
-        </form>
-        <p>{{ error }}</p>
+                <h1>User Settings</h1>
+            <form method="POST" action="{{ url_for('usersettings') }}">
+                <div>
+                    <label for="newusername">New username</label><br>
+                    <input type="text" id="newusername" name="settinginputusername" placeholder="New username..." value="{{ pastusername }}">
+                </div>
+                <div>
+                    <label for="newpassword">New password</label><br>
+                    <input type="password" id="newpassword" name="settinginputpassword" placeholder="New password..." value="">
+                </div>
+                <div>
+                    <input type="submit" name="settingschangeaccount" value="Change Account Info">
+                </div>
+                <div>
+                    <br>
+                    <input type="submit" name="logout" value="Log Out">
+                </div>
+                <div>
+                    <br>
+                    <input type="submit" name="deleteaccount" value="Delete Account">
+                </div>
+            </form>
+            <p>{{ error }}</p>
+        </div>
         <br>
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
             <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
             <a href="{{ url_for('cardsearch') }}" class="navlink">ALL CARDS</a>
-            <a href="{{ url_for('index') }}" class="navlink">OWN SETS</a>
+            <a href="{{ url_for('ownsets') }}" class="navlink">OWN SETS</a>
             <a href="{{ url_for('contact') }}" class="navlink">CONTACT US</a>
             <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
         </nav>
