@@ -65,14 +65,15 @@
         </nav>
         <br>
         <div class="divider"></div>
-        {% if selectedsetname %}
         <br>
         <div class="allshowncards">
         <form method="POST" action="/cardsearch">
             {% for card in showncards %}
-            <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
-                <img src="static/cardimages/{{ card[0] }}">
-            </button>
+                {% if card in storedcards %}
+                    <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
+                        <img src="static/cardimages/{{ card[0] }}">
+                    </button>
+                {% endif %}
             {% endfor %}
         </form>
         </div>

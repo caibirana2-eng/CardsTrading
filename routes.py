@@ -86,21 +86,15 @@ def cardsearch():
     else:
         cardsearchcur.execute("SELECT cardimg FROM cards")
     showncards = cardsearchcur.fetchall()
-    
-    # Filter by user set if one is selected
     if selectedusersetname:
+        # Filters out any cardimg that isn't present in stored cards
         username = session.get("user_logged_in")
         usernamewithletter = username + "a"
         setnamewithletter = selectedusersetname + "a"
         uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
-        
-        # Gets stored cards from user's set table
-        query = f"SELECT storedcards FROM {uniquesetname}"
-        usersetcur.execute(f"{query}")
-        cardsinset = usersetcur.fetchall()
-        
-    
-    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname)
+        usersetcur.execute(f"SELECT storedcards FROM {uniquesetname}")
+        storedcards = usersetcur.fetchall()  
+    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards)
 
 @app.route("/instructionsmanual")
 def instructionsmanual():
