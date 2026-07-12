@@ -32,9 +32,11 @@ def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
     searchvalue = session.get("cardsearchbarinput")
-    selectedusersetname = session.get("selectedusersetname")
+    cardsearchcur.execute("SELECT cardimg FROM cards")
+    storedcards = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards")
     sets = cardsearchcur.fetchall()
+    selectedusersetname = session.get("selectedusersetname")
     if request.method == "POST":
         if "card" in request.form:
             session["cardclicked"] = request.form.get("card")
@@ -44,9 +46,6 @@ def cardsearch():
             return redirect(url_for("cardsearch"))
         elif "viewsetname" in request.form:
             session["selectedusersetname"] = request.form.get("viewsetname")
-            return redirect(url_for("cardsearch"))
-        elif "clearsetfilter" in request.form:
-            session["selectedusersetname"] = ""
             return redirect(url_for("cardsearch"))
         elif "runfilter" in request.form:
             higherlower = request.form.get("avgpricehigherlower")
@@ -72,28 +71,34 @@ def cardsearch():
             if filterset == "anyset":
                 query = f"SELECT cardimg FROM cards WHERE avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
                 cardsearchcur.execute(query, (request.form.get("priceinput"), intreleaseyear, intrecencyyear))
+                showncards = cardsearchcur.fetchall()
             else:
                 query = f"SELECT cardimg FROM cards WHERE fromset = ? AND avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
                 cardsearchcur.execute(query, (filterset, request.form.get("priceinput"), intreleaseyear, intrecencyyear))
-            showncards = cardsearchcur.fetchall()
-            return render_template('cardsearch.html', showncards=showncards, sets=sets)
+                showncards = cardsearchcur.fetchall()
+
+    # Clears personal set filter when page is not accessed via ownsets view form
+    elif request.method == "GET" and not session.get("cardsearchbarinput"):
+        session["selectedusersetname"] = None
+        session["addorremove"] = "add"
+
     if searchvalue:
         comparedsearchvalue = f"%{searchvalue}%"
-        cardsearchcur.execute(
-            "SELECT cardimg FROM cards WHERE cardname LIKE ?",
-            (comparedsearchvalue,)
-        )
+        cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ?", (comparedsearchvalue,))
+        showncards = cardsearchcur.fetchall()
     else:
-        cardsearchcur.execute("SELECT cardimg FROM cards")
-    showncards = cardsearchcur.fetchall()
+        showncards = storedcards
     if selectedusersetname:
+        session["addorremove"] = "remove"
+
         # Filters out any cardimg that isn't present in stored cards
         username = session.get("user_logged_in")
         usernamewithletter = username + "a"
         setnamewithletter = selectedusersetname + "a"
         uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
         usersetcur.execute(f"SELECT storedcards FROM {uniquesetname}")
-        storedcards = usersetcur.fetchall()  
+        storedcards = usersetcur.fetchall()
+
     return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards)
 
 @app.route("/instructionsmanual")

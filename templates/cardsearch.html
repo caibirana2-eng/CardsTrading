@@ -64,7 +64,11 @@
         </form>
         </nav>
         <br>
+        <br>
         <div class="divider"></div>
+        {% if selectedsetname %}
+            <p>Showing cards from set: {{ selectedsetname }}</p>
+        {% endif %}
         <br>
         <div class="allshowncards">
         <form method="POST" action="/cardsearch">
