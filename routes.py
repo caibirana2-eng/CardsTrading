@@ -25,17 +25,14 @@ def index():
     image_folder = os.path.join('static', 'trendingcardnotices')
     trendingcardnotices = os.listdir(image_folder)
     user = session.get('user_logged_in')
-    if request.method == "POST":
-        if "confirmnavsearch" in request.form:
-            session["cardsearchbarinput"] = request.form.get("navsearch")
-            return redirect(url_for("cardsearch"))
     return render_template('index.html', bugfixchangenotices=bugfixchangenotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
 @app.route("/cardsearch", methods=['GET', 'POST'])
 def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    searchvalue = session.get("cardsearchbarinput", "")
+    searchvalue = session.get("cardsearchbarinput")
+    selectedusersetname = session.get("selectedusersetname")
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards")
     sets = cardsearchcur.fetchall()
     if request.method == "POST":
@@ -44,6 +41,12 @@ def cardsearch():
             return redirect(url_for("individualcards"))
         elif "confirmnavsearch" in request.form:
             session["cardsearchbarinput"] = request.form.get("navsearch")
+            return redirect(url_for("cardsearch"))
+        elif "viewsetname" in request.form:
+            session["selectedusersetname"] = request.form.get("viewsetname")
+            return redirect(url_for("cardsearch"))
+        elif "clearsetfilter" in request.form:
+            session["selectedusersetname"] = ""
             return redirect(url_for("cardsearch"))
         elif "runfilter" in request.form:
             higherlower = request.form.get("avgpricehigherlower")
@@ -83,7 +86,21 @@ def cardsearch():
     else:
         cardsearchcur.execute("SELECT cardimg FROM cards")
     showncards = cardsearchcur.fetchall()
-    return render_template('cardsearch.html', showncards=showncards, sets=sets)
+    
+    # Filter by user set if one is selected
+    if selectedusersetname:
+        username = session.get("user_logged_in")
+        usernamewithletter = username + "a"
+        setnamewithletter = selectedusersetname + "a"
+        uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
+        
+        # Gets stored cards from user's set table
+        query = f"SELECT storedcards FROM {uniquesetname}"
+        usersetcur.execute(f"{query}")
+        cardsinset = usersetcur.fetchall()
+        
+    
+    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname)
 
 @app.route("/instructionsmanual")
 def instructionsmanual():
@@ -292,25 +309,60 @@ def ownsets():
         return redirect(url_for("login"))
     error = ""
     username = session.get("user_logged_in")
+    usernamewithletter = username + "a"
     if request.method == "POST":
         if "confirmmakeset" in request.form:
-            setname = request.form.get("makesetname", "").strip()
+
+
+            # Makes use of alphanumeric filter to account for risk of SQL injection caused by f strings being used in the queries
+            # Uses capital username and lower set name joined to help ensure that each table is unique and can be directly linked to individual users
+            # Ensures there will always be letters to capitalize / decapitalize in the set and user names to ensure that the capital thing can't just be avoided by someone using only numbers in either name 
+            setname = request.form.get("makesetname").strip()
+            setnamewithletter = setname + "a"
             if not setname:
                 error = "Please enter a set name."
+            elif setname != "".join(filter(str.isalnum, setname)):
+                    error = "Set name can only contain alphanumeric characters (a-z), (0-9)."
             else:
-                uniquesetname = username.upper() + setname.lower()
-                usersetcur.execute("""CREATE TABLE IF NOT EXISTS ? (username TEXT, setname TEXT, storedcards TEXT)""", (uniquesetname,))
-                usersetcur.execute("INSERT INTO ? (username, setname) VALUES (?, ?)", (uniquesetname, username, setname,))
-                conusersets.commit()
-    usernameupper = username.upper()
+                uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
+                query = f"""SELECT name FROM sqlite_master WHERE type='table' AND name = '{uniquesetname}'"""
+                usersetcur.execute(f"{query}")
+                matchingtablename = usersetcur.fetchall()
+                if matchingtablename:
+                    error = "You've already created a set with this name!"
+                else:
+
+                    # Creates a uniquely named table, then immediately stores the data of what the set it's for is named, and the exact username of the user who made the set
+                    query = f"""CREATE TABLE IF NOT EXISTS {uniquesetname} (username TEXT, setname TEXT, storedcards TEXT)"""
+                    usersetcur.execute(f"{query}")
+                    query = f"INSERT INTO {uniquesetname} (username, setname, storedcards) VALUES (?, ?, ?)"
+                    usersetcur.execute(f"{query}", (username, setname, None))
+                    conusersets.commit()
+        
+        # Deletes whichever set the value is assigned to
+        if "deleteset" in request.form:
+            setname = request.form.get("deletesetname")
+            print(setname)
+            setnamewithletter = setname + "a"
+            uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
+            query = f"""DROP TABLE IF EXISTS {uniquesetname}"""
+            usersetcur.execute(f"{query}")
+            conusersets.commit()
+            
+    # Selects all tables belonging to the user
+    usernameupper = usernamewithletter.upper()
     likeusernameupper = f"%{usernameupper}%"
     usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
     loggedinusersets = usersetcur.fetchall()
     shownsets = []
+
+    # Selects the set names from every table belonging to the user
     for sets in loggedinusersets:
-        usersetcur.execute(f"SELECT setname FROM {sets}")
+        cleansets = sets[0]
+        usersetcur.execute(f"SELECT setname FROM {cleansets}")
         loggedinsetname = usersetcur.fetchone()
         shownsets.append(loggedinsetname[0]) 
+
     return render_template('ownsets.html', error=error, shownsets=shownsets)
 
 
