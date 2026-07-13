@@ -97,3 +97,17 @@ a{
 .cardimg{
     display: block;
 }
+
+.addremove{
+    display: flex;
+    position: fixed;
+    background-color: rgb(35, 35, 99);
+    width: 100%;
+    height: 2%;
+    top: 7%;
+    left: 0;
+    border-bottom: 2px solid aliceblue;
+    align-content: center;
+    justify-content: center;
+    padding: 15px;
+}

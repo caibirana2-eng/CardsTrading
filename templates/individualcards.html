@@ -6,11 +6,30 @@
     </head>
     <body>
         <nav>
-        <form method="POST" action="/individualcards" class="navsearchbar">
-            <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
-            <input type="submit" name="confirmnavsearch" value="Search">
-        </form>
+            <form method="POST" action="/individualcards" class="navsearchbar">
+                <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
+                <input type="submit" name="confirmnavsearch" value="Search">
+            </form>
+            <div class="addremove">
+                {% if shownsets %}
+                    {% if addorremove == "add" %}
+                        <form method="POST" action="/individualcards">
+                            <select name="addchosenset">
+                                {% for set in shownsets %}
+                                    <option value="{{ set }}">{{ set }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" name="addcard" value="Add Card">
+                        </form>
+                    {% else %}
+                        <form method="POST" action="/individualcards">
+                            <input type="submit" name="removecard" value="Remove Card">
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
         </nav>
+        <br>
         <br>
         <div class="divider"></div>
         <div class="cardinfo">

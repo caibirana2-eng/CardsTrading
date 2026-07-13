@@ -43,10 +43,9 @@ def cardsearch():
             return redirect(url_for("individualcards"))
         elif "confirmnavsearch" in request.form:
             session["cardsearchbarinput"] = request.form.get("navsearch")
-            return redirect(url_for("cardsearch"))
         elif "viewsetname" in request.form:
             session["selectedusersetname"] = request.form.get("viewsetname")
-            return redirect(url_for("cardsearch"))
+            selectedusersetname = session.get("selectedusersetname")
         elif "runfilter" in request.form:
             higherlower = request.form.get("avgpricehigherlower")
             if higherlower == "higher":
@@ -78,10 +77,12 @@ def cardsearch():
                 showncards = cardsearchcur.fetchall()
 
     # Clears personal set filter when page is not accessed via ownsets view form
-    elif request.method == "GET" and not session.get("cardsearchbarinput"):
+    elif not session.get("setpersists"):
         session["selectedusersetname"] = None
         session["addorremove"] = "add"
-
+        selectedusersetname = session.get("selectedusersetname")
+    else:
+        session["setpersists"] = False
     if searchvalue:
         comparedsearchvalue = f"%{searchvalue}%"
         cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ?", (comparedsearchvalue,))
@@ -164,6 +165,37 @@ def individualcards():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
     cardpage = session.get('cardclicked')
+    username = session.get("user_logged_in")
+    usernamewithletter = username + "a"
+    usernameupper = usernamewithletter.upper()
+    likeusernameupper = f"%{usernameupper}%"
+    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+    loggedinusersets = usersetcur.fetchall()
+    shownsets = []
+    for sets in loggedinusersets:
+        cleansets = sets[0]
+        usersetcur.execute(f"SELECT setname FROM {cleansets}")
+        loggedinsetname = usersetcur.fetchone()
+        shownsets.append(loggedinsetname[0])
+    if shownsets == []:
+        shownsets = None 
+    if request.method == "POST":
+        if "addcard" in request.form:
+            addchosenset = request.form.get("addchosenset")
+            fulluniquesetname = usernameupper + addchosenset.lower() + "a"
+            query = f"INSERT INTO {fulluniquesetname} (username, setname, storedcards) VALUES (?, ?, ?)"
+            usersetcur.execute(f"{query}", (None, None, cardpage))
+            conusersets.commit()
+            return redirect(url_for("cardsearch"))
+        if "removecard" in request.form: 
+            removechosenset = session.get("selectedusersetname")
+            removechosenwithletter = removechosenset + "a"
+            fulluniquesetname = usernameupper + removechosenwithletter.lower()
+            query = f"DELETE FROM {fulluniquesetname} WHERE storedcards = ?"
+            usersetcur.execute(f"{query}", (cardpage,))
+            conusersets.commit()
+            session["setpersists"] = True
+            return redirect(url_for("cardsearch"))
     cardsearchcur.execute("SELECT * FROM cards WHERE cardimg = ?", (cardpage,))
     cardpagedata = cardsearchcur.fetchall()
     cleancardpagedata = cardpagedata[0]
@@ -175,7 +207,7 @@ def individualcards():
     cardset = cleancardpagedata[5]
     cardlistings = cleancardpagedata[7]
     cardtrend = cleancardpagedata[8]
-    return render_template('individualcards.html', carddatarecency=carddatarecency, cardpage=cardpage, carddesc=carddesc, cardname=cardname, cardreleaseyear=cardreleaseyear, avgcardprice=avgcardprice, cardset=cardset, cardlistings=cardlistings, cardtrend=cardtrend)
+    return render_template('individualcards.html', carddatarecency=carddatarecency, cardpage=cardpage, carddesc=carddesc, cardname=cardname, cardreleaseyear=cardreleaseyear, avgcardprice=avgcardprice, cardset=cardset, cardlistings=cardlistings, cardtrend=cardtrend, shownsets=shownsets, addorremove=session.get("addorremove"))
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
@@ -341,7 +373,6 @@ def ownsets():
         # Deletes whichever set the value is assigned to
         if "deleteset" in request.form:
             setname = request.form.get("deletesetname")
-            print(setname)
             setnamewithletter = setname + "a"
             uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
             query = f"""DROP TABLE IF EXISTS {uniquesetname}"""
