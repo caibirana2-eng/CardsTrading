@@ -31,7 +31,6 @@ def index():
 def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    searchvalue = session.get("cardsearchbarinput")
     cardsearchcur.execute("SELECT cardimg FROM cards")
     storedcards = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards")
@@ -42,10 +41,14 @@ def cardsearch():
             session["cardclicked"] = request.form.get("card")
             return redirect(url_for("individualcards"))
         elif "confirmnavsearch" in request.form:
-            session["cardsearchbarinput"] = request.form.get("navsearch")
+            searchvalue = request.form.get("navsearch")
+            comparedsearchvalue = f"%{searchvalue}%"
+            cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ?", (comparedsearchvalue,))
+            showncards = cardsearchcur.fetchall()
         elif "viewsetname" in request.form:
             session["selectedusersetname"] = request.form.get("viewsetname")
             selectedusersetname = session.get("selectedusersetname")
+            showncards = storedcards
         elif "runfilter" in request.form:
             higherlower = request.form.get("avgpricehigherlower")
             if higherlower == "higher":
@@ -76,19 +79,15 @@ def cardsearch():
                 cardsearchcur.execute(query, (filterset, request.form.get("priceinput"), intreleaseyear, intrecencyyear))
                 showncards = cardsearchcur.fetchall()
 
-    # Clears personal set filter when page is not accessed via ownsets view form
+     # Clears personal set filter when page is not accessed via ownsets view form
     elif not session.get("setpersists"):
         session["selectedusersetname"] = None
         session["addorremove"] = "add"
         selectedusersetname = session.get("selectedusersetname")
-    else:
-        session["setpersists"] = False
-    if searchvalue:
-        comparedsearchvalue = f"%{searchvalue}%"
-        cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ?", (comparedsearchvalue,))
-        showncards = cardsearchcur.fetchall()
-    else:
         showncards = storedcards
+    else:
+        session["setpersists"] = None
+    
     if selectedusersetname:
         session["addorremove"] = "remove"
 
