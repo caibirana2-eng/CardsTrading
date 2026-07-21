@@ -87,6 +87,7 @@ def cardsearch():
         showncards = storedcards
     else:
         session["setpersists"] = None
+        showncards = storedcards
     
     if selectedusersetname:
         session["addorremove"] = "remove"
