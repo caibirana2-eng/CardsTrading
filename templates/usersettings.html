@@ -9,7 +9,7 @@
         <div class="divider"></div>
         <div class="pagecontent">
                 <h1>User Settings</h1>
-            <form method="POST" action="{{ url_for('usersettings') }}">
+            <form method="POST" action="/usersettings">
                 <div>
                     <label for="newusername">New username</label><br>
                     <input type="text" id="newusername" name="settinginputusername" placeholder="New username..." value="{{ pastusername }}">
@@ -31,6 +31,12 @@
                 </div>
             </form>
             <p>{{ error }}</p>
+            {% if requestingdelete %}
+                <p>To finalize account deletion, type "PleaseDeleteMyAccount" into the box below.</p>
+                <form method="POST" action="/usersettings">
+                    <input type="text" name="deleteaccountconfirm" placeholder="PleaseDeleteMyAccount">
+                </form>
+            {% endif %}
         </div>
         <br>
         <nav class="navlinkbar">

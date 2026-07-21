@@ -5,7 +5,7 @@
     font-style: normal;
 }
 
-body {
+body{
     min-height: 100vh;
     margin: 0;
     color: aliceblue;
@@ -19,7 +19,7 @@ body {
     box-sizing: border-box;
 }
 
-.navblankbar {
+.navblankbar{
     position: fixed;
     top: 0;
     left: 0;
@@ -29,7 +29,7 @@ body {
     border-bottom: 2px solid aliceblue;
 }
 
-.navlinkbar {
+.navlinkbar{
     position: fixed;
     bottom: 0;
     left: 0;
@@ -43,14 +43,14 @@ body {
     border-top: 2px solid aliceblue;
 }
 
-.navlink {
+.navlink{
     padding: 5px;
     background-color: rgb(47, 47, 128);
     width: 80%;
     text-align: center;
 }
 
-.pagecontent {
+.pagecontent{
     width: min(100%, 520px);
     padding: 24px;
     display: grid;
@@ -61,19 +61,19 @@ body {
 
 }
 
-h1 {
+h1{
     margin: 0;
 }
 
-form {
+form{
     display: grid;
     gap: 16px;
 }
 
-a {
+a{
     color: aliceblue;
 }
 
-.divider {
+.divider{
     margin: 5%;
 }

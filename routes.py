@@ -126,6 +126,7 @@ def contact():
 @app.route("/usersettings", methods=['GET', 'POST'])
 def usersettings():
     error = ""
+    requestingdelete = ""
     pastusername = session.get('user_logged_in')
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
@@ -134,10 +135,29 @@ def usersettings():
             session['user_logged_in'] = None
             return redirect(url_for("login"))
         if "deleteaccount" in request.form:
-            accountscur.execute("DELETE FROM accounts WHERE username = ?", (session.get('user_logged_in'),))
-            conaccounts.commit()
-            session['user_logged_in'] = None
-            return redirect(url_for("login"))
+            requestingdelete = True
+        if "deleteaccountconfirm" in request.form:
+            if request.form.get("deleteaccountconfirm") == "PleaseDeleteMyAccount":
+                usernamewithletter = session.get("user_logged_in") + "a"
+                accountscur.execute("DELETE FROM accounts WHERE username = ?", (session.get('user_logged_in'),))
+                conaccounts.commit()
+                session['user_logged_in'] = None
+
+
+                # Selects all tables belonging to the user
+                usernameupper = usernamewithletter.upper()
+                likeusernameupper = f"%{usernameupper}%"
+                usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+                loggedinusersets = usersetcur.fetchall()
+
+                # Deletes all selected tables
+                for sets in loggedinusersets:
+                    untupledsets = sets[0]
+                    query = f"""DROP TABLE IF EXISTS {untupledsets}"""
+                    usersetcur.execute(f"{query}")
+                    conusersets.commit()
+
+                return redirect(url_for("login"))
         if "settingschangeaccount" in request.form:
             loweredpastusername = pastusername.lower()
             settinginputusername = request.form.get("settinginputusername")
@@ -156,9 +176,9 @@ def usersettings():
                 elif len(settinginputpassword) < 10:
                     error = "Password must be at least 10 characters long"
                 else:
-                    accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername))
+                    accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,))
                 conaccounts.commit()             
-    return render_template('usersettings.html', pastusername=pastusername, error=error)
+    return render_template('usersettings.html', pastusername=pastusername, error=error, requestingdelete=requestingdelete)
 
 @app.route("/individualcards", methods=['GET', 'POST'])
 def individualcards():
@@ -194,6 +214,11 @@ def individualcards():
             query = f"DELETE FROM {fulluniquesetname} WHERE storedcards = ?"
             usersetcur.execute(f"{query}", (cardpage,))
             conusersets.commit()
+            session["setpersists"] = True
+            return redirect(url_for("cardsearch"))
+        if "backnoset" in request.form:
+            return redirect(url_for("cardsearch"))
+        if "backset" in request.form:
             session["setpersists"] = True
             return redirect(url_for("cardsearch"))
     cardsearchcur.execute("SELECT * FROM cards WHERE cardimg = ?", (cardpage,))
@@ -354,6 +379,8 @@ def ownsets():
                 error = "Please enter a set name."
             elif setname != "".join(filter(str.isalnum, setname)):
                     error = "Set name can only contain alphanumeric characters (a-z), (0-9)."
+            elif len(setname) > 20:
+                    error = "Set name can only be as long as 20 characters."
             else:
                 uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
                 query = f"""SELECT name FROM sqlite_master WHERE type='table' AND name = '{uniquesetname}'"""

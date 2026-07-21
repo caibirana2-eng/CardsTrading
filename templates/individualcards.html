@@ -10,23 +10,32 @@
                 <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
                 <input type="submit" name="confirmnavsearch" value="Search">
             </form>
-            <div class="addremove">
-                {% if shownsets %}
-                    {% if addorremove == "add" %}
-                        <form method="POST" action="/individualcards">
-                            <select name="addchosenset">
-                                {% for set in shownsets %}
-                                    <option value="{{ set }}">{{ set }}</option>
-                                {% endfor %}
-                            </select>
-                            <input type="submit" name="addcard" value="Add Card">
-                        </form>
-                    {% else %}
-                        <form method="POST" action="/individualcards">
-                            <input type="submit" name="removecard" value="Remove Card">
-                        </form>
+            <div class="secondtopbar">
+                    <form method="POST" action="/individualcards" class="goback">
+                        {% if addorremove == "add" %}
+                            <input type="submit" name="backnoset" value="Back">
+                        {% else %}
+                            <input type="submit" name="backset" value="Back">
+                        {% endif %}
+                    </form>
+                    {% if shownsets %}
+                        <div class="addremove">
+                            {% if addorremove == "add" %}
+                                <form method="POST" action="/individualcards">
+                                    <select name="addchosenset">
+                                        {% for set in shownsets %}
+                                            <option value="{{ set }}">{{ set }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <input type="submit" name="addcard" value="Add Card">
+                                </form>
+                            {% else %}
+                                <form method="POST" action="/individualcards">
+                                    <input type="submit" name="removecard" value="Remove Card">
+                                </form>
+                            {% endif %}
+                        </div>
                     {% endif %}
-                {% endif %}
             </div>
         </nav>
         <br>
