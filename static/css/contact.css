@@ -5,12 +5,15 @@
     font-style: normal;
 }
 
+* {
+    font-family: "Comfortaa";
+}
+
 body{
     min-height: 100vh;
     margin: 0;
     color: aliceblue;
     background-color: rgb(47, 47, 128);
-    font-family: "Comfortaa", sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

@@ -5,10 +5,13 @@
     font-style: normal;
 }
 
+* {
+    font-family: "Comfortaa";
+}
+
 body{
     color: aliceblue;
     background-color: rgb(47, 47, 128);
-    font-family: "Comfortaa", sans-serif;
     padding-top: 80px;
     padding-bottom: 140px;
 }
