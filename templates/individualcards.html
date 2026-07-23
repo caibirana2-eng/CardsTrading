@@ -43,20 +43,25 @@
         <div class="divider"></div>
         <div class="cardinfo">
             <div class="sidebyside">
-                <div class="cardimg"><img src="static/cardimages/{{ cardpage }}"></div>
+                <div class="cardimg">
+                    <img src="static/cardimages/{{ cardpage }}">
+                </div>
                 <div class="cardinfobox">
-                    <p>Page last updated: {{ carddatarecency }}</p>
-                    <p>Card Name: {{ cardname }}</p>
-                    <p>Set: {{ cardset }}</p>
-                    <p>Release Date: {{ cardreleaseyear }}</p>
-                    <p>Description: {{ carddesc }}</p>
-                    <p>Current Price Average: {{ avgcardprice }}</p>
-                    <p>Market Trend:</p>
-                    <img src="static/cardtrends/{{ cardtrend }}" class="trendimg">
+                    <div class="cardinfotext">
+                        <br> 
+                        <p>Page last updated: {{ carddatarecency }}</p>
+                        <p>Card Name: {{ cardname }}</p>
+                        <p>Set: {{ cardset }}</p>
+                        <p>Release Date: {{ cardreleaseyear }}</p>
+                        <p>Description: {{ carddesc }}</p>
+                        <p>Current Price Average: {{ avgcardprice }}</p>
+                    </div>
+                    <div class="trends">
+                        <img src="static/cardtrends/{{ cardtrend }}" class="trendimg">
+                    </div>
                 </div>    
             </div>
             <div class="marketlistings">
-                <p>Market Listings:</p>
                 <img src="static/cardlistings/{{ cardlistings }}" class="marketlistingsimg">
             </div>
         </div>

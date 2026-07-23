@@ -118,10 +118,14 @@ def faqs():
 def contact():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
+    error = ""
     messagesent = False
     if request.method == "POST" and "sendmessageconfirm" in request.form:
-        messagesent = True
-    return render_template('contact.html', messagesent=messagesent)
+        if request.form.get("contactmessage") != "" and request.form.get("messagesubject") != "":
+            messagesent = True
+        else:
+            error = "Both fields must be filled in"
+    return render_template('contact.html', messagesent=messagesent, error=error)
 
 @app.route("/usersettings", methods=['GET', 'POST'])
 def usersettings():
@@ -196,7 +200,14 @@ def individualcards():
         cleansets = sets[0]
         usersetcur.execute(f"SELECT setname FROM {cleansets}")
         loggedinsetname = usersetcur.fetchone()
-        shownsets.append(loggedinsetname[0])
+        if session.get("addorremove") == "add":
+            query = f"SELECT storedcards FROM {cleansets} WHERE storedcards = ?"
+            usersetcur.execute(f"{query}", (cardpage,))
+            alreadyadded = usersetcur.fetchone()
+            if not alreadyadded:
+                shownsets.append(loggedinsetname[0])
+        else:
+            shownsets.append(loggedinsetname[0])
     if shownsets == []:
         shownsets = None 
     if request.method == "POST":

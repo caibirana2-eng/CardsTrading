@@ -32,7 +32,7 @@
             </form>
             <p>{{ error }}</p>
             {% if requestingdelete %}
-                <p>To finalize account deletion, type "PleaseDeleteMyAccount" into the box below.</p>
+                <p>To finalize account deletion, type "PleaseDeleteMyAccount" into the box below and enter</p>
                 <form method="POST" action="/usersettings">
                     <input type="text" name="deleteaccountconfirm" placeholder="PleaseDeleteMyAccount">
                 </form>
