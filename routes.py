@@ -174,18 +174,42 @@ def usersettings():
             accountscur.execute('SELECT LOWER(username) FROM accounts')
             data = accountscur.fetchall()
             cleandata = (account[0] for account in data)
+
+            # Basic boundary checking  
             if loweredsettinginputusername in cleandata and loweredsettinginputusername != loweredpastusername:
                 error = "Username is taken!"
-            else:                
+            else:              
                 if not 3 <= len(settinginputusername) <= 20:
                     error = "Username must be between 3 and 20 characters long."
                 elif settinginputusername != "".join(filter(str.isalnum, settinginputusername)):
                     error = "Username can only contain alphanumeric characters (a-z), (0-9)."
                 elif len(settinginputpassword) < 8:
                     error = "Password must be at least 8 characters long"
+                
                 else:
-                    accountscur.execute('UPDATE accounts SET username = ?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,))
-                conaccounts.commit()             
+                    # Selects all tables belonging to the user
+                    usernamewithletter = session.get("user_logged_in") + "a"
+                    usernameupper = usernamewithletter.upper()
+                    likeusernameupper = f"%{usernameupper}%"
+                    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+                    loggedinusersets = usersetcur.fetchall()
+                    
+                    # Updates the names of all tables belonging to the user
+                    usernamewithletter = settinginputusername + "a"
+                    for sets in loggedinusersets:
+                        cleansets = sets[0]
+                        usersetcur.execute(f"SELECT setname from {cleansets}")
+                        pasttable = usersetcur.fetchone()
+                        pasttablewithletter = pasttable[0] + "a"
+                        changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
+                        query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
+                        usersetcur.execute(f"{query}")
+                        conusersets.commit()
+
+                    # Changes the user's information in the account database
+                    accountscur.execute('UPDATE accounts SET username = ?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,)) 
+                    conaccounts.commit()
+                    session["user_logged_in"] = settinginputusername             
     return render_template('usersettings.html', pastusername=pastusername, error=error, requestingdelete=requestingdelete)
 
 @app.route("/individualcards", methods=['GET', 'POST'])
@@ -218,8 +242,8 @@ def individualcards():
         if "addcard" in request.form:
             addchosenset = request.form.get("addchosenset")
             fulluniquesetname = usernameupper + addchosenset.lower() + "a"
-            query = f"INSERT INTO {fulluniquesetname} (username, setname, storedcards) VALUES (?, ?, ?)"
-            usersetcur.execute(f"{query}", (None, None, cardpage))
+            query = f"INSERT INTO {fulluniquesetname} (setname, storedcards) VALUES (?, ?)"
+            usersetcur.execute(f"{query}", (None, cardpage))
             conusersets.commit()
             return redirect(url_for("cardsearch"))
         if "removecard" in request.form: 
@@ -285,8 +309,10 @@ def signup():
                 return redirect(url_for("receiveemailcode"))            
     return render_template('signup.html', errormessage=error)
 
+# Not only makes accounts, but can also be used to change account details
 @app.route("/accdetails", methods=['GET', 'POST'])
 def makeaccount():
+
     #Checks if a username is already linked to the given forgotpass email   
     error = ""
     givenemail = session.get('givenemail')
@@ -335,6 +361,28 @@ def makeaccount():
                     elif len(createpassword) < 8:
                         error = "Password must be at least 8 characters long"
                     else:
+
+                        # Selects all sets owned by the user
+                        usernamewithletter = cleanpastusername + "a"
+                        usernameupper = usernamewithletter.upper()
+                        likeusernameupper = f"%{usernameupper}%"
+                        usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+                        loggedoutusersets = usersetcur.fetchall()
+                        print(loggedoutusersets)
+                        
+                        # Updates the names of all tables belonging to the user
+                        for sets in loggedoutusersets:
+                            cleansets = sets[0]
+                            usersetcur.execute(f"SELECT setname from {cleansets}")
+                            pasttable = usersetcur.fetchone()
+                            pasttablewithletter = pasttable[0] + "a"
+                            usernamewithletter = createusername + "a"
+                            usernameupper = usernamewithletter.upper()
+                            likeusernameupper = f"%{usernameupper}%"
+                            changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
+                            query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
+                            usersetcur.execute(f"{query}")
+                            conusersets.commit()
                         accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
                         conaccounts.commit()
                         return redirect(url_for("login"))
@@ -406,10 +454,10 @@ def ownsets():
                 else:
 
                     # Creates a uniquely named table, then immediately stores the data of what the set it's for is named, and the exact username of the user who made the set
-                    query = f"""CREATE TABLE IF NOT EXISTS {uniquesetname} (username TEXT, setname TEXT, storedcards TEXT)"""
+                    query = f"""CREATE TABLE IF NOT EXISTS {uniquesetname} (setname TEXT, storedcards TEXT)"""
                     usersetcur.execute(f"{query}")
-                    query = f"INSERT INTO {uniquesetname} (username, setname, storedcards) VALUES (?, ?, ?)"
-                    usersetcur.execute(f"{query}", (username, setname, None))
+                    query = f"INSERT INTO {uniquesetname} (setname, storedcards) VALUES (?, ?)"
+                    usersetcur.execute(f"{query}", (setname, None))
                     conusersets.commit()
         
         # Deletes whichever set the value is assigned to
@@ -428,7 +476,7 @@ def ownsets():
     loggedinusersets = usersetcur.fetchall()
     shownsets = []
 
-    # Selects the set names from every table belonging to the user
+    # Selects the set names from every table belonging to the user and adds them to shown sets
     for sets in loggedinusersets:
         cleansets = sets[0]
         usersetcur.execute(f"SELECT setname FROM {cleansets}")
@@ -436,7 +484,6 @@ def ownsets():
         shownsets.append(loggedinsetname[0]) 
 
     return render_template('ownsets.html', error=error, shownsets=shownsets)
-
 
 
 app.run(host="127.0.0.1", port=5000, debug=True)
