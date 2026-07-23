@@ -35,6 +35,10 @@ def cardsearch():
     storedcards = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards")
     sets = cardsearchcur.fetchall()
+    cardsearchcur.execute("SELECT DISTINCT intreleaseyear FROM cards ORDER BY intreleaseyear ASC")
+    releaseyears = cardsearchcur.fetchall()
+    cardsearchcur.execute("SELECT DISTINCT intinforecency FROM cards ORDER BY intinforecency ASC")
+    datayears = cardsearchcur.fetchall()
     selectedusersetname = session.get("selectedusersetname")
     if request.method == "POST":
         if "card" in request.form:
@@ -50,11 +54,11 @@ def cardsearch():
             selectedusersetname = session.get("selectedusersetname")
             showncards = storedcards
         elif "runfilter" in request.form:
-            higherlower = request.form.get("avgpricehigherlower")
+            higherlower = request.form.get("pricefilter")
             if higherlower == "higher":
-                pricehighlow = "<"
-            else:
                 pricehighlow = ">"
+            else:
+                pricehighlow = "<"
             higherlower = request.form.get("releaseearlylate")
             if higherlower == "later":
                 releaseearlylate = ">"
@@ -100,7 +104,7 @@ def cardsearch():
         usersetcur.execute(f"SELECT storedcards FROM {uniquesetname}")
         storedcards = usersetcur.fetchall()
 
-    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards)
+    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards, releaseyears=releaseyears, datayears=datayears)
 
 @app.route("/instructionsmanual")
 def instructionsmanual():
@@ -177,10 +181,10 @@ def usersettings():
                     error = "Username must be between 3 and 20 characters long."
                 elif settinginputusername != "".join(filter(str.isalnum, settinginputusername)):
                     error = "Username can only contain alphanumeric characters (a-z), (0-9)."
-                elif len(settinginputpassword) < 10:
-                    error = "Password must be at least 10 characters long"
+                elif len(settinginputpassword) < 8:
+                    error = "Password must be at least 8 characters long"
                 else:
-                    accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,))
+                    accountscur.execute('UPDATE accounts SET username = ?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,))
                 conaccounts.commit()             
     return render_template('usersettings.html', pastusername=pastusername, error=error, requestingdelete=requestingdelete)
 
@@ -328,8 +332,8 @@ def makeaccount():
                         error = "Username must be between 3 and 20 characters long."
                     elif createusername != "".join(filter(str.isalnum, createusername)):
                         error = "Username can only contain alphanumeric characters (a-z), (0-9)."
-                    elif len(createpassword) < 10:
-                        error = "Password must be at least 10 characters long"
+                    elif len(createpassword) < 8:
+                        error = "Password must be at least 8 characters long"
                     else:
                         accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
                         conaccounts.commit()

@@ -35,12 +35,9 @@
                     <option value="earlier">earlier than</option>
                 </select>
                 <select id="releaseyear" name="releaseyear">
-                    <option value=2021>2021</option>
-                    <option value=2022>2022</option>
-                    <option value=2023>2023</option>
-                    <option value=2024>2024</option>
-                    <option value=2025>2025</option>
-                    <option value=2026>2026</option>
+                    {% for year in releaseyears %}
+                        <option value="{{ year[0] }}">{{ year[0] }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div>
@@ -50,12 +47,9 @@
                     <option value="earlier">earlier than</option>
                 </select>
                 <select id="datayear" name="datayear">
-                    <option value=2021>2021</option>
-                    <option value=2022>2022</option>
-                    <option value=2023>2023</option>
-                    <option value=2024>2024</option>
-                    <option value=2025>2025</option>
-                    <option value=2026>2026</option>
+                    {% for year in datayears %}
+                        <option value="{{ year[0] }}">{{ year[0] }}</option>
+                    {% endfor %}
                 </select>
             </div>
             <div class="navfilterconfirm">
@@ -73,7 +67,7 @@
         <div class="allshowncards">
         <form method="POST" action="/cardsearch">
             {% for card in showncards %}
-                {% if card in storedcards %}
+                {% if card in storedcards and card[0] != "EXTRAYEARS23048239047234823049328409" %}
                     <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
                         <img src="static/cardimages/{{ card[0] }}">
                     </button>
