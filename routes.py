@@ -133,7 +133,7 @@ def contact():
 
 @app.route("/usersettings", methods=['GET', 'POST'])
 def usersettings():
-    error = ""
+    alert = ""
     requestingdelete = ""
     pastusername = session.get('user_logged_in')
     if not session.get('user_logged_in'):
@@ -141,6 +141,7 @@ def usersettings():
     if request.method == "POST":
         if "logout" in request.form:
             session['user_logged_in'] = None
+            session["loginalert"] = "Logged out successfully!"
             return redirect(url_for("login"))
         if "deleteaccount" in request.form:
             requestingdelete = True
@@ -165,6 +166,7 @@ def usersettings():
                     usersetcur.execute(f"{query}")
                     conusersets.commit()
 
+                session["loginalert"] = "Account has been permanently deleted"
                 return redirect(url_for("login"))
         if "settingschangeaccount" in request.form:
             loweredpastusername = pastusername.lower()
@@ -177,40 +179,41 @@ def usersettings():
 
             # Basic boundary checking  
             if loweredsettinginputusername in cleandata and loweredsettinginputusername != loweredpastusername:
-                error = "Username is taken!"
+                alert = "Username is taken!"
             else:              
                 if not 3 <= len(settinginputusername) <= 20:
-                    error = "Username must be between 3 and 20 characters long."
+                    alert = "Username must be between 3 and 20 characters long."
                 elif settinginputusername != "".join(filter(str.isalnum, settinginputusername)):
-                    error = "Username can only contain alphanumeric characters (a-z), (0-9)."
+                    alert = "Username can only contain alphanumeric characters (a-z), (0-9)."
                 elif len(settinginputpassword) < 8:
-                    error = "Password must be at least 8 characters long"
-                
+                    alert = "Password must be at least 8 characters long"
                 else:
-                    # Selects all tables belonging to the user
-                    usernamewithletter = session.get("user_logged_in") + "a"
-                    usernameupper = usernamewithletter.upper()
-                    likeusernameupper = f"%{usernameupper}%"
-                    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-                    loggedinusersets = usersetcur.fetchall()
-                    
-                    # Updates the names of all tables belonging to the user
-                    usernamewithletter = settinginputusername + "a"
-                    for sets in loggedinusersets:
-                        cleansets = sets[0]
-                        usersetcur.execute(f"SELECT setname from {cleansets}")
-                        pasttable = usersetcur.fetchone()
-                        pasttablewithletter = pasttable[0] + "a"
-                        changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
-                        query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
-                        usersetcur.execute(f"{query}")
-                        conusersets.commit()
+                    if pastusername.lower() != settinginputusername.lower():
+                        # Selects all tables belonging to the user
+                        usernamewithletter = session.get("user_logged_in") + "a"
+                        usernameupper = usernamewithletter.upper()
+                        likeusernameupper = f"%{usernameupper}%"
+                        usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+                        loggedinusersets = usersetcur.fetchall()
+                        
+                        # Updates the names of all tables belonging to the user
+                        usernamewithletter = settinginputusername + "a"
+                        for sets in loggedinusersets:
+                            cleansets = sets[0]
+                            usersetcur.execute(f"SELECT setname from {cleansets}")
+                            pasttable = usersetcur.fetchone()
+                            pasttablewithletter = pasttable[0] + "a"
+                            changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
+                            query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
+                            usersetcur.execute(f"{query}")
+                            conusersets.commit()
 
                     # Changes the user's information in the account database
                     accountscur.execute('UPDATE accounts SET username = ?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,)) 
                     conaccounts.commit()
-                    session["user_logged_in"] = settinginputusername             
-    return render_template('usersettings.html', pastusername=pastusername, error=error, requestingdelete=requestingdelete)
+                    session["user_logged_in"] = settinginputusername
+                    alert = "Successfully set account details!"             
+    return render_template('usersettings.html', pastusername=pastusername, alert=alert, requestingdelete=requestingdelete)
 
 @app.route("/individualcards", methods=['GET', 'POST'])
 def individualcards():
@@ -275,7 +278,10 @@ def individualcards():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    error = ""
+    alert = ""
+    if session.get("loginalert"):
+        alert = session.get("loginalert")
+        session["loginalert"] = None
     if request.method == "POST":
         if "confirmlogin" in request.form:
             infoinput = [request.form.get("usernametype"), request.form.get("passwordtype")]
@@ -284,8 +290,8 @@ def login():
             if data != None:
                 session['user_logged_in'] = infoinput[0]
                 return redirect(url_for("index"))
-            error = "Incorrect username or password! (Case sensitive)"
-    return render_template('login.html', errormessage=error)
+            alert = "Incorrect username or password! (Case sensitive)"
+    return render_template('login.html', errormessage=alert)
 
 @app.route("/signup", methods=['GET', 'POST'])
 def signup():
@@ -347,11 +353,12 @@ def makeaccount():
                         error = "Username must be between 3 and 20 characters long."
                     elif createusername != "".join(filter(str.isalnum, createusername)):
                         error = "Username can only contain alphanumeric characters (a-z), (0-9)."
-                    elif len(createpassword) < 10:
-                        error = "Password must be at least 10 characters long"
+                    elif len(createpassword) < 8:
+                        error = "Password must be at least 8 characters long"
                     else:
                         accountscur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, givenemail,))
                         conaccounts.commit()
+                        session["loginalert"] = "Successfully created account!"
                         return redirect(url_for("login"))
                 else:                
                     if not 3 <= len(createusername) <= 20:
@@ -361,30 +368,31 @@ def makeaccount():
                     elif len(createpassword) < 8:
                         error = "Password must be at least 8 characters long"
                     else:
-
-                        # Selects all sets owned by the user
-                        usernamewithletter = cleanpastusername + "a"
-                        usernameupper = usernamewithletter.upper()
-                        likeusernameupper = f"%{usernameupper}%"
-                        usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-                        loggedoutusersets = usersetcur.fetchall()
-                        print(loggedoutusersets)
-                        
-                        # Updates the names of all tables belonging to the user
-                        for sets in loggedoutusersets:
-                            cleansets = sets[0]
-                            usersetcur.execute(f"SELECT setname from {cleansets}")
-                            pasttable = usersetcur.fetchone()
-                            pasttablewithletter = pasttable[0] + "a"
-                            usernamewithletter = createusername + "a"
+                        if cleanpastusername.lower() != createusername.lower():
+                            # Selects all sets owned by the user
+                            usernamewithletter = cleanpastusername + "a"
                             usernameupper = usernamewithletter.upper()
                             likeusernameupper = f"%{usernameupper}%"
-                            changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
-                            query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
-                            usersetcur.execute(f"{query}")
-                            conusersets.commit()
+                            usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+                            loggedoutusersets = usersetcur.fetchall()
+                            
+                            # Updates the names of all tables belonging to the user
+                            for sets in loggedoutusersets:
+                                cleansets = sets[0]
+                                usersetcur.execute(f"SELECT setname from {cleansets}")
+                                pasttable = usersetcur.fetchone()
+                                pasttablewithletter = pasttable[0] + "a"
+                                usernamewithletter = createusername + "a"
+                                usernameupper = usernamewithletter.upper()
+                                likeusernameupper = f"%{usernameupper}%"
+                                changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
+                                query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
+                                usersetcur.execute(f"{query}")
+                                conusersets.commit()
+
                         accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
                         conaccounts.commit()
+                        session["loginalert"] = "Successfully set account details!"
                         return redirect(url_for("login"))
                     
                     #added pastusername=cleanpastusername for recognition rather than recall   

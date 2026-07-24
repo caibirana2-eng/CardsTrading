@@ -30,7 +30,7 @@
                     <input type="submit" name="deleteaccount" value="Delete Account">
                 </div>
             </form>
-            <p>{{ error }}</p>
+            <p>{{ alert }}</p>
             {% if requestingdelete %}
                 <p>To finalize account deletion, type "PleaseDeleteMyAccount" into the box below and enter</p>
                 <form method="POST" action="/usersettings">
