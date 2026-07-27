@@ -98,7 +98,7 @@ def cardsearch():
 
         # Filters out any cardimg that isn't present in stored cards
         username = session.get("user_logged_in")
-        usernamewithletter = username + "a"
+        usernamewithletter = "a" + username
         setnamewithletter = selectedusersetname + "a"
         uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
         usersetcur.execute(f"SELECT storedcards FROM {uniquesetname}")
@@ -147,7 +147,7 @@ def usersettings():
             requestingdelete = True
         if "deleteaccountconfirm" in request.form:
             if request.form.get("deleteaccountconfirm") == "PleaseDeleteMyAccount":
-                usernamewithletter = session.get("user_logged_in") + "a"
+                usernamewithletter = "a" + session.get("user_logged_in") 
                 accountscur.execute("DELETE FROM accounts WHERE username = ?", (session.get('user_logged_in'),))
                 conaccounts.commit()
                 session['user_logged_in'] = None
@@ -190,14 +190,14 @@ def usersettings():
                 else:
                     if pastusername.lower() != settinginputusername.lower():
                         # Selects all tables belonging to the user
-                        usernamewithletter = session.get("user_logged_in") + "a"
+                        usernamewithletter = "a" + session.get("user_logged_in")
                         usernameupper = usernamewithletter.upper()
                         likeusernameupper = f"%{usernameupper}%"
                         usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
                         loggedinusersets = usersetcur.fetchall()
                         
                         # Updates the names of all tables belonging to the user
-                        usernamewithletter = settinginputusername + "a"
+                        usernamewithletter = "a" + settinginputusername 
                         for sets in loggedinusersets:
                             cleansets = sets[0]
                             usersetcur.execute(f"SELECT setname from {cleansets}")
@@ -221,7 +221,7 @@ def individualcards():
         return redirect(url_for("login"))
     cardpage = session.get('cardclicked')
     username = session.get("user_logged_in")
-    usernamewithletter = username + "a"
+    usernamewithletter = "a" + username
     usernameupper = usernamewithletter.upper()
     likeusernameupper = f"%{usernameupper}%"
     usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
@@ -370,7 +370,7 @@ def makeaccount():
                     else:
                         if cleanpastusername.lower() != createusername.lower():
                             # Selects all sets owned by the user
-                            usernamewithletter = cleanpastusername + "a"
+                            usernamewithletter = "a" + cleanpastusername
                             usernameupper = usernamewithletter.upper()
                             likeusernameupper = f"%{usernameupper}%"
                             usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
@@ -382,7 +382,7 @@ def makeaccount():
                                 usersetcur.execute(f"SELECT setname from {cleansets}")
                                 pasttable = usersetcur.fetchone()
                                 pasttablewithletter = pasttable[0] + "a"
-                                usernamewithletter = createusername + "a"
+                                usernamewithletter =  "a" + createusername
                                 usernameupper = usernamewithletter.upper()
                                 likeusernameupper = f"%{usernameupper}%"
                                 changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
@@ -436,7 +436,7 @@ def ownsets():
         return redirect(url_for("login"))
     error = ""
     username = session.get("user_logged_in")
-    usernamewithletter = username + "a"
+    usernamewithletter = "a" + username
     if request.method == "POST":
         if "confirmmakeset" in request.form:
 
