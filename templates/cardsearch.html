@@ -66,6 +66,13 @@
         <br>
         <div class="allshowncards">
         <form method="POST" action="/cardsearch">
+            {% if storedcards == [(None,)] %}
+                <br>
+                <div class="emptyset">
+                    <h2>Your set is currently empty!</h2>
+                    <p>To add a card to your set, go to "All Cards" and click a card. Then choose what set to add it in and press add.</p>
+                </div>
+            {% endif %}
             {% for card in showncards %}
                 {% if card in storedcards and card[0] != "EXTRAYEARS23048239047234823049328409" %}
                     <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">

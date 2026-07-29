@@ -14,7 +14,7 @@
                 <input type="text" placeholder="Set name..." value="" name="makesetname">
                 <input type="submit" value="Create" name="confirmmakeset">
             </form>
-            <p>{{ error }}</p>
+            <div class="textalert">{{ error }}</div>
             {% for sets in shownsets %}
             <div class="section">
                 <h2>{{ sets }}</h2>

@@ -11,6 +11,7 @@
             <h1>Contact Us</h1>
             {% if messagesent %}
                 <p>Your message has been sent. We will review it shortly.</p>
+                <a href="{{ url_for('contact') }}">Send another message?</a>
             {% else %}
                 <form method="POST" action="{{ url_for('contact') }}">
                     <label for="subject">Subject</label><br>
@@ -23,7 +24,7 @@
                 </form>
                 <br>
             {% endif %}
-            {{ error }}
+            <div class="textalert">{{ error }}</div>
         </div>
         <br>
         <div class="divider"></div>
