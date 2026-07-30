@@ -95,7 +95,7 @@ a{
 .trendimg{
     display: block;
     width: 100%;
-    height: 362px;
+    height: 382px;
 }
 
 .trends{
@@ -107,6 +107,8 @@ a{
 .cardimg{
     display: flex;
     background-color:rgb(26, 26, 97);
+    padding-left: 7%;
+    padding-top: 7%;
 }
 
 .secondtopbar{
