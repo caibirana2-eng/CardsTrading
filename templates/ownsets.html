@@ -14,7 +14,10 @@
                 <input type="text" placeholder="Set name..." value="" name="makesetname">
                 <input type="submit" value="Create" name="confirmmakeset">
             </form>
-            <div class="textalert">{{ error }}</div>
+            <p class="setnameboundaries">(Two sets can't have the same name. Set name must not exceed 20 characters and can only contain alphanumeric characters)</p>
+            <div class="textalert">
+                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ error }}</p>
+            </div>
             {% for sets in shownsets %}
             <div class="section">
                 <h2>{{ sets }}</h2>

@@ -18,22 +18,20 @@ app.secret_key = secrets.token_hex(32)
 def index():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    image_folder = os.path.join('static', 'bugfixchangenotices')
-    bugfixchangenotices = os.listdir(image_folder)
     image_folder = os.path.join('static', 'newsetnotices')
     newsetnotices = os.listdir(image_folder)
     image_folder = os.path.join('static', 'trendingcardnotices')
     trendingcardnotices = os.listdir(image_folder)
     user = session.get('user_logged_in')
-    return render_template('index.html', bugfixchangenotices=bugfixchangenotices, newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
+    return render_template('index.html', newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
 @app.route("/cardsearch", methods=['GET', 'POST'])
 def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    cardsearchcur.execute("SELECT cardimg FROM cards")
+    cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardimg IS NOT NULL")
     storedcards = cardsearchcur.fetchall()
-    cardsearchcur.execute("SELECT DISTINCT fromset FROM cards")
+    cardsearchcur.execute("SELECT DISTINCT fromset FROM cards WHERE fromset IS NOT NULL")
     sets = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT intreleaseyear FROM cards ORDER BY intreleaseyear ASC")
     releaseyears = cardsearchcur.fetchall()
@@ -65,10 +63,11 @@ def cardsearch():
             else:
                 releaseearlylate = "<"
             higherlower = request.form.get("dataearlylate")
+            print(higherlower)
             if higherlower == "later":
-                recencyearlylate = "<"
-            else:
                 recencyearlylate = ">"
+            else:
+                recencyearlylate = "<"
             releaseyear = request.form.get("releaseyear")
             intreleaseyear = int(releaseyear)
             recencyyear = request.form.get("datayear")
@@ -447,11 +446,11 @@ def ownsets():
             setname = request.form.get("makesetname").strip()
             setnamewithletter = setname + "a"
             if not setname:
-                error = "Please enter a set name."
+                error = "Please enter a set name"
             elif setname != "".join(filter(str.isalnum, setname)):
-                    error = "Set name can only contain alphanumeric characters (a-z), (0-9)."
+                    error = "Set name can only contain alphanumeric characters (a-z), (0-9)"
             elif len(setname) > 20:
-                    error = "Set name can only be as long as 20 characters."
+                    error = "Set name can only be as long as 20 characters"
             else:
                 uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
                 query = f"""SELECT name FROM sqlite_master WHERE type='table' AND name = '{uniquesetname}'"""
@@ -475,6 +474,7 @@ def ownsets():
             uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
             query = f"""DROP TABLE IF EXISTS {uniquesetname}"""
             usersetcur.execute(f"{query}")
+            error = f"Successfully deleted set: {setname}"
             conusersets.commit()
             
     # Selects all tables belonging to the user

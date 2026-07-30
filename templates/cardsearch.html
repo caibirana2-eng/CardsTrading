@@ -42,7 +42,7 @@
             </div>
             <div>
                 <label for="dataearlylate">Data Recency:</label>
-                <select id="dataearlylate" name="dateearlylate">
+                <select id="dataearlylate" name="dataearlylate">
                     <option value="later">later than</option>
                     <option value="earlier">earlier than</option>
                 </select>
@@ -74,7 +74,7 @@
                 </div>
             {% endif %}
             {% for card in showncards %}
-                {% if card in storedcards and card[0] != "EXTRAYEARS23048239047234823049328409" %}
+                {% if card in storedcards %}
                     <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
                         <img src="static/cardimages/{{ card[0] }}">
                     </button>

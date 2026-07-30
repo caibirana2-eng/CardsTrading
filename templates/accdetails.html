@@ -12,10 +12,12 @@
                 <br>
                 <div>
                     <input type="text" name="createusernametype" placeholder="Set Username here..." value="{{ pastusername }}">
+                    <p class="namepassboundaries">(Username must be at least 3 characters long and can only contain alphanumeric characters)</p>
                 </div>
                 <br>
                 <div>
                     <input type="text" name="createpasswordtype" placeholder="Set Password here..." value="">
+                    <p class="namepassboundaries">(Password must be at least 8 characters long)</p>
                 </div>
                 <br>
                 <div>
@@ -25,7 +27,9 @@
             <div class="divider">
                 <a href="{{ url_for('receiveemailcode') }}">Back</a>
             </div>
-            <p class="textalert">{{  errormessage  }}</p>
+            <div class="textalert">
+                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
+            </div>
         </div>
     </body>
 </html>

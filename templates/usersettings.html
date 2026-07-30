@@ -13,15 +13,18 @@
                 <div>
                     <label for="newusername">New username</label><br>
                     <input type="text" id="newusername" name="settinginputusername" placeholder="New username..." value="{{ pastusername }}">
+                    <p class="namepassboundaries">(Username must be at least 3 characters long and can only contain alphanumeric characters)</p>
                 </div>
                 <div>
                     <label for="newpassword">New password</label><br>
                     <input type="text" id="newpassword" name="settinginputpassword" placeholder="New password..." value="">
+                    <p class="namepassboundaries">(Password must be at least 8 characters long)</p>
                 </div>
                 <div>
                     <input type="submit" name="settingschangeaccount" value="Change Account Info">
                 </div>
                 <div>
+                    <br>
                     <br>
                     <input type="submit" name="logout" value="Log Out">
                 </div>
@@ -30,9 +33,11 @@
                     <input type="submit" name="deleteaccount" value="Delete Account">
                 </div>
             </form>
-            <div class="textalert">{{ alert }}</div>
+            <div class="textalert">
+                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ alert }}</p>
+            </div>
             {% if requestingdelete %}
-                <p>To finalize account deletion, type "PleaseDeleteMyAccount" into the box below and enter</p>
+                <p style="background-color: #4b0101; color: #fcb0b0;">To finalize account deletion, type "PleaseDeleteMyAccount" into the box below and enter</p>
                 <form method="POST" action="/usersettings">
                     <input type="text" name="deleteaccountconfirm" placeholder="PleaseDeleteMyAccount">
                 </form>

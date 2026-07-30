@@ -46,8 +46,10 @@ a{
     margin-left: 14%;
 }
 
-.errormessage{
+.textalert{
     color: aliceblue;
     font-size: 15px;
     font-weight: normal;
+    width: 80%;
+    margin-left: 11%;
 }

@@ -29,7 +29,7 @@ body{
     max-width: 500px;
     background-color: rgb(38, 34, 95);
     border-radius: 5%;
-    max-height: 325px;
+    max-height: 350px;
 }
 
 .sidebyside{
@@ -48,8 +48,16 @@ a{
     color: aliceblue;
 }
 
-.errormessage{
+.textalert{
     color: aliceblue;
     font-size: 15px;
     font-weight: normal;
+    width: 80%;
+    margin-left: 11%;
+}
+
+.namepassboundaries{
+    font-size: 10px;
+    width: 80%;
+    margin-left: 11%;
 }
