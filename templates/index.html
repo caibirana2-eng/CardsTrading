@@ -17,16 +17,16 @@
         <br>
         <div class="noticecontainer">
             {% for notice in newsetnotices %}
-                <div class="notice"><img src="static/newsetnotices/{{ notice }}"></div>
+                <button class="notice"><img src="static/newsetnotices/{{ notice }}"></button>
             {% endfor %}
         </div>
         <p class="noticetype">Trending Cards</p>
         <br>
-        <div class="noticecontainer">
+        <form class="noticecontainer" method="POST" action="/individualcards">
             {% for notice in trendingcardnotices %}
-                <div class="notice"><img src="static/trendingcardnotices/{{ notice }}"></div>
+                <button class="notice" name="trendingcards" value='{{ notice }}'><img src="static/trendingcardnotices/{{ notice }}"></button>
             {% endfor %}
-        </div>
+        </form>
         <br>
         <div class="changeslist">
             <p class="changes">Bug Fixes and Changes</p>

@@ -26,7 +26,7 @@ body{
     background-color: aliceblue;
     gap: 15px;
     border-radius: 8px;
-    height:200px;
+    height:350px;
     margin-bottom: 5%;
 }
 
@@ -104,4 +104,11 @@ a{
 
 .changeslist{
     margin-left: 1%;
+}
+
+button {
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    line-height: 0;
 }

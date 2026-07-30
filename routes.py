@@ -218,7 +218,13 @@ def usersettings():
 def individualcards():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    cardpage = session.get('cardclicked')
+    if "trendingcards" in request.form:
+        session["addorremove"] = "add"
+        unnoticetrendingcard = request.form.get("trendingcards").split(",")
+        cardpage = unnoticetrendingcard[1]
+        session["cardclicked"] = cardpage
+    else:
+        cardpage = session.get('cardclicked')
     username = session.get("user_logged_in")
     usernamewithletter = "a" + username
     usernameupper = usernamewithletter.upper()
@@ -258,7 +264,10 @@ def individualcards():
             session["setpersists"] = True
             return redirect(url_for("cardsearch"))
         if "backnoset" in request.form:
-            return redirect(url_for("cardsearch"))
+            if session.get("fromhomepage"):
+                return redirect(url_for("cardsearch"))
+            else:
+                return redirect(url_for("cardsearch"))
         if "backset" in request.form:
             session["setpersists"] = True
             return redirect(url_for("cardsearch"))
