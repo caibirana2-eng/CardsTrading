@@ -15,11 +15,11 @@
         <p class="welcomeback">Welcome, {{ user }}!</p>
         <p class="noticetype">New Sets!</p>
         <br>
-        <div class="noticecontainer">
+        <form class="noticecontainer" method="POST" action="/cardsearch">
             {% for notice in newsetnotices %}
-                <button class="notice"><img src="static/newsetnotices/{{ notice }}"></button>
+                <button class="notice" name="newsets" value='{{ notice }}'><img src="static/newsetnotices/{{ notice }}"></button>
             {% endfor %}
-        </div>
+        </form>
         <p class="noticetype">Trending Cards</p>
         <br>
         <form class="noticecontainer" method="POST" action="/individualcards">

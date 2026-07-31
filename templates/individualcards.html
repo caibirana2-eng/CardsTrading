@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Home</title>
+        <title>Card: {{ cardname }}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/individualcards.css') }}">
     </head>
     <body>
@@ -50,6 +50,7 @@
                     <div class="cardinfotext">
                         <br> 
                         <p>Page last updated: {{ carddatarecency }}</p>
+                        <br> 
                         <p>Card Name: {{ cardname }}</p>
                         <p>Set: {{ cardset }}</p>
                         <p>Release Date: {{ cardreleaseyear }}</p>

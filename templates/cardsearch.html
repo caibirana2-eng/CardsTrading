@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Home</title>
+        <title>
+            {% if selectedsetname %}
+                Set: {{ selectedsetname }}
+            {% else %}
+                All Cards
+            {% endif %}
+        </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/cardsearch.css') }}">
     </head>
     <body>

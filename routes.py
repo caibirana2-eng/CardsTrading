@@ -29,6 +29,7 @@ def index():
 def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
+    session["homepage"] = True
     cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardimg IS NOT NULL")
     storedcards = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards WHERE fromset IS NOT NULL")
@@ -39,6 +40,9 @@ def cardsearch():
     datayears = cardsearchcur.fetchall()
     selectedusersetname = session.get("selectedusersetname")
     if request.method == "POST":
+        if session.get("viewingnewsets"):
+            cardsearchcur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (session.get("viewingnewsets"),))
+            storedcards = cardsearchcur.fetchall()
         if "card" in request.form:
             session["cardclicked"] = request.form.get("card")
             return redirect(url_for("individualcards"))
@@ -63,7 +67,6 @@ def cardsearch():
             else:
                 releaseearlylate = "<"
             higherlower = request.form.get("dataearlylate")
-            print(higherlower)
             if higherlower == "later":
                 recencyearlylate = ">"
             else:
@@ -81,15 +84,24 @@ def cardsearch():
                 query = f"SELECT cardimg FROM cards WHERE fromset = ? AND avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
                 cardsearchcur.execute(query, (filterset, request.form.get("priceinput"), intreleaseyear, intrecencyyear))
                 showncards = cardsearchcur.fetchall()
+        elif "newsets" in request.form:
+            removepng = request.form.get("newsets").replace(".png", "")
+            unnoticeset = removepng.split("-")
+            setname = " ".join(unnoticeset)
+            cardsearchcur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (setname,))
+            showncards = cardsearchcur.fetchall()
+            session["viewingnewsets"] = setname
 
-     # Clears personal set filter when page is not accessed via ownsets view form
+     # Clears personal and new set filter when page is not accessed via ownsets view form
     elif not session.get("setpersists"):
         session["selectedusersetname"] = None
+        session["viewingnewsets"] = None
         session["addorremove"] = "add"
         selectedusersetname = session.get("selectedusersetname")
         showncards = storedcards
     else:
         session["setpersists"] = None
+        session["viewingnewsets"] = None
         showncards = storedcards
     
     if selectedusersetname:
@@ -223,6 +235,7 @@ def individualcards():
         unnoticetrendingcard = request.form.get("trendingcards").split(",")
         cardpage = unnoticetrendingcard[1]
         session["cardclicked"] = cardpage
+        session["fromhomepage"] = True
     else:
         cardpage = session.get('cardclicked')
     username = session.get("user_logged_in")
@@ -253,7 +266,11 @@ def individualcards():
             query = f"INSERT INTO {fulluniquesetname} (setname, storedcards) VALUES (?, ?)"
             usersetcur.execute(f"{query}", (None, cardpage))
             conusersets.commit()
-            return redirect(url_for("cardsearch"))
+            if session.get("fromhomepage"):
+                session["fromhomepage"] = None
+                return redirect(url_for("index"))
+            else:
+                return redirect(url_for("cardsearch"))
         if "removecard" in request.form: 
             removechosenset = session.get("selectedusersetname")
             removechosenwithletter = removechosenset + "a"
@@ -265,7 +282,8 @@ def individualcards():
             return redirect(url_for("cardsearch"))
         if "backnoset" in request.form:
             if session.get("fromhomepage"):
-                return redirect(url_for("cardsearch"))
+                session["fromhomepage"] = None
+                return redirect(url_for("index"))
             else:
                 return redirect(url_for("cardsearch"))
         if "backset" in request.form:
@@ -443,6 +461,7 @@ def ownsets():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
     error = ""
+    session["viewingnewsets"] = False
     username = session.get("user_logged_in")
     usernamewithletter = "a" + username
     if request.method == "POST":
