@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Card: {{ cardname }}</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/individualcards.css') }}">
     </head>
@@ -44,7 +46,7 @@
         <div class="cardinfo">
             <div class="sidebyside">
                 <div class="cardimg">
-                    <img src="static/cardimages/{{ cardpage }}">
+                    <img src="static/cardimages/{{ cardpage }}" alt="{{ cardpage }}">
                 </div>
                 <div class="cardinfobox">
                     <div class="cardinfotext">
@@ -58,12 +60,12 @@
                         <p>Current Price Average: {{ avgcardprice }}</p>
                     </div>
                     <div class="trends">
-                        <img src="static/cardtrends/{{ cardtrend }}" class="trendimg">
+                        <img src="static/cardtrends/{{ cardtrend }}" class="trendimg" alt="{{ cardtrend }}">
                     </div>
                 </div>    
             </div>
             <div class="marketlistings">
-                <img src="static/cardlistings/{{ cardlistings }}" class="marketlistingsimg">
+                <img src="static/cardlistings/{{ cardlistings }}" class="marketlistingsimg" alt="{{ cardlistings }}">
             </div>
         </div>
         <br>

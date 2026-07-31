@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Signup</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     </head>
     <body>
         <div class="divider"></div>
         <div class="signupbox">
-            <h2>Signup by entering your email!<h2>
+            <h2>Signup by entering your email!</h2>
             <form method="post" action="/signup" class="userpassinput">
                 <div>
                     <input type="text" name="emailtype" placeholder="Email here..." value="">

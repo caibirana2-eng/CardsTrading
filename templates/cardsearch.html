@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
             {% if selectedsetname %}
                 Set: {{ selectedsetname }}
@@ -91,7 +93,7 @@
             {% for card in showncards %}
                 {% if card in storedcards %}
                     <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
-                        <img src="static/cardimages/{{ card[0] }}">
+                        <img src="static/cardimages/{{ card[0] }}" alt="{{ card[0] }}">
                     </button>
                 {% endif %}
             {% endfor %}

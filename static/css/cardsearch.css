@@ -32,20 +32,6 @@ body{
     padding: 20px;
 }
 
-.navfilterbar{
-    display: flex;
-    position: fixed;
-    background-color: rgb(35, 35, 99);
-    width: 100%;
-    height: 2%;
-    top: 7%;
-    left: 0;
-    border-bottom: 2px solid aliceblue;
-    align-content: center;
-    justify-content: center;
-    padding: 15px;
-}
-
 .navsearchbartext{
     width: 50%;
 }
@@ -101,6 +87,13 @@ a{
     width: 100%;
     align-items: center;
     justify-items: center;
+     position: fixed;
+    background-color: rgb(35, 35, 99);
+    height: 2%;
+    top: 7%;
+    left: 0;
+    border-bottom: 2px solid aliceblue;
+    padding: 15px;
 }
 
 .navfilterconfirm{

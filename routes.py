@@ -31,7 +31,6 @@ def index():
 def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
-    session["homepage"] = True
     cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardimg IS NOT NULL")
     storedcards = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards WHERE fromset IS NOT NULL")
@@ -93,17 +92,17 @@ def cardsearch():
             cardsearchcur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (setname,))
             showncards = cardsearchcur.fetchall()
             session["viewingnewsets"] = setname
+            session["fromhomepage"] = False
 
      # Clears personal and new set filter when page is not accessed via ownsets view form
     elif not session.get("setpersists"):
         session["selectedusersetname"] = None
-        session["viewingnewsets"] = None
         session["addorremove"] = "add"
         selectedusersetname = session.get("selectedusersetname")
+        session["viewingnewsets"] = None
         showncards = storedcards
     else:
         session["setpersists"] = None
-        session["viewingnewsets"] = None
         showncards = storedcards
     
     if selectedusersetname:
@@ -116,6 +115,10 @@ def cardsearch():
         uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
         usersetcur.execute(f"SELECT storedcards FROM {uniquesetname}")
         storedcards = usersetcur.fetchall()
+
+    elif session.get("viewingnewsets"):
+        cardsearchcur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (session.get("viewingnewsets"),))
+        storedcards = cardsearchcur.fetchall()
 
     return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards, releaseyears=releaseyears, datayears=datayears, viewingnewsets=session.get("viewingnewsets"))
 
@@ -272,6 +275,8 @@ def individualcards():
                 session["fromhomepage"] = None
                 return redirect(url_for("index"))
             else:
+                if session.get("viewingnewsets"):
+                    session["setpersists"] = True
                 return redirect(url_for("cardsearch"))
         if "removecard" in request.form: 
             removechosenset = session.get("selectedusersetname")
@@ -287,6 +292,8 @@ def individualcards():
                 session["fromhomepage"] = None
                 return redirect(url_for("index"))
             else:
+                if session.get("viewingnewsets"):
+                    session["setpersists"] = True
                 return redirect(url_for("cardsearch"))
         if "backset" in request.form:
             session["setpersists"] = True
