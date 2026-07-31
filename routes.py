@@ -23,6 +23,8 @@ def index():
     image_folder = os.path.join('static', 'trendingcardnotices')
     trendingcardnotices = os.listdir(image_folder)
     user = session.get('user_logged_in')
+    session["setpersists"] = None
+    session["selectedusersetname"] = None
     return render_template('index.html', newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
 @app.route("/cardsearch", methods=['GET', 'POST'])
@@ -115,7 +117,7 @@ def cardsearch():
         usersetcur.execute(f"SELECT storedcards FROM {uniquesetname}")
         storedcards = usersetcur.fetchall()
 
-    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards, releaseyears=releaseyears, datayears=datayears)
+    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards, releaseyears=releaseyears, datayears=datayears, viewingnewsets=session.get("viewingnewsets"))
 
 @app.route("/instructionsmanual")
 def instructionsmanual():

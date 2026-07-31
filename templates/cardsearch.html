@@ -19,12 +19,18 @@
         <form method="POST" action="/cardsearch" class="navfilterbar" name="filtersets">
             <div>
                 <label for="setfilter">Set:</label>
-                <select id="setfilter" name="setfilter">
-                    <option value="anyset">ALL</option>
-                  {% for set in sets %}
-                    <option value="{{ set[0] }}">{{ set[0] }}</option>
-                  {% endfor %}
-                </select>
+                {% if viewingnewsets %}
+                    <select id="setfilter" name="setfilter">
+                        <option value="{{ viewingnewsets }}">{{ viewingnewsets }}</option>
+                    </select>
+                {% else %}
+                    <select id="setfilter" name="setfilter">
+                        <option value="anyset">ALL</option>
+                    {% for set in sets %}
+                        <option value="{{ set[0] }}">{{ set[0] }}</option>
+                    {% endfor %}
+                    </select>
+                {% endif %}
             </div>
             <div>
                 <label for="pricefilter">Avg Price:</label>
@@ -68,6 +74,9 @@
         <div class="divider"></div>
         {% if selectedsetname %}
             <p>Showing cards from set: {{ selectedsetname }}</p>
+        {% endif %}
+        {% if viewingnewsets %}
+            <p>Showing cards from set: {{ viewingnewsets }}</p>
         {% endif %}
         <br>
         <div class="allshowncards">
