@@ -60,9 +60,10 @@ a{
     background-color: rgb(35, 35, 99);
     width: 100%;
     height: 4%;
-    top: 72px;
+    top: 68px;
     left: 0;
     border-bottom: 2px solid aliceblue;
+    margin-top: -4px;
     align-content: center;
     justify-content: center;
     padding: 20px;
