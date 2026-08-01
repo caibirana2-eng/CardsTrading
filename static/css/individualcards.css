@@ -83,7 +83,7 @@ a{
 /* Places two elements side by side in a 2 by 1 grid (1 column per element) where one side is thrice the width of the other */
 .sidebyside{
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 3fr 7fr;
     grid-template-rows: 1fr;
 }
 
@@ -110,7 +110,7 @@ a{
 .trendimg{
     display: flex;
     width: 99%;
-    height: 355px;
+    height: 358px;
 }
 
 /* Creates a bit of padding around its contents to separate it from the edges of the container */
@@ -123,9 +123,21 @@ a{
 /* Gives the card image padding around the top and left sides to separate it from the edges of the container and sets its background color */
 .cardimg{
     display: flex;
+    align-items: center;
+    justify-content: center;
     background-color:rgb(26, 26, 97);
+    overflow: hidden;
+    min-height: 320px;
     padding-left: 7%;
     padding-top: 7%;
+}
+
+/* Makes the card image fill the container exactly, stretching or compressing it as needed */
+.cardimg img{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
 }
 
 /* Determines the layout for the back bar / card add or remove bar below the search bar (positioning, color, size, display) */
