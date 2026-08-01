@@ -1,3 +1,4 @@
+/* Comfortaa font import */
 @font-face {
     font-family: 'Comfortaa';
     src: url('font/Comfortaa-VariableFont_wght.ttf');
@@ -5,10 +6,12 @@
     font-style: normal;
 }
 
+/* Determines the font for the entire page */
 * {
     font-family: "Comfortaa";
 }
 
+/* Sets the background color and text color for the entire page */
 body{
     min-height: 100vh;
     margin: 0;
@@ -22,16 +25,12 @@ body{
     box-sizing: border-box;
 }
 
-.navblankbar{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 10.3%;
-    background-color: rgb(35, 35, 99);
-    border-bottom: 2px solid aliceblue;
+/* Makes all links on the page have an aliceblue color */
+a{
+    color: aliceblue;
 }
 
+/* Determines the layout for the nav link bar (Sizing, color, display, positioning). Makes it into a 6 by 1 grid (1 column per page link) */
 .navlinkbar{
     position: fixed;
     bottom: 0;
@@ -46,41 +45,15 @@ body{
     border-top: 2px solid aliceblue;
 }
 
+/* Makes little rectangles around each link in the bottom nav bar / nav link bar. Helps them stand out. */
 .navlink{
     padding: 5px;
-    background-color: rgb(47, 47, 128);
+    background-color:rgb(47, 47, 128);
     width: 80%;
     text-align: center;
 }
 
-.pagecontent{
-    width: min(100%, 520px);
-    padding: 24px;
-    display: grid;
-    gap: 20px;
-    background-color: rgb(38, 34, 95);
-    border-radius: 20px;
-    text-align: center;
-
-}
-
-h1{
-    margin: 0;
-}
-
-form{
-    display: grid;
-    gap: 16px;
-}
-
-a{
-    color: aliceblue;
-}
-
-.divider{
-    margin: 5%;
-}
-
+/* Determines the layout for alert messages (color, size, font weight, width, positioning) */
 .textalert{
     color: aliceblue;
     font-size: 15px;
@@ -89,8 +62,26 @@ a{
     margin-left: 11%;
 }
 
+/* Determines the layout for the text that shows the boundaries for the username and password (size, positioning) */
 .namepassboundaries{
     font-size: 10px;
     width: 80%;
-    margin-left: 10%;
+    margin-left: 11%;
+}
+
+/* Determines the layout of the page's main contents (Positioning, color, sizing) and makes rounded padding around everything */
+.pagecontent{
+    width: min(100%, 520px);
+    padding: 24px;
+    display: grid;
+    gap: 20px;
+    background-color: rgb(38, 34, 95);
+    border-radius: 20px;
+    text-align: center;
+}
+
+/* Makes all forms be displayed like a grid, with a 16px gap between each item inside */
+form{
+    display: grid;
+    gap: 16px;
 }

@@ -10,6 +10,9 @@
         <div class="divider"></div>
         <div class="accountcreationbox">   
             <h2>Set your account details!</h2>
+
+            <!-- Account details form. Includes statement of boundaries. Values in the fields are sent to accdetails route for validation.
+             Successful validation will update the user's account details / make the account, otherwise an error message will be displayed. -->
             <form method="POST" action="/accdetails" class="userdetailsinput">
                 <br>
                 <div>
@@ -26,9 +29,13 @@
                     <input type="submit" name="accdetailsconfirm" value="Confirm">
                 </div>
             </form>
+
+            <!-- Back link, leads back to receiveemail code page -->
             <div class="divider">
                 <a href="{{ url_for('receiveemailcode') }}">Back</a>
             </div>
+
+            <!-- Error message display -->
             <div class="textalert">
                 <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
             </div>

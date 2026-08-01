@@ -1,3 +1,4 @@
+/* Comfortaa font import */
 @font-face {
     font-family: 'Comfortaa';
     src: url('font/Comfortaa-VariableFont_wght.ttf');
@@ -5,37 +6,28 @@
     font-style: normal;
 }
 
+/* Determines the font for the entire page */
 * {
     font-family: "Comfortaa";
 }
 
+/* Sets the background color and text color for the entire page */
 body{
     color:aliceblue;
     background-color:rgb(47, 47, 128);
 }
 
+/* Creates small gaps between itself to separate elements */
 .divider{
     margin: 5%;
 }
 
-.navsearchbar{
-    display: flex;
-    position: fixed;
-    background-color: rgb(35, 35, 99);
-    width: 100%;
-    height: 4%;
-    top: 0;
-    left: 0;
-    border-bottom: 2px solid aliceblue;
-    align-content: center;
-    justify-content: center;
-    padding: 20px;
+/* Makes all links on the page have an aliceblue color */
+a{
+    color: aliceblue;
 }
 
-.navsearchbartext{
-    width: 50%;
-}
-
+/* Determines the layout for the nav link bar (Sizing, color, display, positioning). Makes it into a 6 by 1 grid (1 column per page link) */
 .navlinkbar{
     position: fixed;
     bottom: 0;
@@ -50,6 +42,7 @@ body{
     border-top: 2px solid aliceblue;
 }
 
+/* Makes little rectangles around each link in the bottom nav bar / nav link bar. Helps them stand out. */
 .navlink{
     padding: 5px;
     background-color:rgb(47, 47, 128);
@@ -57,10 +50,27 @@ body{
     text-align: center;
 }
 
-a{
-    color: aliceblue;
+/* Determines the layout for the nav search bar (Sizing, color, display, positioning) */
+.navsearchbar{
+    display: flex;
+    position: fixed;
+    background-color: rgb(35, 35, 99);
+    width: 100%;
+    height: 4%;
+    top: 0;
+    left: 0;
+    border-bottom: 2px solid aliceblue;
+    align-content: center;
+    justify-content: center;
+    padding: 20px;
 }
 
+/* Makes the search bar text box take up 50% of the width of the search bar */
+.navsearchbartext{
+    width: 50%;
+}
+
+/* Determines the layout for the container of all the page's contents (color, size, display, positioning). Splits contents into a 2 by 1 grid (2 rows, 1 column) */
 .cardinfo{
     border: solid, 2px, aliceblue;
     display: grid;
@@ -70,40 +80,47 @@ a{
     margin: auto;
 }
 
+/* Places two elements side by side in a 2 by 1 grid (1 column per element) where one side is thrice the width of the other */
 .sidebyside{
     display: grid;
     grid-template-columns: 1fr 3fr;
     grid-template-rows: 1fr;
 }
 
+/* Makes the images of the cards take up the entire width of the cardimg container and sets its color to rgb(26, 26, 97) */
 .cardinfobox{
     width: 100%;
     background-color:rgb(26, 26, 97);
 }
 
+/* Makes the market listings container have a specific background color and padding to separate it from the edges of the container */
 .marketlistings{
     background-color:rgb(26, 26, 97);
     padding: 2%;
 }
 
+/* Makes the market listings images take up the entire width of the market listings container and sets its height and display */
 .marketlistingsimg{
-    display: block;
+    display: flex;
     width: 100%;
     height: 380px;
 }
 
+/* Makes the trend images take up the entire width of the trends container and sets its height and display */
 .trendimg{
-    display: block;
+    display: flex;
     width: 99%;
     height: 355px;
 }
 
+/* Creates a bit of padding around its contents to separate it from the edges of the container */
 .trends{
     padding-left: 2%;
     padding-right: 2%;
     padding-top: 2%;
 }
 
+/* Gives the card image padding around the top and left sides to separate it from the edges of the container and sets its background color */
 .cardimg{
     display: flex;
     background-color:rgb(26, 26, 97);
@@ -111,6 +128,7 @@ a{
     padding-top: 7%;
 }
 
+/* Determines the layout for the back bar / card add or remove bar below the search bar (positioning, color, size, display) */
 .secondtopbar{
     display: flex;
     position: fixed;
@@ -125,18 +143,21 @@ a{
     padding: 15px;
 }
 
+/* Positions the back button */
 .goback{
     position: fixed;
     top: 9%;
     left: 24.2%;
 }
 
+/* Positions the add or remove button */
 .addremove{
     position: fixed;
     top: 9%;
     left: 30%;
 }
 
+/* Slightly shifts the card info text to the right to separate it from the edge of the container */
 .cardinfotext{
     margin-left: 2%;
 }

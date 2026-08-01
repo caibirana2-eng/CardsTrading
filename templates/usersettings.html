@@ -7,11 +7,18 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/usersettings.css') }}">
     </head>
     <body>
-        <div class="navblankbar"></div>
-        <div class="divider"></div>
+        <br>
+        <br>
+
+        <!-- User settings content -->
         <div class="pagecontent">
                 <h1>User Settings</h1>
+
+            <!-- Form for changing username and password, logging out, and deleting account -->
             <form method="POST" action="/usersettings">
+
+                <!-- Input fields for changing username and password. Values sent to usersettings route for validation and updating. If validation succeeds, the changes are saved. 
+                Else, an error message is displayed -->
                 <div>
                     <label for="newusername">New username</label><br>
                     <input type="text" id="newusername" name="settinginputusername" placeholder="New username..." value="{{ pastusername }}">
@@ -25,27 +32,39 @@
                 <div>
                     <input type="submit" name="settingschangeaccount" value="Change Account Info">
                 </div>
+
+                <!-- Logout button -->
                 <div>
                     <br>
                     <br>
                     <input type="submit" name="logout" value="Log Out">
                 </div>
+
+                <!-- Delete account button. Triggers confirmation form to be shown -->
                 <div>
                     <br>
                     <input type="submit" name="deleteaccount" value="Delete Account">
                 </div>
+
             </form>
+
+            <!-- displays alert / error messages -->
             <div class="textalert">
                 <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ alert }}</p>
             </div>
+
+            <!-- Form for confirming delete account. Sends value to check if it matches "PleaseDeleteMyAccount" then if successful deletes account. Else sets error alert -->
             {% if requestingdelete %}
                 <p style="background-color: #4b0101; color: #fcb0b0;">To finalize account deletion, type "PleaseDeleteMyAccount" into the box below and enter</p>
                 <form method="POST" action="/usersettings">
                     <input type="text" name="deleteaccountconfirm" placeholder="PleaseDeleteMyAccount">
                 </form>
             {% endif %}
+
         </div>
         <br>
+
+        <!-- Navigation bar at the bottom of the page. Links to all other pages -->
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
             <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
@@ -54,5 +73,6 @@
             <a href="{{ url_for('contact') }}" class="navlink">CONTACT US</a>
             <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
         </nav>
+
     </body>
 </html>

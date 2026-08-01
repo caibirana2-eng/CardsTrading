@@ -1,3 +1,4 @@
+/* Comfortaa font import */
 @font-face {
     font-family: 'Comfortaa';
     src: url('font/Comfortaa-VariableFont_wght.ttf');
@@ -5,15 +6,72 @@
     font-style: normal;
 }
 
+/* Determines the font for the entire page */
 * {
     font-family: "Comfortaa";
 }
 
+/* Sets the background color and text color for the entire page */
 body{
     color:aliceblue;
     background-color:rgb(47, 47, 128);
 }
 
+/* Creates small gaps between itself to separate elements */
+.divider{
+    margin: 5%;
+}
+
+/* Makes all links on the page have an aliceblue color */
+a{
+    color: aliceblue;
+}
+
+/* Determines the layout for the nav search bar (Sizing, color, display, positioning) */
+.navsearchbar{
+    display: flex;
+    position: fixed;
+    background-color: rgb(35, 35, 99);
+    width: 100%;
+    height: 4%;
+    top: 0;
+    left: 0;
+    border-bottom: 2px solid aliceblue;
+    align-content: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Makes the search bar text box take up 50% of the width of the search bar */
+.navsearchbartext{
+    width: 50%;
+}
+
+
+/* Determines the layout for the nav link bar (Sizing, color, display, positioning). Makes it into a 6 by 1 grid (1 column per page link) */
+.navlinkbar{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(35, 35, 99);
+    padding: 20px;
+    width: 100%;
+    display: grid;
+    place-items: center;
+    grid-template-rows: 1fr;
+    grid-template-columns: repeat(6, 1fr);
+    border-top: 2px solid aliceblue;
+}
+
+/* Makes little rectangles around each link in the bottom nav bar / nav link bar. Helps them stand out. */
+.navlink{
+    padding: 5px;
+    background-color:rgb(47, 47, 128);
+    width: 80%;
+    text-align: center;
+}
+
+/* Determines the layout for the notice container forms (Sizing, color, display) and makes it scrollable */
 .noticecontainer{
     margin: auto;
     display: flex;            
@@ -30,6 +88,7 @@ body{
     margin-bottom: 5%;
 }
 
+/* Determines the layout for the individual notices (Sizing, color, display) */
 .notices{
     flex: 0 0 200px;           
     height: 50px;
@@ -40,57 +99,12 @@ body{
     justify-content: center;
 }
 
+/* centers all text that says what type of notices is being displayed below it (New sets, trending cards, bug fixes) */
 .noticetype{
     text-align: center;
 }
 
-.divider{
-    margin: 5%;
-}
-
-.navsearchbar{
-    display: flex;
-    position: fixed;
-    background-color: rgb(35, 35, 99);
-    width: 100%;
-    height: 4%;
-    top: 0;
-    left: 0;
-    border-bottom: 2px solid aliceblue;
-    align-content: center;
-    justify-content: center;
-    padding: 20px;
-}
-
-.navsearchbartext{
-    width: 50%;
-}
-
-.navlinkbar{
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    background-color: rgb(35, 35, 99);
-    padding: 20px;
-    width: 100%;
-    display: grid;
-    place-items: center;
-    grid-template-rows: 1fr;
-    grid-template-columns: repeat(6, 1fr);
-    border-top: 2px solid aliceblue;
-}
-
-.navlink{
-    padding: 5px;
-    background-color:rgb(47, 47, 128);
-    width: 80%;
-    text-align: center;
-}
-
-a{
-    color: aliceblue;
-}
-
+/* Determines the layout for the welcome back message (Sizing, positioning) */
 .welcomeback{
     margin-top: 5%;
     text-align: center;
@@ -98,14 +112,17 @@ a{
     margin-bottom: 5%;
 }
 
+/* Slightly shifts the changes written in the list to the right */
 .changes{
     margin-left: 1%;
 }
 
+/* Slightly shifts the changes list itself to the right */
 .changeslist{
     margin-left: 1%;
 }
 
+/* Removes the white boarders around the buttons and makes it so the cursor changes when hovering over them */
 button {
     padding: 0;
     border: none;

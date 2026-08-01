@@ -3,16 +3,24 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Page title sets itself to the name of the card being viewed -->
         <title>Card: {{ cardname }}</title>
+
         <link rel="stylesheet" href="{{ url_for('static', filename='css/individualcards.css') }}">
     </head>
     <body>
         <nav>
-            <form method="POST" action="/individualcards" class="navsearchbar">
+
+            <!-- Search bar. Value of the search query is passed to the cardsearch route and used to filter cards -->
+            <form method="POST" action="/cardsearch" class="navsearchbar">
                 <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
                 <input type="submit" name="confirmnavsearch" value="Search">
             </form>
+
             <div class="secondtopbar">
+
+                    <!-- Back button. Triggers a different function depending on whether the user is viewing a set or not -->
                     <form method="POST" action="/individualcards" class="goback">
                         {% if addorremove == "add" %}
                             <input type="submit" name="backnoset" value="Back">
@@ -20,8 +28,12 @@
                             <input type="submit" name="backset" value="Back">
                         {% endif %}
                     </form>
+
+                    <!-- Depending on if the user is viewing an owned set or not, either displays the option to add or remove a card to or from a specific set -->
                     {% if shownsets %}
                         <div class="addremove">
+
+                            <!-- If adding, displays all available sets as options. Submit acts as the trigger to add the card to the selected option-->
                             {% if addorremove == "add" %}
                                 <form method="POST" action="/individualcards">
                                     <select name="addchosenset">
@@ -31,11 +43,14 @@
                                     </select>
                                     <input type="submit" name="addcard" value="Add Card">
                                 </form>
+                            
+                            <!-- If removing, displays a button that acts as the trigger to remove the card from the set being viewed -->
                             {% else %}
                                 <form method="POST" action="/individualcards">
                                     <input type="submit" name="removecard" value="Remove Card">
                                 </form>
                             {% endif %}
+
                         </div>
                     {% endif %}
             </div>
@@ -69,6 +84,8 @@
             </div>
         </div>
         <br>
+
+        <!-- Navigation bar at the bottom of the page. Links to all other pages -->
         <div class="divider"></div>
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>

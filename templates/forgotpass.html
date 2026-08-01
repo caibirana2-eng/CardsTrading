@@ -8,7 +8,11 @@
     </head>
     <body>
         <div class="divider"></div>
+
+        <!-- Forgot Password Box -->
         <div class="forgotpassbox">
+
+            <!-- Passes value for email. Value is used to check if email exists and is bount to an account-->
             <h2>Enter your email for a recovery code!</h2>
             <form method="post" action="/forgotpass" class="userpassinput">
                 <div>
@@ -16,12 +20,19 @@
                     <input type="submit" name="confirmrecoveryemail" value="Confirm">
                 </div>
             </form>
+
+            <!-- Back link to login page -->
             <div class="divider">
                 <a href="{{ url_for('login') }}">Back</a>
             </div>
+
+        </div>
+
+            <!-- Error message display -->
             <div class="textalert">
                 <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
             </div>
+
         </div>
     </body>
 </html>

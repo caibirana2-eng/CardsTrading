@@ -1,31 +1,33 @@
-@font-face{
+/* Comfortaa font import */
+@font-face {
     font-family: 'Comfortaa';
     src: url('font/Comfortaa-VariableFont_wght.ttf');
     font-weight: 200 700;
     font-style: normal;
 }
 
+/* Determines the font for the entire page */
 * {
     font-family: "Comfortaa";
 }
 
+/* Sets the background color and text color for the entire page */
 body{
+    color:aliceblue;
+    background-color:rgb(47, 47, 128);
+}
+
+/* Creates small gaps between itself to separate elements */
+.divider{
+    margin: 5%;
+}
+
+/* Makes all links on the page have an aliceblue color */
+a{
     color: aliceblue;
-    background-color: rgb(47, 47, 128);
-    padding-top: 80px;
-    padding-bottom: 140px;
 }
 
-.navblankbar{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 10.3%;
-    background-color: rgb(35, 35, 99);
-    border-bottom: 2px solid aliceblue;
-}
-
+/* Determines the layout for the nav link bar (Sizing, color, display, positioning). Makes it into a 6 by 1 grid (1 column per page link) */
 .navlinkbar{
     position: fixed;
     bottom: 0;
@@ -40,13 +42,15 @@ body{
     border-top: 2px solid aliceblue;
 }
 
+/* Makes little rectangles around each link in the bottom nav bar / nav link bar. Helps them stand out. */
 .navlink{
     padding: 5px;
-    background-color: rgb(47, 47, 128);
+    background-color:rgb(47, 47, 128);
     width: 80%;
     text-align: center;
 }
 
+/* Determines the layout of the page's main contents (Positioning, color, sizing) and makes a rounded box around it all */
 .pagecontent{
     display: grid;
     gap: 20px;
@@ -58,6 +62,7 @@ body{
     text-align: center;
 }
 
+/* Determines the layout of each info box (Padding, border, background color)*/
 .section{
     padding: 20px;
     background-color: rgb(35, 35, 99);
@@ -65,18 +70,13 @@ body{
     border-radius: 12px;
 }
 
+/* Makes a bit of empty space below each section header */
 .section h2{
     margin-bottom: 10px;
 }
 
+/* Sets the vertical spacing between the lines of texto to 1.6*/
 .section p{
     line-height: 1.6;
 }
 
-.divider{
-    margin: 5%;
-}
-
-a{
-    color: aliceblue;
-}

@@ -7,10 +7,16 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/contact.css') }}">
     </head>
     <body>
-        <div class="navblankbar"></div>
-        <div class="divider"></div>
+        <br>
+        <br>
+
+        <!-- Contact page content -->
         <div class="pagecontent">
             <h1>Contact Us</h1>
+
+            <!-- Contact form for users to send messages to the site administrators. If a message has been sent, a confirmation message will be displayed in place
+             of the forms. Value for the message sent will be checked. If either field is empty, an error message will be displayed. -->
+            <p>If you have any questions, concerns, or feedback, please fill out the form below and we will get back to you as soon as possible.</p>
             {% if messagesent %}
                 <p>Your message has been sent. We will review it shortly.</p>
                 <a href="{{ url_for('contact') }}">Send another message?</a>
@@ -19,19 +25,21 @@
                     <label for="subject">Subject</label><br>
                     <input type="text" id="subject" name="messagesubject" placeholder="Subject..." class="messagesubject">
                     <br>
-                    <br>
                     <label for="message">Message</label><br>
                     <textarea id="message" name="contactmessage" rows="6" placeholder="Write your message here..."></textarea><br><br>
                     <input type="submit" name="sendmessageconfirm" value="Send Message" class="sendmessageconfirm">
                 </form>
                 <br>
             {% endif %}
+
+            <!-- Error message display -->
             <div class="textalert">
                 <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ error }}</p>
             </div>
         </div>
         <br>
-        <div class="divider"></div>
+
+        <!-- Navigation bar at the bottom of the page. Links to all other pages -->
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
             <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
@@ -40,5 +48,6 @@
             <a href="{{ url_for('contact') }}" class="navlink">CONTACT US</a>
             <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
         </nav>
+
     </body>
 </html>

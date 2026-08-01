@@ -11,6 +11,8 @@
         <div class="loginbox">
             <h1>Bobo Cards Tracker!</h1>    
             <h2>Log In</h2>
+
+            <!-- User details input fields. Username and password values passed to login route for authentication -->
             <form method="POST" action="/login" class="userdetailsinput">
                 <div>
                     <input type="text" name="usernametype" placeholder="Username here..." value="">
@@ -20,6 +22,8 @@
                     <input type="submit" name="confirmlogin" value="Confirm">
                 </div>
             </form>
+
+            <!-- Links for signing up and resetting password -->
             <div class="sidebyside">
                 <div>
                     <a href="{{ url_for('signup') }}">Have no account?</a>
@@ -28,9 +32,12 @@
                     <a href="{{ url_for('forgotpass') }}">Forgot your password?</a>
                 </div>
             </div>
+
+            <!-- Displays any error messages either sent via session or passed directly from login route -->
             <div class="textalert">
                 <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
             </div>
+
         </div>
     </body>
 </html>

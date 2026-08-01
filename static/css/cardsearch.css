@@ -1,3 +1,4 @@
+/* Comfortaa font import */
 @font-face {
     font-family: 'Comfortaa';
     src: url('font/Comfortaa-VariableFont_wght.ttf');
@@ -5,37 +6,28 @@
     font-style: normal;
 }
 
+/* Determines the font for the entire page */
 * {
     font-family: "Comfortaa";
 }
 
+/* Sets the background color and text color for the entire page */
 body{
     color:aliceblue;
     background-color:rgb(47, 47, 128);
 }
 
+/* Creates small gaps between itself to separate elements */
 .divider{
     margin: 5%;
 }
 
-.navsearchbar{
-    display: flex;
-    position: fixed;
-    background-color: rgb(35, 35, 99);
-    width: 100%;
-    height: 4%;
-    top: 0;
-    left: 0;
-    border-bottom: 2px solid aliceblue;
-    align-content: center;
-    justify-content: center;
-    padding: 20px;
+/* Makes all links on the page have an aliceblue color */
+a{
+    color: aliceblue;
 }
 
-.navsearchbartext{
-    width: 50%;
-}
-
+/* Determines the layout for the nav link bar (Sizing, color, display, positioning). Makes it into a 6 by 1 grid (1 column per page link) */
 .navlinkbar{
     position: fixed;
     bottom: 0;
@@ -50,6 +42,7 @@ body{
     border-top: 2px solid aliceblue;
 }
 
+/* Makes little rectangles around each link in the bottom nav bar / nav link bar. Helps them stand out. */
 .navlink{
     padding: 5px;
     background-color:rgb(47, 47, 128);
@@ -57,29 +50,46 @@ body{
     text-align: center;
 }
 
-a{
-    color: aliceblue;
+/* Determines the layout for the nav search bar (Sizing, color, display, positioning) */
+.navsearchbar{
+    display: flex;
+    position: fixed;
+    background-color: rgb(35, 35, 99);
+    width: 100%;
+    height: 4%;
+    top: 0;
+    left: 0;
+    border-bottom: 2px solid aliceblue;
+    align-content: center;
+    justify-content: center;
+    padding: 20px;
 }
 
+/* Makes the search bar text box take up 50% of the width of the search bar */
+.navsearchbartext{
+    width: 50%;
+}
+
+/* Determines the layout for the images of the cards (size, spacing) */
 .cardimg{
     width: 200px;
+    height: auto;
     margin: 10px;
 }
 
+/* Makes the images of the cards take up the entire width of the cardimg container */
 .cardimg img{
     max-width: 100%;
 }
 
-.filterresults{
-    text-align: center;
-}
-
+/* Centers all cards shown on the page */
 .allshowncards{
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+/* Determines the layout for the nav filter bar (Sizing, color, display, positioning). Makes it into a 5 by 1 grid (1 column per filter selection) */
 .navfilterbar{
     display: grid;
     grid-template-rows: 1fr;
@@ -96,10 +106,12 @@ a{
     padding: 15px;
 }
 
+/* Makes the filter confirm button take up 40% of the width of the nav filter bar */
 .navfilterconfirm{
     width: 40%;
 }
 
+/* Removes the white boarders around the buttons and makes it so the cursor changes when hovering over them */
 button {
     padding: 0;
     border: none;
@@ -107,6 +119,7 @@ button {
     line-height: 0;
 }
 
+/* Determines the layout for the empty set message (Sizing, color, display) */
 .emptyset{
     padding: 20px;
     background-color: rgb(35, 35, 99);

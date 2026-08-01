@@ -10,12 +10,16 @@
         <div class="divider"></div>
         <div class="codebox">
             <h2>A code was mailed to the given address!</h2>
+
+            <!-- Code input form. Value sent to the receiveemailcode route for validation, if valid sends to accountdetails page -->
             <form method="post" action="/receiveemailcode" class="userpassinput">
                 <div>
                     <input type="text" name="codeemail" placeholder="Code here..." value="">
                     <input type="submit" name="confirmcodeemail" value="Confirm">
                 </div>
             </form>
+
+            <!-- Back and Resend Code links. Back link is dynamic and will return to the page that sent the user to this page -->
             <div class="sidebyside">
                 <div class="divider">
                     <div class="divider"></div>
@@ -28,9 +32,12 @@
                     <a>Resend Code</a>
                 </div>
             </div>
+
+            <!-- Displays error messages -->
             <div class="textalert">
                 <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
             </div>
+
         </div>
     </body>
 </html>

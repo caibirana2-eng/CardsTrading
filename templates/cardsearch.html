@@ -3,6 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Page title sets itself to whichever set is currently being viewed (if there is one)-->
         <title>
             {% if selectedsetname %}
                 Set: {{ selectedsetname }}
@@ -10,70 +12,77 @@
                 All Cards
             {% endif %}
         </title>
+
         <link rel="stylesheet" href="{{ url_for('static', filename='css/cardsearch.css') }}">
     </head>
     <body>
         <nav>
-        <form method="POST" action="/cardsearch" class="navsearchbar">
-            <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
-            <input type="submit" name="confirmnavsearch" value="Search">
-        </form>
-        <form method="POST" action="/cardsearch" class="navfilterbar" name="filtersets">
-            <div>
-                <label for="setfilter">Set:</label>
-                {% if viewingnewsets %}
-                    <select id="setfilter" name="setfilter">
-                        <option value="{{ viewingnewsets }}">{{ viewingnewsets }}</option>
+            <!-- Search bar. Value of the search query is passed to the cardsearch route and used to filter cards -->
+            <form method="POST" action="/cardsearch" class="navsearchbar">
+                <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
+                <input type="submit" name="confirmnavsearch" value="Search">
+            </form>
+
+            <!-- Filter bar. Presents an array of select options with each their own values. The selected values are passed to the cardsearch route 
+             and used to run the filter system's sql queries while finding cards that match the value-determined criteria -->
+            <form method="POST" action="/cardsearch" class="navfilterbar" name="filtersets">
+                <div>
+                    <label for="setfilter">Set:</label>
+                    {% if viewingnewsets %}
+                        <select id="setfilter" name="setfilter">
+                            <option value="{{ viewingnewsets }}">{{ viewingnewsets }}</option>
+                        </select>
+                    {% else %}
+                        <select id="setfilter" name="setfilter">
+                            <option value="anyset">ALL</option>
+                        {% for set in sets %}
+                            <option value="{{ set[0] }}">{{ set[0] }}</option>
+                        {% endfor %}
+                        </select>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="pricefilter">Avg Price:</label>
+                    <select id="pricefilter" name="pricefilter">
+                        <option value="higher">higher than</option>
+                        <option value="lower">lower than</option>
                     </select>
-                {% else %}
-                    <select id="setfilter" name="setfilter">
-                        <option value="anyset">ALL</option>
-                    {% for set in sets %}
-                        <option value="{{ set[0] }}">{{ set[0] }}</option>
-                    {% endfor %}
+                    <input type="number" name="priceinput" value=0>
+                </div>
+                <div>
+                    <label for="releaseearlylate">Release Year:</label>
+                    <select id="releaseearlylate" name="releaseearlylate">
+                        <option value="later">later than</option>
+                        <option value="earlier">earlier than</option>
                     </select>
-                {% endif %}
-            </div>
-            <div>
-                <label for="pricefilter">Avg Price:</label>
-                <select id="pricefilter" name="pricefilter">
-                    <option value="higher">higher than</option>
-                    <option value="lower">lower than</option>
-                </select>
-                <input type="number" name="priceinput" value=0>
-            </div>
-            <div>
-                <label for="releaseearlylate">Release Year:</label>
-                <select id="releaseearlylate" name="releaseearlylate">
-                    <option value="later">later than</option>
-                    <option value="earlier">earlier than</option>
-                </select>
-                <select id="releaseyear" name="releaseyear">
-                    {% for year in releaseyears %}
-                        <option value="{{ year[0] }}">{{ year[0] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="dataearlylate">Data Recency:</label>
-                <select id="dataearlylate" name="dataearlylate">
-                    <option value="later">later than</option>
-                    <option value="earlier">earlier than</option>
-                </select>
-                <select id="datayear" name="datayear">
-                    {% for year in datayears %}
-                        <option value="{{ year[0] }}">{{ year[0] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="navfilterconfirm">
-                <input type="submit" value="Run Filter" name="runfilter">
-            </div>
-        </form>
+                    <select id="releaseyear" name="releaseyear">
+                        {% for year in releaseyears %}
+                            <option value="{{ year[0] }}">{{ year[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <label for="dataearlylate">Data Recency:</label>
+                    <select id="dataearlylate" name="dataearlylate">
+                        <option value="later">later than</option>
+                        <option value="earlier">earlier than</option>
+                    </select>
+                    <select id="datayear" name="datayear">
+                        {% for year in datayears %}
+                            <option value="{{ year[0] }}">{{ year[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="navfilterconfirm">
+                    <input type="submit" value="Run Filter" name="runfilter">
+                </div>
+            </form>
         </nav>
         <br>
         <br>
         <div class="divider"></div>
+
+        <!-- Display the name of the viewed set (if there is one)-->
         {% if selectedsetname %}
             <p>Showing cards from set: {{ selectedsetname }}</p>
         {% endif %}
@@ -81,25 +90,34 @@
             <p>Showing cards from set: {{ viewingnewsets }}</p>
         {% endif %}
         <br>
+
+        <!-- Display all cards that match the search query and filter criteria. If a set is being viewed, only cards from that set will be displayed -->
         <div class="allshowncards">
-        <form method="POST" action="/cardsearch">
-            {% if storedcards == [(None,)] %}
-                <br>
-                <div class="emptyset">
-                    <h2>Your set is currently empty!</h2>
-                    <p>To add a card to your set, go to "All Cards" and click a card. Then choose what set to add it in and press add.</p>
-                </div>
-            {% endif %}
-            {% for card in showncards %}
-                {% if card in storedcards %}
-                    <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
-                        <img src="static/cardimages/{{ card[0] }}" alt="{{ card[0] }}">
-                    </button>
+            <form method="POST" action="/cardsearch">
+
+                <!-- Alert that appears when the user's set is empty -->
+                {% if storedcards == [(None,)] %}
+                    <br>
+                    <div class="emptyset">
+                        <h2>Your set is currently empty!</h2>
+                        <p>To add a card to your set, go to "All Cards" and click a card. Then choose what set to add it in and press add.</p>
+                    </div>
                 {% endif %}
-            {% endfor %}
-        </form>
+
+                <!-- Display each card that matches the search and filter criteria -->
+                {% for card in showncards %}
+                    {% if card in storedcards %}
+                        <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
+                            <img src="static/cardimages/{{ card[0] }}" alt="{{ card[0] }}">
+                        </button>
+                    {% endif %}
+                {% endfor %}
+
+            </form>
         </div>
         <div class="divider"></div>
+
+        <!-- Navigation bar at the bottom of the page. Links to all other pages -->
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
             <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>

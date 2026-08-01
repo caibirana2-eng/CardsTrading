@@ -8,29 +8,45 @@
     </head>
     <body>
         <nav>
-        <form method="POST" action="/cardsearch" class="navsearchbar">
-            <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
-            <input type="submit" name="confirmnavsearch" value="Search">
-        </form>
+
+            <!-- Search bar. Value of the search query is passed to the cardsearch route and used to filter cards -->
+            <form method="POST" action="/cardsearch" class="navsearchbar">
+                <input type="text" name="navsearch" placeholder="Search for cards!" value="" class="navsearchbartext">
+                <input type="submit" name="confirmnavsearch" value="Search">
+            </form>
+
         </nav>
         <br>
         <p class="welcomeback">Welcome, {{ user }}!</p>
+
+        <!-- Notice section -->
         <p class="noticetype">New Sets!</p>
         <br>
         <form class="noticecontainer" method="POST" action="/cardsearch">
+
+            <!-- Creates a button in the form for each new set notice that when clicked sends the specific new set as a value
+             and navigates to the card page. The value is used to filter cards in cardsearch and make it only show cards from the new set-->
             {% for notice in newsetnotices %}
                 <button class="notice" name="newsets" value='{{ notice }}'><img src="static/newsetnotices/{{ notice }}" alt="{{ notice }}"></button>
             {% endfor %}
+
         </form>
         <p class="noticetype">Trending Cards</p>
         <br>
         <form class="noticecontainer" method="POST" action="/individualcards">
+
+            <!-- Creates a button in the form for each trending card notice that when clicked sends the specific trending card as a value
+             and navigates to the card page. The value is used to filter cards in individualcards and make it only show the trending card-->
             {% for notice in trendingcardnotices %}
                 <button class="notice" name="trendingcards" value='{{ notice }}'><img src="static/trendingcardnotices/{{ notice }}" alt="{{ notice }}"></button>
             {% endfor %}
+
         </form>
         <br>
+
         <div class="changeslist">
+
+            <!-- Bug fixes and changes -->
             <p class="changes">Bug Fixes and Changes</p>
             <ul>
                 <li>
@@ -46,9 +62,12 @@
                     Fixed a bug where the card images in their individual pages clipped into the corners
                 </li>
             </ul>
+
         </div>
         <br>
         <div class="divider"></div>
+
+        <!-- Navigation bar at the bottom of the page. Links to all other pages -->
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
             <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>

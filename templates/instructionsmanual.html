@@ -7,39 +7,46 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/instructionsmanual.css') }}">
     </head>
     <body>
-        <div class="navblankbar"></div>
-        <br>
         <div class="divider"></div>
+
+        <!-- Instructions manual content -->        
         <div class="pagecontent">
+            
+            <!-- Instructions manual title and link to FAQs -->
             <h1>Instructions Manual</h1>
             <p><a href="{{ url_for('faqs') }}">Click for FAQs</a></p>
+
+            <!-- Instructions manual sections with headings and descriptions -->
             <div class="section">
                 <h2>Search</h2>
                 <p>Use the search bar at the top to find cards by name, description, set, or image filename.</p>
             </div>
-        <div class="section">
-            <h2>Card Details</h2>
-            <p>Click a card image to view its details on the individual card page.</p>
-        </div>
-        <div class="section">
-            <h2>Account Settings</h2>
-            <p>Go to User Settings to change your account information, log out, or delete your account.</p>
-        </div>
-        <div class="section">
-            <h2>Sets</h2>
-            <p>Go to the "own sets" tab to create, delete, or view sets!</p>
-        </div>
-        <div class="section">
-            <h2>Adding and Removing Cards</h2>
-            <p>When accessing a card's individual page from the card search page, you're given the option to add it to a selected set where it hasn't already been added (if you've made any sets). Accessing a card's individual page from your set instead provides the option to remove it from the set.</p>
-        </div>
-        <div class="section">
-            <h2>Filter System</h2>
-            <p>To run the filter system, input all of the boundaries you're looking for then press the "run filter" button.</p>
-        </div>
+            <div class="section">
+                <h2>Card Details</h2>
+                <p>Click a card image to view its details on the individual card page.</p>
+            </div>
+            <div class="section">
+                <h2>Account Settings</h2>
+                <p>Go to User Settings to change your account information, log out, or delete your account.</p>
+            </div>
+            <div class="section">
+                <h2>Sets</h2>
+                <p>Go to the "own sets" tab to create, delete, or view sets!</p>
+            </div>
+            <div class="section">
+                <h2>Adding and Removing Cards</h2>
+                <p>When accessing a card's individual page from the card search page, you're given the option to add it to a selected set where it hasn't already been added (if you've made any sets). Accessing a card's individual page from your set instead provides the option to remove it from the set.</p>
+            </div>
+            <div class="section">
+                <h2>Filter System</h2>
+                <p>To run the filter system, input all of the boundaries you're looking for then press the "run filter" button.</p>
+            </div>
+
         </div>
         <br>
         <div class="divider"></div>
+
+        <!-- Navigation bar at the bottom of the page. Links to all other pages -->
         <nav class="navlinkbar">
             <a href="{{ url_for('index') }}" class="navlink">HOME</a>
             <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
