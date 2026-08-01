@@ -24,20 +24,19 @@
             </form>
 
             <!-- Links for signing up and resetting password -->
-            <div class="sidebyside">
-                <div>
-                    <a href="{{ url_for('signup') }}">Have no account?</a>
-                </div>
-                <div>
-                    <a href="{{ url_for('forgotpass') }}">Forgot your password?</a>
-                </div>
+            <div class="divider">
+                <a href="{{ url_for('signup') }}">Have no account?</a>
+            </div>
+            <div>
+                <a href="{{ url_for('forgotpass') }}">Forgot your password?</a>
             </div>
 
             <!-- Displays any error messages either sent via session or passed directly from login route -->
-            <div class="textalert">
-                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
-            </div>
-
+            {% if errormessage %}
+                <div class="textalert">
+                    <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
+                </div>
+            {% endif %}
         </div>
     </body>
 </html>

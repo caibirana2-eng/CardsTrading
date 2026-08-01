@@ -29,15 +29,6 @@ a{
     font-weight: normal;
 }
 
-/* Places two elements side by side in a 2 by 1 grid (1 column per element) shifted a bit to the right */
-.sidebyside{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr;
-    width: 70%;
-    margin-left: 14%;
-}
-
 /* Determines the layout for alert messages (color, size, font weight, width, positioning) */
 .textalert{
     color: aliceblue;
@@ -45,19 +36,22 @@ a{
     font-weight: normal;
     width: 80%;
     margin-left: 11%;
+    margin-bottom: 5%;
 }
 
-/* Determines the layout for the container of all the page's contents (color, size, display, positioning). Splits contents into a 1 by 4 grid */
+/* Determines the layout for the container of all the page's contents (color, size, display, positioning) */
 .forgotpassbox{
     display: grid;
     margin: auto;
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, 1fr);
     text-align: center;
     max-width: 500px;
-    max-height: 250px;
     background-color: rgb(38, 34, 95);
     border-radius: 5%;
+}
+
+/* Makes a bit of empty space above the email receiving form*/
+.useremailinput{
+    margin-top: 5%;
 }
 
 

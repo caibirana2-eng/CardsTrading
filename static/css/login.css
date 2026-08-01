@@ -29,15 +29,6 @@ a{
     font-weight: normal;
 }
 
-/* Places two elements side by side in a 2 by 1 grid (1 column per element) shifted a bit to the right */
-.sidebyside{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1fr;
-    width: 70%;
-    margin-left: 14%;
-}
-
 /* Determines the layout for alert messages (color, size, font weight, width, positioning) */
 .textalert{
     color: aliceblue;
@@ -45,6 +36,7 @@ a{
     font-weight: normal;
     width: 80%;
     margin-left: 11%;
+    padding-bottom: 5%;
 }
 
 /* Determines the layout for the container of all the page's contents (color, size, display, positioning). Splits contents into a 1 by 5 grid (1 row per element) */

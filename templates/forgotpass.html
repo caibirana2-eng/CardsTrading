@@ -14,7 +14,7 @@
 
             <!-- Passes value for email. Value is used to check if email exists and is bount to an account-->
             <h2>Enter your email for a recovery code!</h2>
-            <form method="post" action="/forgotpass" class="userpassinput">
+            <form method="post" action="/forgotpass" class="useremailinput">
                 <div>
                     <input type="text" name="emailtypeforgot" placeholder="Email here..." value="">
                     <input type="submit" name="confirmrecoveryemail" value="Confirm">
@@ -26,13 +26,11 @@
                 <a href="{{ url_for('login') }}">Back</a>
             </div>
 
-        </div>
-
-            <!-- Error message display -->
-            <div class="textalert">
-                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
-            </div>
-
+            {% if errormessage %}
+                <div class="textalert">
+                    <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
+                </div>
+            {% endif %}
         </div>
     </body>
 </html>

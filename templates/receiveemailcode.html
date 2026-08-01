@@ -21,22 +21,20 @@
 
             <!-- Back and Resend Code links. Back link is dynamic and will return to the page that sent the user to this page -->
             <div class="sidebyside">
-                <div class="divider">
-                    <div class="divider"></div>
-                    <div class="divider"></div>
+                <div>
                     <a href="{{ url_for(priorpage) }}">Back</a>
                 </div>
-                <div class="divider">
-                    <div class="divider"></div>
-                    <div class="divider"></div>
+                <div>
                     <a>Resend Code</a>
                 </div>
             </div>
 
             <!-- Displays error messages -->
-            <div class="textalert">
-                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
-            </div>
+            {% if errormessage %}
+                <div class="textalert">
+                    <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
+                </div>
+            {% endif %}
 
         </div>
     </body>

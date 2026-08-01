@@ -36,9 +36,11 @@
             </div>
 
             <!-- Error message display -->
-            <div class="textalert">
-                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
-            </div>
+            {% if errormessage %}
+                <div class="textalert">
+                    <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
+                </div>
+            {% endif %}
         </div>
     </body>
 </html>

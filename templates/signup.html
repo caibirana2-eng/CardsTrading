@@ -12,7 +12,7 @@
             <h2>Signup by entering your email!</h2>
 
             <!-- Signup form. Sends user-entered value to the signup route for validation. If valid sends to emailcode page-->
-            <form method="post" action="/signup" class="userpassinput">
+            <form method="post" action="/signup" class="useremailinput">
                 <div>
                     <input type="text" name="emailtype" placeholder="Email here..." value="">
                     <input type="submit" name="confirmemail" value="Confirm">
@@ -23,9 +23,11 @@
             </div>
 
             <!-- Displays error messages -->
-            <div class="textalert">
-                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
-            </div>
+            {% if errormessage %}
+                <div class="textalert">
+                    <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ errormessage }}</p>
+                </div>
+            {% endif %}
 
         </div>
     </body>
