@@ -15,6 +15,8 @@
 body{
     color:aliceblue;
     background-color:rgb(47, 47, 128);
+    padding: 20px 16px 40px;
+    box-sizing: border-box;
 }
 
 /* Creates small gaps between itself to separate elements */
@@ -39,7 +41,7 @@ a{
     place-items: center;
     grid-template-rows: 1fr;
     grid-template-columns: repeat(6, 1fr);
-    border-bottom: 2px solid aliceblue;
+    border-bottom: 0;
     z-index: 1000;
 }
 
@@ -58,10 +60,11 @@ a{
     background-color: rgb(35, 35, 99);
     width: 100%;
     height: 4%;
-    top: 68px;
+    top: 67.5px;
     left: 0;
+    border-top: 2px solid aliceblue;
     border-bottom: 2px solid aliceblue;
-    margin-top: -4px;
+    margin-top: 0;
     align-content: center;
     justify-content: center;
     padding: 20px;

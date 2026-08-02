@@ -7,6 +7,16 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     </head>
     <body>
+        <!-- Navigation bar at the top of the page. Links to all other pages -->
+        <nav class="navlinkbar">
+            <a href="{{ url_for('index') }}" class="navlink">HOME</a>
+            <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
+            <a href="{{ url_for('cardsearch') }}" class="navlink">ALL CARDS</a>
+            <a href="{{ url_for('ownsets') }}" class="navlink">OWN SETS</a>
+            <a href="{{ url_for('contact') }}" class="navlink">CONTACT US</a>
+            <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
+        </nav>
+
         <nav>
 
             <!-- Search bar. Value of the search query is passed to the cardsearch route and used to filter cards -->
@@ -64,15 +74,5 @@
 
         </div>
         <br>
-
-        <!-- Navigation bar at the bottom of the page. Links to all other pages -->
-        <nav class="navlinkbar">
-            <a href="{{ url_for('index') }}" class="navlink">HOME</a>
-            <a href="{{ url_for('instructionsmanual') }}" class="navlink">HELP</a>
-            <a href="{{ url_for('cardsearch') }}" class="navlink">ALL CARDS</a>
-            <a href="{{ url_for('ownsets') }}" class="navlink">OWN SETS</a>
-            <a href="{{ url_for('contact') }}" class="navlink">CONTACT US</a>
-            <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
-        </nav>
     </body>
 </html>
