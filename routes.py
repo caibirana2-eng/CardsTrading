@@ -254,7 +254,8 @@ def usersettings():
 
                 session["loginalert"] = "Account has been permanently deleted"
                 return redirect(url_for("login"))
-
+            else:
+                alert = "Entered text incorrectly!"
         # Changes user's details in account database if all checks are passed, otherwise sets an alert message to be displayed on the page
         if "settingschangeaccount" in request.form:
 
