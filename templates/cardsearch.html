@@ -112,26 +112,37 @@
                         <h2>Your set is currently empty!</h2>
                         <p>To add a card to your set, go to "All Cards" and click a card. Then choose what set to add it in and press add.</p>
                     </div>
+                {% else %}
+
+                    <!-- Display each card that matches the search and filter criteria -->
+                    {% for card in showncards %}
+                        {% if card in storedcards %}
+                            <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
+                                <img src="static/cardimages/{{ card[0] }}" alt="{{ card[0] }}">
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+
                 {% endif %}
 
-                <!-- Display each card that matches the search and filter criteria -->
-                {% for card in showncards %}
-                    {% if card in storedcards %}
-                        <button type="submit" name="card" value="{{ card[0] }}" class="cardimg">
-                            <img src="static/cardimages/{{ card[0] }}" alt="{{ card[0] }}">
-                        </button>
-                    {% endif %}
-                {% endfor %}
+                
 
             </form>
         </div>
         <div class="divider"></div>
 
         <!-- Footer bar at the bottom of the page -->
-        <footer>
-                <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
-                <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
-        </footer>
+        {% if storedcards == [(None,)] %}
+            <footer style="margin-top: 19%;">
+                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
+                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
+            </footer>
+        {% else %}
+            <footer style="margin-top: 12%;">
+                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
+                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
+            </footer>
+        {% endif %}
         
     </body>
 </html>
