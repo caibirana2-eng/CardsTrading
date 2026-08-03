@@ -13,11 +13,26 @@
 
 /* Sets the background color and text color for the entire page */
 body{
+    margin: 0;
     color:aliceblue;
     background-color:rgb(47, 47, 128);
-    padding: 50px 16px 40px;
+    padding: 50px 0 0 0;
     box-sizing: border-box;
 }
+
+/* Determines the layout of the footer at the bottom of the page (Sizing, display, color)*/
+footer {
+    display: grid;
+    background-color: rgb(35, 35, 99);
+    width: 100%;
+    height: 80px;
+    border-top: 2px solid aliceblue;
+    margin-top: 4%;
+    justify-content: center;
+    padding: 20px 0 40px 0;
+    text-align: center;
+}
+
 
 /* Creates small gaps between itself to separate elements */
 .divider{
@@ -63,6 +78,11 @@ a{
     background-color: rgb(38, 34, 95);
     border-radius: 8px;
     text-align: center;
+}
+
+/* Makes all links on the page have an aliceblue color */
+a{
+    color: aliceblue;
 }
 
 /* Determines the layout of each info box (Padding, border, background color)*/
