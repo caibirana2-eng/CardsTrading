@@ -13,6 +13,16 @@ usersetcur = conusersets.cursor()
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
+
+# Selects all sets belonging in to a logged in user
+def selectallusersets():
+    global loggedinusersets
+    usernamewithletter = "a" + session.get("user_logged_in")
+    usernameupper = usernamewithletter.upper()
+    likeusernameupper = f"%{usernameupper}%"
+    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
+    loggedinusersets = usersetcur.fetchall()
+
 # Defines the route for the index page, which displays new set notices and trending card notices
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -240,10 +250,7 @@ def usersettings():
 
 
                 # Selects all tables belonging to the user
-                usernameupper = usernamewithletter.upper()
-                likeusernameupper = f"%{usernameupper}%"
-                usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-                loggedinusersets = usersetcur.fetchall()
+                selectallusersets()
 
                 # Deletes all selected tables
                 for sets in loggedinusersets:
@@ -285,11 +292,7 @@ def usersettings():
                     if pastusername.lower() != settinginputusername.lower():
 
                         # Selects all tables belonging to the user
-                        usernamewithletter = "a" + session.get("user_logged_in")
-                        usernameupper = usernamewithletter.upper()
-                        likeusernameupper = f"%{usernameupper}%"
-                        usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-                        loggedinusersets = usersetcur.fetchall()
+                        selectallusersets()
                         
                         # Updates the names of all tables belonging to the user
                         usernamewithletter = "a" + settinginputusername 
@@ -334,12 +337,7 @@ def individualcards():
         cardpage = session.get('cardclicked')
 
     # Selects all tables belonging to the user
-    username = session.get("user_logged_in")
-    usernamewithletter = "a" + username
-    usernameupper = usernamewithletter.upper()
-    likeusernameupper = f"%{usernameupper}%"
-    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-    loggedinusersets = usersetcur.fetchall()
+    selectallusersets()
     shownsets = []
 
     # For each table belonging to the user, checks if the card being viewed is already in that set and if it isn't, 
@@ -667,10 +665,7 @@ def ownsets():
             conusersets.commit()
             
     # Selects all tables belonging to the user
-    usernameupper = usernamewithletter.upper()
-    likeusernameupper = f"%{usernameupper}%"
-    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-    loggedinusersets = usersetcur.fetchall()
+    selectallusersets()
     shownsets = []
 
     # Selects the set names from every table belonging to the user and adds them to shown sets
