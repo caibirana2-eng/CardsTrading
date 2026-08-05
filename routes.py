@@ -43,6 +43,7 @@ def index():
     # Clears the session variables for set persistence and selected user set name
     session["setpersists"] = None
     session["selectedusersetname"] = None
+    session["addorremove"] = "add"
 
     return render_template('index.html', newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
