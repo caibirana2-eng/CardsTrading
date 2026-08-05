@@ -16,7 +16,7 @@ app.secret_key = secrets.token_hex(32)
 
 # Selects all sets belonging in to a logged in user
 def selectallusersets():
-    global loggedinusersets
+    global loggedinusersets, usernameupper
     usernamewithletter = "a" + session.get("user_logged_in")
     usernameupper = usernamewithletter.upper()
     likeusernameupper = f"%{usernameupper}%"
