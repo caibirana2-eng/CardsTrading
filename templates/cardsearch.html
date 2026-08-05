@@ -59,7 +59,7 @@
                         <option value="higher">higher than</option>
                         <option value="lower">lower than</option>
                     </select>
-                    <input type="number" name="priceinput" value=0>
+                    <input type="number" name="priceinput" value=0 min=0>
                 </div>
                 <div>
                     <label for="releaseearlylate">Release Year:</label>
@@ -94,10 +94,10 @@
 
         <!-- Display the name of the viewed set (if there is one)-->
         {% if selectedsetname %}
-            <p>Showing cards from set: {{ selectedsetname }}</p>
+            <p class="showingfrom">Showing cards from set: {{ selectedsetname }}</p>
         {% endif %}
         {% if viewingnewsets %}
-            <p>Showing cards from set: {{ viewingnewsets }}</p>
+            <p class="showingfrom">Showing cards from set: {{ viewingnewsets }}</p>
         {% endif %}
         <br>
 

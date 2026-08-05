@@ -144,3 +144,8 @@ button {
     background-color: rgb(35, 35, 99);
     border-radius: 12px;
 }
+
+/* Shifts the showing from message a bit to the right */
+.showingfrom{
+    margin-left: 1%;
+}
