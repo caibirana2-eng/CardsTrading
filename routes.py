@@ -336,6 +336,7 @@ def individualcards():
     # If the user clicks on a card from the card search page, sets the card page to whichever card clicked is 
     else:
         cardpage = session.get('cardclicked')
+        session["fromhomepage"] = False
 
     # Selects all tables belonging to the user
     selectallusersets()
