@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
 
-# Selects all sets belonging in to a logged in user
+# Selects all sets belonging to a logged in user
 def selectallusersets():
     global loggedinusersets, usernameupper
     usernamewithletter = "a" + session.get("user_logged_in")
