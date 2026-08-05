@@ -48,11 +48,18 @@
         </div>
         <br>
 
-        <!-- Footer bar at the bottom of the page -->
-        <footer>
-                <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
-                <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
-        </footer>
+        <!-- Footer bar at the bottom of the page. Top margin changes depending on what's shown so that the footer is always touching the bottom of the screen -->
+        {% if messagesent %}
+            <footer style="margin-top: 19%;">
+                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
+                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
+            </footer>
+        {% else %}
+            <footer style="margin-top: 4%;">
+                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
+                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
+            </footer>
+        {% endif %}
         
     </body>
 </html>
