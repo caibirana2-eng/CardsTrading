@@ -98,8 +98,7 @@ a{
     overflow-x: auto;         
     overflow-y: hidden;        
     width: 95%;             
-    border: 2.5px solid aliceblue;
-    padding: 10px;
+    border: 10px solid aliceblue;
     background-color: aliceblue;
     gap: 15px;
     border-radius: 8px;
