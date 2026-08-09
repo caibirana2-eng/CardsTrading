@@ -98,9 +98,9 @@ a{
     overflow-x: auto;         
     overflow-y: hidden;        
     width: 95%;             
-    border: 10px solid aliceblue;
+    border: 2.5px solid aliceblue;
     background-color: aliceblue;
-    gap: 15px;
+    gap: 2.5px;
     border-radius: 8px;
     height:350px;
     margin-bottom: 5%;
