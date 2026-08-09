@@ -84,7 +84,7 @@ def cardsearch():
         elif "confirmnavsearch" in request.form:
             searchvalue = request.form.get("navsearch")
             comparedsearchvalue = f"%{searchvalue}%"
-            cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ?", (comparedsearchvalue,))
+            cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ? AND cardimg IS NOT NULL", (comparedsearchvalue,))
             showncards = cardsearchcur.fetchall()
 
         # If a set is being viewed from ownsets, the set name is stored in the session and the shown cards are filtered to only show cards that are present in the viewed set
