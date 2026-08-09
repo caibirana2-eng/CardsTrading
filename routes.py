@@ -45,6 +45,7 @@ def index():
     session["selectedusersetname"] = None
     session["addorremove"] = "add"
 
+
     return render_template('index.html', newsetnotices=newsetnotices, trendingcardnotices=trendingcardnotices, user=user)
 
 @app.route("/cardsearch", methods=['GET', 'POST'])
@@ -54,6 +55,7 @@ def cardsearch():
     if not session.get('user_logged_in'):
         return redirect(url_for("login"))
 
+    
     # Retrieves the distinct names of all cards, card images, set names, release years, and data recency values from the cards database to
     # show as options in the filter bar or to display all cards if no kind of filter is applied
     cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardimg IS NOT NULL")
@@ -62,6 +64,7 @@ def cardsearch():
     sets = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT intreleaseyear FROM cards ORDER BY intreleaseyear ASC")
     releaseyears = cardsearchcur.fetchall()
+
     cardsearchcur.execute("SELECT DISTINCT intinforecency FROM cards ORDER BY intinforecency ASC")
     datayears = cardsearchcur.fetchall()
 
@@ -335,8 +338,9 @@ def individualcards():
 
     # If the user clicks on a card from the card search page, sets the card page to whichever card clicked is 
     else:
+        if not request.method == "POST":
+            session["fromhomepage"] = False
         cardpage = session.get('cardclicked')
-        session["fromhomepage"] = False
 
     # Selects all tables belonging to the user
     selectallusersets()
