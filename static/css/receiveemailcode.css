@@ -60,3 +60,7 @@ a{
     background-color: rgb(38, 34, 95);
     border-radius: 5%;
 }
+
+h1 {
+    font-size: 25px;
+}
