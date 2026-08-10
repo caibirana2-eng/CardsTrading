@@ -59,7 +59,7 @@
                         <option value="higher">higher than</option>
                         <option value="lower">lower than</option>
                     </select>
-                    <input type="number" name="priceinput" value=0 min=0>
+                    <input type="number" name="priceinput" value=0>
                 </div>
                 <div>
                     <label for="releaseearlylate">Release Year:</label>
@@ -109,7 +109,7 @@
                 {% if storedcards == [(None,)] %}
                     <br>
                     <div class="emptyset">
-                        <h2>Your set is currently empty!</h2>
+                        <h1>Your set is currently empty!</h1>
                         <p>To add a card to your set, go to "All Cards" and click a card. Then choose what set to add it in and press add.</p>
                     </div>
                 {% else %}
