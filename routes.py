@@ -457,8 +457,8 @@ def signup():
             # code to send email and check if valid, then generate a random teporary code with would be here
             # using emailtype == "erorrpls" as a placeholder for invalid emails
             # Using a set code since I can't email a random temp code
-            givenemail = request.form.get("emailtype")
-            accountscur.execute('SELECT * FROM accounts WHERE email = ?', (givenemail,))
+            givenemail = request.form.get("emailtype").lower()
+            accountscur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
             data = accountscur.fetchone()
             if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data != None:
                 error = "Entered invalid or taken email!"
@@ -574,8 +574,8 @@ def forgotpass():
         if "confirmrecoveryemail" in request.form:
 
             # Same case here as in /signup route (pretty much the exact same code, just with different session variable for emailfor)
-            givenemail = request.form.get("emailtypeforgot")
-            accountscur.execute('SELECT * FROM accounts WHERE email = ?', (givenemail,))
+            givenemail = request.form.get("emailtype").lower()
+            accountscur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
             data = accountscur.fetchone()
             if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data == None:
                 error = "Entered invalid email!"
