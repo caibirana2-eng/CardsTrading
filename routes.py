@@ -297,6 +297,7 @@ def usersettings():
                         selectallusersets()
                         
                         # Updates the names of all tables belonging to the user
+                        usernamewithletter = "a" + settinginputusername
                         for sets in loggedinusersets:
                             cleansets = sets[0]
                             usersetcur.execute(f"SELECT setname from {cleansets}")
