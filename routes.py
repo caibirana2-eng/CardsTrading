@@ -16,7 +16,7 @@ app.secret_key = secrets.token_hex(32)
 
 # Selects all sets belonging to a logged in user
 def selectallusersets():
-    global loggedinusersets, usernameupper
+    global loggedinusersets, usernameupper, usernamewithletter
     usernamewithletter = "a" + session.get("user_logged_in")
     usernameupper = usernamewithletter.upper()
     likeusernameupper = f"%{usernameupper}%"
@@ -246,12 +246,9 @@ def usersettings():
         if "deleteaccountconfirm" in request.form:
             if request.form.get("deleteaccountconfirm") == "PleaseDeleteMyAccount":
 
-                # Deletes the user's account from the accounts database and clears the session variable for the logged-in user
-                usernamewithletter = "a" + session.get("user_logged_in") 
+                # Deletes the user's account from the accounts database and clears the session variable for the logged-in user 
                 accountscur.execute("DELETE FROM accounts WHERE username = ?", (session.get('user_logged_in'),))
                 conaccounts.commit()
-                session['user_logged_in'] = None
-
 
                 # Selects all tables belonging to the user
                 selectallusersets()
@@ -262,8 +259,9 @@ def usersettings():
                     query = f"""DROP TABLE IF EXISTS {untupledsets}"""
                     usersetcur.execute(f"{query}")
                     conusersets.commit()
-
+                
                 session["loginalert"] = "Account has been permanently deleted"
+                session['user_logged_in'] = None
                 return redirect(url_for("login"))
             else:
                 alert = "Entered text incorrectly!"
@@ -299,7 +297,6 @@ def usersettings():
                         selectallusersets()
                         
                         # Updates the names of all tables belonging to the user
-                        usernamewithletter = "a" + settinginputusername 
                         for sets in loggedinusersets:
                             cleansets = sets[0]
                             usersetcur.execute(f"SELECT setname from {cleansets}")
