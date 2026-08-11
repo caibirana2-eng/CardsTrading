@@ -24,10 +24,10 @@
             <h1>My Sets</h1>
 
             <!-- Create set form. Sends value for the set name input to ownsets route, which is run against boundary checks and on successful validation makes a set with the value as a name -->
-            <label for="makeset">Create a set:</label>
-            <form id="makeset" method="post" action="/ownsets">
-                <input type="text" placeholder="Set name..." value="" name="makesetname">
-                <input type="submit" value="Create" name="confirmmakeset">
+            <label for="makesetname">Create a set:</label> 
+            <form id="makeset" method="post" action="/ownsets"> 
+                <input type="text" placeholder="Set name..." value="" name="makesetname" id="makesetname"> 
+                <input type="submit" value="Create" name="confirmmakeset"> 
             </form>
 
             <!-- States set name boundaries and validation error messages-->
