@@ -574,7 +574,7 @@ def forgotpass():
         if "confirmrecoveryemail" in request.form:
 
             # Same case here as in /signup route (pretty much the exact same code, just with different session variable for emailfor)
-            givenemail = request.form.get("emailtype").lower()
+            givenemail = request.form.get("emailtypeforgot").lower()
             accountscur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
             data = accountscur.fetchone()
             if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data == None:
