@@ -16,19 +16,21 @@ body{
     margin: 0;
     color:aliceblue;
     background-color:rgb(47, 47, 128);
-    padding: 40px 0 0 0;
+    padding: 150px 0 0 0;
     box-sizing: border-box;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Determines the layout of the footer at the bottom of the page (Sizing, display, color)*/
 footer {
     display: flex;
     flex-direction: column;
-    min-height: 10vh;
     background-color: rgb(35, 35, 99);
     width: 100%;
     border-top: 2px solid aliceblue;
-    margin-top: 4%;
+    margin-top: auto;
     justify-content: center;
     padding: 20px 0 40px 0;
     text-align: center;

@@ -21,15 +21,18 @@
         <br>
 
         <!-- Contact page content -->
-        <div class="pagecontent">
-            <h1>Contact Us</h1>
+        {% if messagesent %}
+            <div class="pagecontent" style="margin-top: 6%;">
+                <h1>Contact Us</h1>
 
-            <!-- Contact form for users to send messages to the site administrators. If a message has been sent, a confirmation message will be displayed in place
-             of the forms. Value for the message sent will be checked. If either field is empty, an error message will be displayed. -->
-            {% if messagesent %}
-                <p>Your message has been sent. We will review it shortly.</p>
-                <a href="{{ url_for('contact') }}">Send another message?</a>
-            {% else %}
+                <!-- Contact form for users to send messages to the site administrators. If a message has been sent, a confirmation message will be displayed in place
+                of the forms. Value for the message sent will be checked. If either field is empty, an error message will be displayed. -->
+            
+                    <p>Your message has been sent. We will review it shortly.</p>
+                    <a href="{{ url_for('contact') }}">Send another message?</a>
+            </div>
+        {% else %}
+            <div class="pagecontent" style="margin-bottom: 4%;">
                 <p>If you have any questions, concerns, or feedback, please fill out the form below and we will get back to you as soon as possible.</p>
                 <form method="POST" action="{{ url_for('contact') }}">
                     <label for="subject">Subject</label><br>
@@ -39,27 +42,24 @@
                     <textarea id="message" name="contactmessage" rows="6" placeholder="Write your message here..."></textarea><br><br>
                     <input type="submit" name="sendmessageconfirm" value="Send Message" class="sendmessageconfirm">
                 </form>
-            {% endif %}
 
-            <!-- Error message display -->
-            <div class="textalert">
-                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ error }}</p>
+                <!-- Error message display -->
+                {% if error %}
+                    <div class="textalert">
+                        <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ error }}</p>
+                    </div>
+                {% endif %}
             </div>
+        {% endif %}
+
+            
         </div>
         <br>
 
         <!-- Footer bar at the bottom of the page. Top margin changes depending on what's shown so that the footer is always touching the bottom of the screen -->
-        {% if messagesent %}
-            <footer style="margin-top: 19%;">
-                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
-                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
-            </footer>
-        {% else %}
-            <footer style="margin-top: 4%;">
-                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
-                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
-            </footer>
-        {% endif %}
-        
+        <footer>
+                <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
+                <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
+        </footer>
     </body>
 </html>

@@ -131,23 +131,10 @@
         </div>
         <div class="divider"></div>
 
-        <!-- Footer bar at the bottom of the page. Top margin changes depending on what's shown so that the footer is always touching the bottom of the screen -->
-        {% if storedcards == [(None,)] %}
-            <footer style="margin-top: 19.8%;">
-                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
-                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
-            </footer>
-        {% elif showncards == [] %}
-            <footer style="margin-top: 30.8%;">
-                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
-                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
-            </footer>
-        {% else %}
-            <footer style="margin-top: 12%;">
-                    <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
-                    <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
-            </footer>
-        {% endif %}
-        
+        <!-- Footer bar at the bottom of the page. -->
+        <footer>
+            <p>Bobo Cards Tracker is an unofficial program not owned by or affiliated with the Bobo Cards Company.</p>
+            <p>All card art and licensing to all cards belongs to the Bobo Cards Company.</p>
+        </footer>
     </body>
 </html>

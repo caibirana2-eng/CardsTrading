@@ -17,10 +17,8 @@
             <a href="{{ url_for('usersettings') }}" class="navlink">SETTINGS</a>
         </nav>
 
-        <div class="divider"></div>
-
         <!-- Personal sets display-->
-        <div class="pagecontent">
+        <div class="pagecontent" style="margin-bottom: 4%;">
             <h1>My Sets</h1>
 
             <!-- Create set form. Sends value for the set name input to ownsets route, which is run against boundary checks and on successful validation makes a set with the value as a name -->
@@ -53,8 +51,6 @@
                 </div>
             {% endfor %}
         </div>
-        <br>
-        <div class="divider"></div>
         
         <!-- Footer bar at the bottom of the page -->
         <footer>

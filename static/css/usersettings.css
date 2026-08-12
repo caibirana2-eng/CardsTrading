@@ -18,6 +18,7 @@ body{
     color: aliceblue;
     background-color: rgb(47, 47, 128);
     display: flex;
+    min-height: 100vh;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
@@ -29,11 +30,10 @@ body{
 footer {
     display: flex;
     flex-direction: column;
-    min-height: 10vh;
     background-color: rgb(35, 35, 99);
     width: 100%;
     border-top: 2px solid aliceblue;
-    margin-top: 4%;
+    margin-top: auto;
     justify-content: center;
     padding: 20px 0 40px 0;
     text-align: center;
