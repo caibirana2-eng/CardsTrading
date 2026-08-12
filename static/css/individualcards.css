@@ -16,7 +16,7 @@ body{
     margin: 0;
     color:aliceblue;
     background-color:rgb(47, 47, 128);
-    padding: 150px 0 0 0;
+    padding: 100px 0 0 0;
     box-sizing: border-box;
     min-height: 100vh;
     display: flex;
