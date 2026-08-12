@@ -312,6 +312,7 @@ def usersettings():
                     accountscur.execute('UPDATE accounts SET username = ?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,)) 
                     conaccounts.commit()
                     session["user_logged_in"] = settinginputusername
+                    pastusername = settinginputusername
                     alert = "Successfully set account details!"         
 
     return render_template('usersettings.html', pastusername=pastusername, alert=alert, requestingdelete=requestingdelete)
