@@ -15,13 +15,13 @@ app.secret_key = secrets.token_hex(32)
 
 
 # Selects all sets belonging to a logged in user
-def selectallusersets():
-    global loggedinusersets, usernameupper, usernamewithletter
-    usernamewithletter = "a" + session.get("user_logged_in")
+def selectallusersets(setowner):
+    global allusersets, usernameupper, usernamewithletter
+    usernamewithletter = "a" + setowner
     usernameupper = usernamewithletter.upper()
     likeusernameupper = f"%{usernameupper}%"
     usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-    loggedinusersets = usersetcur.fetchall()
+    allusersets = usersetcur.fetchall()
 
 # Defines the route for the index page, which displays new set notices and trending card notices
 @app.route("/", methods=['GET', 'POST'])
@@ -251,10 +251,10 @@ def usersettings():
                 conaccounts.commit()
 
                 # Selects all tables belonging to the user
-                selectallusersets()
+                selectallusersets(session.get("user_logged_in"))
 
                 # Deletes all selected tables
-                for sets in loggedinusersets:
+                for sets in allusersets:
                     untupledsets = sets[0]
                     query = f"""DROP TABLE IF EXISTS {untupledsets}"""
                     usersetcur.execute(f"{query}")
@@ -294,11 +294,11 @@ def usersettings():
                     if pastusername.lower() != settinginputusername.lower():
 
                         # Selects all tables belonging to the user
-                        selectallusersets()
+                        selectallusersets(session.get("user_logged_in"))
                         
                         # Updates the names of all tables belonging to the user
                         usernamewithletter = "a" + settinginputusername
-                        for sets in loggedinusersets:
+                        for sets in allusersets:
                             cleansets = sets[0]
                             usersetcur.execute(f"SELECT setname from {cleansets}")
                             pasttable = usersetcur.fetchone()
@@ -342,12 +342,12 @@ def individualcards():
         cardpage = session.get('cardclicked')
 
     # Selects all tables belonging to the user
-    selectallusersets()
+    selectallusersets(session.get("user_logged_in"))
     shownsets = []
 
     # For each table belonging to the user, checks if the card being viewed is already in that set and if it isn't, 
     # adds the set name to a list of sets to be displayed in the add card form
-    for sets in loggedinusersets:
+    for sets in allusersets:
         cleansets = sets[0]
         usersetcur.execute(f"SELECT setname FROM {cleansets}")
         loggedinsetname = usersetcur.fetchone()
@@ -536,14 +536,10 @@ def makeaccount():
                     else:
                         if cleanpastusername.lower() != createusername.lower():
                             # Selects all sets owned by the user
-                            usernamewithletter = "a" + cleanpastusername
-                            usernameupper = usernamewithletter.upper()
-                            likeusernameupper = f"%{usernameupper}%"
-                            usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-                            loggedoutusersets = usersetcur.fetchall()
+                            selectallusersets(cleanpastusername)
                             
                             # Updates the names of all tables belonging to the user
-                            for sets in loggedoutusersets:
+                            for sets in allusersets:
                                 cleansets = sets[0]
                                 usersetcur.execute(f"SELECT setname from {cleansets}")
                                 pasttable = usersetcur.fetchone()
@@ -670,11 +666,11 @@ def ownsets():
             conusersets.commit()
             
     # Selects all tables belonging to the user
-    selectallusersets()
+    selectallusersets(session.get("user_logged_in"))
     shownsets = []
 
     # Selects the set names from every table belonging to the user and adds them to shown sets
-    for sets in loggedinusersets:
+    for sets in allusersets:
         cleansets = sets[0]
         usersetcur.execute(f"SELECT setname FROM {cleansets}")
         loggedinsetname = usersetcur.fetchone()
