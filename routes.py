@@ -56,17 +56,42 @@ def cardsearch():
         return redirect(url_for("login"))
 
     
-    # Retrieves the distinct names of all cards, card images, set names, release years, and data recency values from the cards database to
+    # Retrieves the distinct names of all cards, card images, and set names from the cards database to
     # show as options in the filter bar or to display all cards if no kind of filter is applied
     cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardimg IS NOT NULL")
     storedcards = cardsearchcur.fetchall()
     cardsearchcur.execute("SELECT DISTINCT fromset FROM cards WHERE fromset IS NOT NULL")
     sets = cardsearchcur.fetchall()
+
+    # Collects all release years for the card database and ensures the lowest year - 1 is always displayed
+    # as the filter defaults to later than. This allows the filter to on default show the every card, including the ones with the earliest release years
+    # Also looks for all the missing years between the minimum and maximum release years and fills in the gaps so that the filter doesn't have any
+    # multi-year gaps
+    # The process requires two for loops each time it's triggered, with the amount of times it loops depending on the amount of years in the database
+    # Which isn't particularily efficient, but I think it will help with future proofing more than it will hurt it 
     cardsearchcur.execute("SELECT DISTINCT intreleaseyear FROM cards ORDER BY intreleaseyear ASC")
     releaseyears = cardsearchcur.fetchall()
+    listreleaseyears = []
+    for years in releaseyears:
+        listreleaseyears.append(years[0])
+    listreleaseyears.append(listreleaseyears[0] - 1)
+    minval, maxval = min(listreleaseyears), max(listreleaseyears)
+    missingyears = [missingnum for missingnum in range(minval, maxval
+     + 1) if missingnum not in set(listreleaseyears)]
+    listreleaseyears.extend(missingyears)
+    listreleaseyears.sort()
 
+    # Same as release years but for data recency years
     cardsearchcur.execute("SELECT DISTINCT intinforecency FROM cards ORDER BY intinforecency ASC")
     datayears = cardsearchcur.fetchall()
+    listdatayears = []
+    for years in datayears:
+        listdatayears.append(years[0])
+    listdatayears.append(listdatayears[0] - 1)
+    minval, maxval = min(listdatayears), max(listdatayears)
+    missingyears = [missingnum for missingnum in range(minval, maxval + 1) if missingnum not in set(listdatayears)]
+    listdatayears.extend(missingyears)
+    listdatayears.sort()
 
     # Retrieves the name of the selected user set from the ownsets page, if any 
     # Most significant use is lower down near lines 127-142 
@@ -176,7 +201,7 @@ def cardsearch():
         cardsearchcur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (session.get("viewingnewsets"),))
         storedcards = cardsearchcur.fetchall()
 
-    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards, releaseyears=releaseyears, datayears=datayears, viewingnewsets=session.get("viewingnewsets"))
+    return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards, releaseyears=listreleaseyears, datayears=listdatayears, viewingnewsets=session.get("viewingnewsets"))
 
 @app.route("/instructionsmanual")
 def instructionsmanual():
