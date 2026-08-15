@@ -273,13 +273,12 @@ def usersettings():
             settinginputpassword = request.form.get("settinginputpassword")
             loweredsettinginputusername = settinginputusername.lower()
 
-            # Creates a collection of every username in the database lowered
-            accountscur.execute('SELECT LOWER(username) FROM accounts')
+            # Checks for any matching usernames in the users table
+            accountscur.execute('SELECT LOWER(username) FROM accounts WHERE LOWER(username) = ?', (loweredsettinginputusername,))
             data = accountscur.fetchall()
-            cleandata = (account[0] for account in data)
-
-            # If the user submits the form to change their account details, checks if the new username is taken by a different account or if the new password is too short,
-            if loweredsettinginputusername in cleandata and loweredsettinginputusername != loweredpastusername:
+            
+            # Checks if the username input is either the past username or is not taken 
+            if data and loweredsettinginputusername !=  loweredpastusername:
                 alert = "Username is taken!"
             else:
 
@@ -501,13 +500,12 @@ def makeaccount():
         createpassword = request.form.get("createpasswordtype")
         loweredcreateusername = createusername.lower()
 
-        # Creates a collection of every username in the database lowered
-        accountscur.execute('SELECT LOWER(username) FROM accounts')
+        # Checks for any matching usernames in the users table
+        accountscur.execute('SELECT LOWER(username) FROM accounts WHERE LOWER(username) = ?', (loweredcreateusername,))
         data = accountscur.fetchall()
-        cleandata = (account[0] for account in data)
 
         # Checks if the username input is either the past username or is not taken 
-        if loweredcreateusername in cleandata and loweredcreateusername != loweredcleanpastusername:
+        if data and loweredcreateusername != loweredcleanpastusername:
             error = "Username is taken!"
         else: 
             if"accdetailsconfirm" in request.form:

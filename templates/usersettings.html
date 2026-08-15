@@ -57,11 +57,14 @@
                 </div>
 
             </form>
+            <br>
 
             <!-- displays alert / error messages -->
-            <div class="textalert">
-                <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ alert }}</p>
-            </div>
+            {% if alert %}
+                <div class="textalert">
+                    <p style="background-color: rgb(75, 74, 0); color: #fad429;">{{ alert }}</p>
+                </div>
+            {% endif %}
 
             <!-- Form for confirming delete account. Sends value to check if it matches "PleaseDeleteMyAccount" then if successful deletes account. Else sets error alert -->
             {% if requestingdelete %}
