@@ -187,9 +187,14 @@ def cardsearch():
         session["addorremove"] = "remove"
 
         user_id = getuser_id(session.get("user_logged_in"))
-        set_id = getset_id(user_id, selectedusersetname)
-        if set_id is not None:
-            storedcards = cur.execute('SELECT card_img FROM set_cards WHERE user_set_id = ?', (set_id,)).fetchall()
+        if user_id is not None:
+            cur.execute('''
+                SELECT sc.card_img
+                FROM user_sets us
+                JOIN set_cards sc ON sc.user_set_id = us.id
+                WHERE us.user_id = ? AND us.setname = ?
+            ''', (user_id, selectedusersetname))
+            storedcards = cur.fetchall()
         else:
             storedcards = []
  
@@ -341,17 +346,21 @@ def individualcards():
             session["fromhomepage"] = False
         cardpage = session.get('cardclicked')
 
-    # Retrieves the logged-in user's ID from the accounts database and uses it to find all sets linked to that user in the user_sets database
+    # Retrieves the logged-in user's ID from the accounts database and uses it to find all sets linked to that user, 
+    # and checks if the current card is already in each set using a LEFT JOIN
     user_id = getuser_id(session.get("user_logged_in"))
-    cur.execute("SELECT id, setname FROM user_sets WHERE user_id = ?", (user_id,))
+    cur.execute('''
+        SELECT us.id, us.setname, sc.card_img
+        FROM user_sets us
+        LEFT JOIN set_cards sc ON sc.user_set_id = us.id AND sc.card_img = ?
+        WHERE us.user_id = ?
+    ''', (cardpage, user_id))
     allusersets = cur.fetchall()
     shownsets = []
 
-    for set_id, setname in allusersets:
+    for set_id, setname, card_in_set in allusersets:
         if session.get("addorremove") == "add":
-            cur.execute('SELECT user_set_id FROM set_cards WHERE user_set_id = ? AND card_img = ?', (set_id, cardpage))
-            alreadyadded = cur.fetchone()
-            if not alreadyadded:
+            if card_in_set is None:
                 shownsets.append(setname)
         else:
             shownsets.append(setname)
