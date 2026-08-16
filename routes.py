@@ -468,7 +468,7 @@ def signup():
             givenemail = request.form.get("emailtype").lower()
             cur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
             data = cur.fetchone()
-            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data is not None:
+            if givenemail == "errorpls" or givenemail == "" or data is not None:
                 error = "Entered invalid or taken email!"
             else:
 
@@ -515,7 +515,7 @@ def makeaccount():
         if data and loweredcreateusername != loweredcleanpastusername:
             error = "Username is taken!"
         else: 
-            if"accdetailsconfirm" in request.form:
+            if "accdetailsconfirm" in request.form:
 
                 #Just states boundaries for the username and password input. Successful check results in either
                 #account creation or the data of the account linked to the given email being updated
