@@ -561,7 +561,7 @@ def forgotpass():
             givenemail = request.form.get("emailtypeforgot").lower()
             cur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
             data = cur.fetchone()
-            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data is None:
+            if request.form.get("emailtypeforgot") == "errorpls" or request.form.get("emailtypeforgot") == "" or data is None:
                 error = "Entered invalid email!"
             else:
                 session['givenemail'] = givenemail
