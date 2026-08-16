@@ -106,7 +106,7 @@
             <form method="POST" action="/cardsearch">
 
                 <!-- Alert that appears when the user's set is empty -->
-                {% if storedcards == [(None,)] %}
+                {% if not storedcards %}
                     <br>
                     <div class="emptyset">
                         <h1>Your set is currently empty!</h1>

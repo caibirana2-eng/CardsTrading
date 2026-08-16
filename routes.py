@@ -1,27 +1,31 @@
 from flask import Flask, render_template, redirect, url_for, session, request
-import sqlite3, secrets, os, re
+import sqlite3, secrets, os
 
-# Connects to the databases and creates cursors for each
-conaccounts = sqlite3.connect('accounts.db', check_same_thread=False)
-accountscur = conaccounts.cursor()
-concards = sqlite3.connect('cards.db', check_same_thread=False)
-cardsearchcur = concards.cursor()
-conusersets = sqlite3.connect('usersets.db', check_same_thread=False)
-usersetcur = conusersets.cursor()
+# Single SQLite connection for the new foreign-key-based schema
+con = sqlite3.connect('database.db', check_same_thread=False)
+con.execute('PRAGMA foreign_keys = ON')
+cur = con.cursor()
 
 # Creates the Flask app and sets a secret key for session management
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
 
-# Selects all sets belonging to a logged in user
-def selectallusersets(setowner):
-    global allusersets, usernameupper, usernamewithletter
-    usernamewithletter = "a" + setowner
-    usernameupper = usernamewithletter.upper()
-    likeusernameupper = f"%{usernameupper}%"
-    usersetcur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name LIKE ?", (likeusernameupper,))
-    allusersets = usersetcur.fetchall()
+# Helper function to get the user ID based on the username
+def getuser_id(username):
+    cur.execute('SELECT id FROM accounts WHERE username = ?', (username,))
+    result = cur.fetchone()
+    if result is not None:
+        return result[0]
+    return None
+
+# Helper function to get the set ID based on the user ID and set name
+def getset_id(user_id, setname):
+    cur.execute('SELECT id FROM user_sets WHERE user_id = ? AND setname = ?', (user_id, setname))
+    result = cur.fetchone()
+    if result is not None:
+        return result[0]
+    return None
 
 # Defines the route for the index page, which displays new set notices and trending card notices
 @app.route("/", methods=['GET', 'POST'])
@@ -58,10 +62,10 @@ def cardsearch():
     
     # Retrieves the distinct names of all cards, card images, and set names from the cards database to
     # show as options in the filter bar or to display all cards if no kind of filter is applied
-    cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardimg IS NOT NULL")
-    storedcards = cardsearchcur.fetchall()
-    cardsearchcur.execute("SELECT DISTINCT fromset FROM cards WHERE fromset IS NOT NULL")
-    sets = cardsearchcur.fetchall()
+    cur.execute("SELECT cardimg FROM cards WHERE cardimg IS NOT NULL")
+    storedcards = cur.fetchall()
+    cur.execute("SELECT DISTINCT fromset FROM cards WHERE fromset IS NOT NULL")
+    sets = cur.fetchall()
 
     # Collects all release years for the card database and ensures the lowest year - 1 is always displayed
     # as the filter defaults to later than. This allows the filter to on default show the every card, including the ones with the earliest release years
@@ -69,21 +73,20 @@ def cardsearch():
     # multi-year gaps
     # The process requires two for loops each time it's triggered, with the amount of times it loops depending on the amount of years in the database
     # Which isn't particularily efficient, but I think it will help with future proofing more than it will hurt it 
-    cardsearchcur.execute("SELECT DISTINCT intreleaseyear FROM cards ORDER BY intreleaseyear ASC")
-    releaseyears = cardsearchcur.fetchall()
+    cur.execute("SELECT DISTINCT intreleaseyear FROM cards ORDER BY intreleaseyear ASC")
+    releaseyears = cur.fetchall()
     listreleaseyears = []
     for years in releaseyears:
         listreleaseyears.append(years[0])
     listreleaseyears.append(listreleaseyears[0] - 1)
     minval, maxval = min(listreleaseyears), max(listreleaseyears)
-    missingyears = [missingnum for missingnum in range(minval, maxval
-     + 1) if missingnum not in set(listreleaseyears)]
+    missingyears = [missingnum for missingnum in range(minval, maxval + 1) if missingnum not in set(listreleaseyears)]
     listreleaseyears.extend(missingyears)
     listreleaseyears.sort()
 
     # Same as release years but for data recency years
-    cardsearchcur.execute("SELECT DISTINCT intinforecency FROM cards ORDER BY intinforecency ASC")
-    datayears = cardsearchcur.fetchall()
+    cur.execute("SELECT DISTINCT intinforecency FROM cards ORDER BY intinforecency ASC")
+    datayears = cur.fetchall()
     listdatayears = []
     for years in datayears:
         listdatayears.append(years[0])
@@ -109,8 +112,8 @@ def cardsearch():
         elif "confirmnavsearch" in request.form:
             searchvalue = request.form.get("navsearch")
             comparedsearchvalue = f"%{searchvalue}%"
-            cardsearchcur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ? AND cardimg IS NOT NULL", (comparedsearchvalue,))
-            showncards = cardsearchcur.fetchall()
+            cur.execute("SELECT cardimg FROM cards WHERE cardname LIKE ? AND cardimg IS NOT NULL", (comparedsearchvalue,))
+            showncards = cur.fetchall()
 
         # If a set is being viewed from ownsets, the set name is stored in the session and the shown cards are filtered to only show cards that are present in the viewed set
         # The session ensures that the set will persist even if the user navigates directly to the individual card page and then returns to card search 
@@ -144,12 +147,12 @@ def cardsearch():
             filterset = request.form.get("setfilter")
             if filterset == "anyset":
                 query = f"SELECT cardimg FROM cards WHERE avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
-                cardsearchcur.execute(query, (request.form.get("priceinput"), intreleaseyear, intrecencyyear))
-                showncards = cardsearchcur.fetchall()
+                cur.execute(query, (request.form.get("priceinput"), intreleaseyear, intrecencyyear))
+                showncards = cur.fetchall()
             else:
                 query = f"SELECT cardimg FROM cards WHERE fromset = ? AND avgprice {pricehighlow} ? AND intreleaseyear {releaseearlylate} ? AND intinforecency {recencyearlylate} ?"
-                cardsearchcur.execute(query, (filterset, request.form.get("priceinput"), intreleaseyear, intrecencyyear))
-                showncards = cardsearchcur.fetchall()
+                cur.execute(query, (filterset, request.form.get("priceinput"), intreleaseyear, intrecencyyear))
+                showncards = cur.fetchall()
 
         # If the user clicks on a new set notice, the set name is extracted from the image name and used to find 
         # all cards in the database that have that set name as their fromset value
@@ -157,8 +160,8 @@ def cardsearch():
             removepng = request.form.get("newsets").replace(".png", "")
             unnoticeset = removepng.split("-")
             setname = " ".join(unnoticeset)
-            cardsearchcur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (setname,))
-            showncards = cardsearchcur.fetchall()
+            cur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (setname,))
+            showncards = cur.fetchall()
             session["viewingnewsets"] = setname
             session["fromhomepage"] = False
 
@@ -183,23 +186,21 @@ def cardsearch():
     if selectedusersetname:
         session["addorremove"] = "remove"
 
-        # Selects all cards that are stored in the viewed set
-        # In the html file, showncards only appear if they're in the storedcards list, so this effectively filters the shown cards to only be those that are in the viewed set
-        username = session.get("user_logged_in")
-        usernamewithletter = "a" + username
-        setnamewithletter = selectedusersetname + "a"
-        uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
-        usersetcur.execute(f"SELECT storedcards FROM {uniquesetname}")
-        storedcards = usersetcur.fetchall()
-
+        user_id = getuser_id(session.get("user_logged_in"))
+        set_id = getset_id(user_id, selectedusersetname)
+        if set_id is not None:
+            storedcards = cur.execute('SELECT card_img FROM set_cards WHERE user_set_id = ?', (set_id,)).fetchall()
+        else:
+            storedcards = []
+ 
     # If the user is viewing a new set, the add or remove button will be set to add and the stored cards will be filtered to only show cards that are in the viewed new set
     elif session.get("viewingnewsets"):
 
         # Selects all cards that have the fromset value of the viewed new set
         # In the html file, showncards only appear if they're in the storedcards list, 
         # so this effectively filters the shown cards to only be those that are in the viewed new set
-        cardsearchcur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (session.get("viewingnewsets"),))
-        storedcards = cardsearchcur.fetchall()
+        cur.execute("SELECT cardimg FROM cards WHERE fromset = ?", (session.get("viewingnewsets"),))
+        storedcards = cur.fetchall()
 
     return render_template('cardsearch.html', showncards=showncards, sets=sets, selectedsetname=selectedusersetname, storedcards=storedcards, releaseyears=listreleaseyears, datayears=listdatayears, viewingnewsets=session.get("viewingnewsets"))
 
@@ -266,30 +267,18 @@ def usersettings():
             requestingdelete = True
 
         # If the user confirms the deletion of their account, checks if the confirmation input matches the required string and if it does, 
-        # deletes the user's account from the accounts database and all of their sets from the usersets database, 
+        # deletes the user's account from the accounts table and all of their sets from the user_sets table, 
         # then clears the session variable for the logged-in user and redirects to the login page
         if "deleteaccountconfirm" in request.form:
             if request.form.get("deleteaccountconfirm") == "PleaseDeleteMyAccount":
-
-                # Deletes the user's account from the accounts database and clears the session variable for the logged-in user 
-                accountscur.execute("DELETE FROM accounts WHERE username = ?", (session.get('user_logged_in'),))
-                conaccounts.commit()
-
-                # Selects all tables belonging to the user
-                selectallusersets(session.get("user_logged_in"))
-
-                # Deletes all selected tables
-                for sets in allusersets:
-                    untupledsets = sets[0]
-                    query = f"""DROP TABLE IF EXISTS {untupledsets}"""
-                    usersetcur.execute(f"{query}")
-                    conusersets.commit()
-                
+                cur.execute("DELETE FROM accounts WHERE username = ?", (session.get('user_logged_in'),))
+                con.commit()
                 session["loginalert"] = "Account has been permanently deleted"
                 session['user_logged_in'] = None
                 return redirect(url_for("login"))
             else:
                 alert = "Entered text incorrectly!"
+    
         # Changes user's details in account database if all checks are passed, otherwise sets an alert message to be displayed on the page
         if "settingschangeaccount" in request.form:
 
@@ -298,12 +287,13 @@ def usersettings():
             settinginputpassword = request.form.get("settinginputpassword")
             loweredsettinginputusername = settinginputusername.lower()
 
-            # Checks for any matching usernames in the users table
-            accountscur.execute('SELECT LOWER(username) FROM accounts WHERE LOWER(username) = ?', (loweredsettinginputusername,))
-            data = accountscur.fetchall()
-            
-            # Checks if the username input is either the past username or is not taken 
-            if data and loweredsettinginputusername !=  loweredpastusername:
+            user_id = getuser_id(session.get('user_logged_in'))
+
+            # Finds any account already linked to the new username input
+            cur.execute('SELECT id FROM accounts WHERE LOWER(username) = ? AND id != ?', (loweredsettinginputusername, user_id))
+            data = cur.fetchall()
+
+            if data and loweredsettinginputusername != loweredpastusername:
                 alert = "Username is taken!"
             else:
 
@@ -315,29 +305,15 @@ def usersettings():
                 elif len(settinginputpassword) < 8:
                     alert = "Password must be at least 8 characters long"
                 else:
-                    if pastusername.lower() != settinginputusername.lower():
 
-                        # Selects all tables belonging to the user
-                        selectallusersets(session.get("user_logged_in"))
-                        
-                        # Updates the names of all tables belonging to the user
-                        usernamewithletter = "a" + settinginputusername
-                        for sets in allusersets:
-                            cleansets = sets[0]
-                            usersetcur.execute(f"SELECT setname from {cleansets}")
-                            pasttable = usersetcur.fetchone()
-                            pasttablewithletter = pasttable[0] + "a"
-                            changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
-                            query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
-                            usersetcur.execute(f"{query}")
-                            conusersets.commit()
-
-                    # Changes the user's information in the account database
-                    accountscur.execute('UPDATE accounts SET username = ?, password = ? WHERE username = ?', (settinginputusername, settinginputpassword, pastusername,)) 
-                    conaccounts.commit()
+                    # Updates the account details in the accounts database with the new username and password, commits the changes,
+                    # updates the session variable for the logged-in user, and sets pastusername to the new username for when the page refreshes
+                    cur.execute('UPDATE accounts SET username = ?, password = ? WHERE id = ?', (settinginputusername, settinginputpassword, user_id))
+                    con.commit()
                     session["user_logged_in"] = settinginputusername
                     pastusername = settinginputusername
-                    alert = "Successfully set account details!"         
+                    alert = "Successfully set account details!"
+         
 
     return render_template('usersettings.html', pastusername=pastusername, alert=alert, requestingdelete=requestingdelete)
 
@@ -365,24 +341,20 @@ def individualcards():
             session["fromhomepage"] = False
         cardpage = session.get('cardclicked')
 
-    # Selects all tables belonging to the user
-    selectallusersets(session.get("user_logged_in"))
+    # Retrieves the logged-in user's ID from the accounts database and uses it to find all sets linked to that user in the user_sets database
+    user_id = getuser_id(session.get("user_logged_in"))
+    cur.execute("SELECT id, setname FROM user_sets WHERE user_id = ?", (user_id,))
+    allusersets = cur.fetchall()
     shownsets = []
 
-    # For each table belonging to the user, checks if the card being viewed is already in that set and if it isn't, 
-    # adds the set name to a list of sets to be displayed in the add card form
-    for sets in allusersets:
-        cleansets = sets[0]
-        usersetcur.execute(f"SELECT setname FROM {cleansets}")
-        loggedinsetname = usersetcur.fetchone()
+    for set_id, setname in allusersets:
         if session.get("addorremove") == "add":
-            query = f"SELECT storedcards FROM {cleansets} WHERE storedcards = ?"
-            usersetcur.execute(f"{query}", (cardpage,))
-            alreadyadded = usersetcur.fetchone()
+            cur.execute('SELECT user_set_id FROM set_cards WHERE user_set_id = ? AND card_img = ?', (set_id, cardpage))
+            alreadyadded = cur.fetchone()
             if not alreadyadded:
-                shownsets.append(loggedinsetname[0])
+                shownsets.append(setname)
         else:
-            shownsets.append(loggedinsetname[0])
+            shownsets.append(setname)
     if shownsets == []:
         shownsets = None
 
@@ -393,10 +365,11 @@ def individualcards():
         # depending on whether the user came from trending card notices or not
         if "addcard" in request.form:
             addchosenset = request.form.get("addchosenset")
-            fulluniquesetname = usernameupper + addchosenset.lower() + "a"
-            query = f"INSERT INTO {fulluniquesetname} (setname, storedcards) VALUES (?, ?)"
-            usersetcur.execute(f"{query}", (None, cardpage))
-            conusersets.commit()
+            user_id = getuser_id(session.get("user_logged_in"))
+            set_id = getset_id(user_id, addchosenset)
+            if set_id is not None:
+                cur.execute('INSERT INTO set_cards (user_set_id, card_img) VALUES (?, ?)', (set_id, cardpage))
+                con.commit()
             if session.get("fromhomepage"):
                 session["fromhomepage"] = None
                 return redirect(url_for("index"))
@@ -413,11 +386,11 @@ def individualcards():
             # The set name is retrieved from the session and used to construct the full unique set name to access
             # the correct table in the usersets database, then the card is removed from that table
             removechosenset = session.get("selectedusersetname")
-            removechosenwithletter = removechosenset + "a"
-            fulluniquesetname = usernameupper + removechosenwithletter.lower()
-            query = f"DELETE FROM {fulluniquesetname} WHERE storedcards = ?"
-            usersetcur.execute(f"{query}", (cardpage,))
-            conusersets.commit()
+            user_id = getuser_id(session.get("user_logged_in"))
+            set_id = getset_id(user_id, removechosenset)
+            if set_id is not None:
+                cur.execute('DELETE FROM set_cards WHERE user_set_id = ? AND card_img = ?', (set_id, cardpage))
+                con.commit()
             session["setpersists"] = True
             return redirect(url_for("cardsearch"))
 
@@ -436,8 +409,8 @@ def individualcards():
             return redirect(url_for("cardsearch"))
 
     # Retrieves the data for the card being viewed from the cards database and stores it in variables to be displayed on the individual card page
-    cardsearchcur.execute("SELECT * FROM cards WHERE cardimg = ?", (cardpage,))
-    cardpagedata = cardsearchcur.fetchall()
+    cur.execute("SELECT * FROM cards WHERE cardimg = ?", (cardpage,))
+    cardpagedata = cur.fetchall()
     cleancardpagedata = cardpagedata[0]
     cardname = cleancardpagedata[0]
     cardreleaseyear = cleancardpagedata[1]
@@ -465,9 +438,9 @@ def login():
         # sets the session variable for the logged-in user and redirects to the index page, otherwise sets an alert message
         if "confirmlogin" in request.form:
             infoinput = [request.form.get("usernametype"), request.form.get("passwordtype")]
-            accountscur.execute('SELECT * FROM accounts WHERE username = ? AND password = ?', (infoinput[0], infoinput[1]))
-            data = accountscur.fetchone()
-            if data != None:
+            cur.execute('SELECT * FROM accounts WHERE username = ? AND password = ?', (infoinput[0], infoinput[1]))
+            data = cur.fetchone()
+            if data is not None:
                 session['user_logged_in'] = infoinput[0]
                 return redirect(url_for("index"))
             alert = "Incorrect username or password! (Case sensitive)"
@@ -484,9 +457,9 @@ def signup():
             # using emailtype == "erorrpls" as a placeholder for invalid emails
             # Using a set code since I can't email a random temp code
             givenemail = request.form.get("emailtype").lower()
-            accountscur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
-            data = accountscur.fetchone()
-            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data != None:
+            cur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
+            data = cur.fetchone()
+            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data is not None:
                 error = "Entered invalid or taken email!"
             else:
 
@@ -509,8 +482,8 @@ def makeaccount():
     # Checks if a username is already linked to the given forgotpass email   
     error = ""
     givenemail = session.get('givenemail')
-    accountscur.execute('SELECT username FROM accounts WHERE email = ?', (givenemail,))
-    pastusername = accountscur.fetchone()
+    cur.execute('SELECT username FROM accounts WHERE email = ?', (givenemail,))
+    pastusername = cur.fetchone()
     if pastusername == None:
         cleanpastusername = ""
     else:
@@ -525,9 +498,9 @@ def makeaccount():
         createpassword = request.form.get("createpasswordtype")
         loweredcreateusername = createusername.lower()
 
-        # Checks for any matching usernames in the users table
-        accountscur.execute('SELECT LOWER(username) FROM accounts WHERE LOWER(username) = ?', (loweredcreateusername,))
-        data = accountscur.fetchall()
+        # Checks for any matching usernames in the accounts table
+        cur.execute('SELECT LOWER(username) FROM accounts WHERE LOWER(username) = ?', (loweredcreateusername,))
+        data = cur.fetchall()
 
         # Checks if the username input is either the past username or is not taken 
         if data and loweredcreateusername != loweredcleanpastusername:
@@ -545,8 +518,8 @@ def makeaccount():
                     elif len(createpassword) < 8:
                         error = "Password must be at least 8 characters long"
                     else:
-                        accountscur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, givenemail,))
-                        conaccounts.commit()
+                        cur.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (createusername, createpassword, givenemail,))
+                        con.commit()
                         session["loginalert"] = "Successfully created account!"
                         return redirect(url_for("login"))
                 else:                
@@ -557,27 +530,8 @@ def makeaccount():
                     elif len(createpassword) < 8:
                         error = "Password must be at least 8 characters long"
                     else:
-                        if cleanpastusername.lower() != createusername.lower():
-                            # Selects all sets owned by the user
-                            selectallusersets(cleanpastusername)
-                            
-                            # Updates the names of all tables belonging to the user
-                            for sets in allusersets:
-                                cleansets = sets[0]
-                                usersetcur.execute(f"SELECT setname from {cleansets}")
-                                pasttable = usersetcur.fetchone()
-                                pasttablewithletter = pasttable[0] + "a"
-                                usernamewithletter =  "a" + createusername
-                                usernameupper = usernamewithletter.upper()
-                                likeusernameupper = f"%{usernameupper}%"
-                                changedsetname = usernamewithletter.upper() + pasttablewithletter.lower()
-                                query = f"ALTER TABLE {cleansets} RENAME TO {changedsetname}"
-                                usersetcur.execute(f"{query}")
-                                conusersets.commit()
-
-                        # Changes the user's information in the account database
-                        accountscur.execute('UPDATE accounts SET username =?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
-                        conaccounts.commit()
+                        cur.execute('UPDATE accounts SET username = ?, password = ? WHERE email = ?', (createusername, createpassword, givenemail,))
+                        con.commit()
                         session["loginalert"] = "Successfully set account details!"
                         return redirect(url_for("login"))
                     
@@ -596,9 +550,9 @@ def forgotpass():
 
             # Same case here as in /signup route (pretty much the exact same code, just with different session variable for emailfor)
             givenemail = request.form.get("emailtypeforgot").lower()
-            accountscur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
-            data = accountscur.fetchone()
-            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data == None:
+            cur.execute('SELECT * FROM accounts WHERE LOWER(email) = ?', (givenemail,))
+            data = cur.fetchone()
+            if request.form.get("emailtype") == "errorpls" or request.form.get("emailtype") == "" or data is None:
                 error = "Entered invalid email!"
             else:
                 session['givenemail'] = givenemail
@@ -641,7 +595,8 @@ def ownsets():
     error = ""
     session["viewingnewsets"] = False
     username = session.get("user_logged_in")
-    usernamewithletter = "a" + username
+    user_id = getuser_id(username)
+
     if request.method == "POST":
 
         # If the user confirms the creation of a new set, checks if the set name is valid, 
@@ -649,55 +604,37 @@ def ownsets():
         # Else sets an error message to be displayed on the page
         if "confirmmakeset" in request.form:
 
-
-            # Makes use of alphanumeric filter to account for risk of SQL injection caused by f strings being used in the queries
-            # Uses capital username and lower set name joined to help ensure that each table is unique and can be directly linked to individual users
-            # Ensures there will always be letters to capitalize / decapitalize in the set and user names to ensure that the capital thing can't just be avoided by someone using only numbers in either name
             # Involves a filter to ensure that the set name is alphanumeric and not too long, and checks if the set name is already taken by the user 
             setname = request.form.get("makesetname").strip()
-            setnamewithletter = setname + "a"
             if not setname:
                 error = "Please enter a set name"
             elif setname != "".join(filter(str.isalnum, setname)):
-                    error = "Set name can only contain alphanumeric characters (a-z), (0-9)"
+                error = "Set name can only contain alphanumeric characters (a-z), (0-9)"
             elif len(setname) > 20:
-                    error = "Set name can only be as long as 20 characters"
+                error = "Set name can only be as long as 20 characters"
             else:
-                uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
-                query = f"""SELECT name FROM sqlite_master WHERE type='table' AND name = '{uniquesetname}'"""
-                usersetcur.execute(f"{query}")
-                matchingtablename = usersetcur.fetchall()
-                if matchingtablename:
+                cur.execute('SELECT id FROM user_sets WHERE user_id = ? AND setname = ?', (user_id, setname))
+                existing = cur.fetchone()
+                if existing:
                     error = "You've already created a set with this name!"
                 else:
 
-                    # Creates a uniquely named table, then immediately stores the data of what the set it's for is named, and the exact username of the user who made the set
-                    query = f"""CREATE TABLE IF NOT EXISTS {uniquesetname} (setname TEXT, storedcards TEXT)"""
-                    usersetcur.execute(f"{query}")
-                    query = f"INSERT INTO {uniquesetname} (setname, storedcards) VALUES (?, ?)"
-                    usersetcur.execute(f"{query}", (setname, None))
-                    conusersets.commit()
-        
-        # Deletes whichever set the value is assigned to
+                    # Creates new set that uses a unique set ID and the user ID to link the set to the user and ensure that each set is unique
+                    cur.execute('INSERT INTO user_sets (user_id, setname) VALUES (?, ?)', (user_id, setname))
+                    con.commit()
+
+        # deletes the set assigned to the user and setname value and gives alert message if successful, otherwise does nothing
         if "deleteset" in request.form:
             setname = request.form.get("deletesetname")
-            setnamewithletter = setname + "a"
-            uniquesetname = usernamewithletter.upper() + setnamewithletter.lower()
-            query = f"""DROP TABLE IF EXISTS {uniquesetname}"""
-            usersetcur.execute(f"{query}")
+            cur.execute('DELETE FROM user_sets WHERE user_id = ? AND setname = ?', (user_id, setname))
+            con.commit()
             error = f"Successfully deleted set: {setname}"
-            conusersets.commit()
-            
-    # Selects all tables belonging to the user
-    selectallusersets(session.get("user_logged_in"))
-    shownsets = []
 
-    # Selects the set names from every table belonging to the user and adds them to shown sets
-    for sets in allusersets:
-        cleansets = sets[0]
-        usersetcur.execute(f"SELECT setname FROM {cleansets}")
-        loggedinsetname = usersetcur.fetchone()
-        shownsets.append(loggedinsetname[0]) 
+    shownsets = []
+    cur.execute('SELECT setname FROM user_sets WHERE user_id = ?', (user_id,))
+    allusersets = cur.fetchall()
+    for row in allusersets:
+        shownsets.append(row[0])
 
     return render_template('ownsets.html', error=error, shownsets=shownsets)
 
